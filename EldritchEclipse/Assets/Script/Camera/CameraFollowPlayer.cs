@@ -11,6 +11,5 @@ public class CameraFollowPlayer : MonoBehaviour
     private void Update()
     {
         transform.position = player.position + (Vector3.up * height);
-
     }
 }

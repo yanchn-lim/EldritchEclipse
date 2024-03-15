@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: Outline
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   passMaterial: {fileID: 2100000, guid: 495978f2eb1fd27408d8cd72f5a69d36, type: 2}
   injectionPoint: 600
-  requirements: 1
-  passIndex: 0
+  requirements: 6
+  passIndex: 1
 --- !u!114 &-1878332245247344467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,7 +125,7 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
-  m_RenderingMode: 0
+  m_RenderingMode: 1
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
@@ -143,8 +143,7 @@ MonoBehaviour:
   m_Name: Pixelize
   m_EditorClassIdentifier: 
   m_Active: 1
-  passMaterial: {fileID: -876546973899608171, guid: cf7411b25ee7f8e4ca8e6cb45149c7ed,
-    type: 3}
+  passMaterial: {fileID: 2100000, guid: 2456053f80a5a9544b5abf7fd7dee4f2, type: 2}
   injectionPoint: 600
   requirements: 4
-  passIndex: 0
+  passIndex: 1

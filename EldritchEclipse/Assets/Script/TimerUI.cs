@@ -14,6 +14,9 @@ public class TimerUI : MonoBehaviour
         float time = GameManager.Timer;
         int min = Mathf.FloorToInt(time / 60);
         int sec = Mathf.FloorToInt(time % 60);
-        timerText.text = $"{min} : {sec}";    
+
+        string minString = min > 10 ? min.ToString() : $"0{min}";
+        string secString = sec > 10 ? sec.ToString() : $"0{sec}";
+        timerText.text = $"{minString} : {secString}";    
     }
 }

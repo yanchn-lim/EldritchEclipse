@@ -38,7 +38,6 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DownSample: 128
+    - _DownSample: 512
     m_Colors: []
   m_BuildTextureStacks: []
-  m_AllowLocking: 1

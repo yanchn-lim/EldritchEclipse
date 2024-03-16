@@ -35,7 +35,7 @@ void ToonShading_float(
         //smoothstep to cut off parts of the shading to achieve toon shade
         half toonRamp = smoothstep(ToonRampOffset, ToonRampOffset + ToonRampSmoothness, d);
 
-        float3 extraLights;
+        float3 extraLights = float3(0,0,0);
         //get the lights in the scene
         int pixelLightCount = GetAdditionalLightsCount();
 

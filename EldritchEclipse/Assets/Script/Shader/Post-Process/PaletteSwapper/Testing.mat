@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PixelizeMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: cf7411b25ee7f8e4ca8e6cb45149c7ed,
+  m_Name: Testing
+  m_Shader: {fileID: -6465566751694194690, guid: a36f582ce95127b4ba67c7917c434a13,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -37,7 +37,6 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats:
-    - _DownSample: 2048
+    m_Floats: []
     m_Colors: []
   m_BuildTextureStacks: []

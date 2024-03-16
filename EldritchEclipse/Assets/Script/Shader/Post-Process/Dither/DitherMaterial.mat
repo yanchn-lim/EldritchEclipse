@@ -38,8 +38,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ColourResolution: 128
-    - _DitherSpread: 0.707
+    - _ColourResolution: 64
+    - _DitherSpread: 0.044
     - _Fullscreen_AlphaBlendOperation: 0
     - _Fullscreen_BlendMode: 4
     - _Fullscreen_ColorBlendOperation: 0

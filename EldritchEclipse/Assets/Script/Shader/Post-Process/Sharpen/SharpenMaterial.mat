@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PixelizeMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: cf7411b25ee7f8e4ca8e6cb45149c7ed,
+  m_Name: SharpenMaterial
+  m_Shader: {fileID: -6465566751694194690, guid: 9488e6e3ad288a044afcd5407ee3c604,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -38,6 +38,6 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DownSample: 2048
+    - _Sharpness: 0.44
     m_Colors: []
   m_BuildTextureStacks: []

@@ -17,6 +17,20 @@ MonoBehaviour:
   injectionPoint: 600
   requirements: 6
   passIndex: 1
+--- !u!114 &-8930594907473470793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbb6121597268e74e88a5424ce738503, type: 3}
+  m_Name: SobelOutlineRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  SobelShader: {fileID: 4800000, guid: 475c28b0cef02ae42b53c7cbc3ff5dea, type: 3}
 --- !u!114 &-7538517076114137367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +156,8 @@ MonoBehaviour:
   - {fileID: 9182091109868933918}
   - {fileID: 5945575568669886922}
   - {fileID: 7529854888884107792}
-  m_RendererFeatureMap: 2ef6969a8edcedeaeed5ba1efcd005d98e79b461d6f319a2e91e00f9a8ce61972d094882cd929d9b1e93023337576d7fca49cf8b7aed825210fa2c66206b7f68
+  - {fileID: -8930594907473470793}
+  m_RendererFeatureMap: 2ef6969a8edcedeaeed5ba1efcd005d98e79b461d6f319a2e91e00f9a8ce61972d094882cd929d9b1e93023337576d7fca49cf8b7aed825210fa2c66206b7f68b79a217b3f271084
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -207,7 +222,7 @@ MonoBehaviour:
         serializedVersion: 2
         m_Bits: 8
       PassNames: []
-    overrideMaterial: {fileID: 2100000, guid: 6ef54600a5a41734baae9b3d5c0e668c, type: 2}
+    overrideMaterial: {fileID: 2100000, guid: 703ee0cdd4ffa1844ba2569484afea5d, type: 2}
     overrideMaterialPassIndex: 0
     overrideShader: {fileID: 0}
     overrideShaderPassIndex: 0

@@ -42,7 +42,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Bright: 2.32
+    - _Bright: 3.22
     - _Scale: 1
     - _Test: 16
     m_Colors: []

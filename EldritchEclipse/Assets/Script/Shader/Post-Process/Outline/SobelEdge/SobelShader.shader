@@ -49,10 +49,11 @@ Shader "Unlit/SobelShader"
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
 
-                if (i.uv.x % 8 == 0) 
+                if (i.uv.x % 2 == 0) 
                 {
                     col = fixed4(0, 0, 0, 0);
                 }
+
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;

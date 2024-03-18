@@ -59,8 +59,8 @@ void ToonShading_float(
         toonRamp *= light.shadowAttenuation;
 
         ToonRampOutput = light.color * (toonRamp + ToonRampTinting) + Ambient;
-        ToonRampOutput += extraLights;
-
+        ToonRampOutput += saturate(extraLights);
+        
         #if MAIN_LIGHT
             Direction = normalize(light.direction);
         #else

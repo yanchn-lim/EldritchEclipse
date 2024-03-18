@@ -7,18 +7,17 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OutlineMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: d9890f01c03bf194c8686cfd3b63a3ca,
+  m_Name: GreyscaleMaterial
+  m_Shader: {fileID: -6465566751694194690, guid: 14c5ebb382d876b49bc500de84232919,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _TYPE_OTHER
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2997
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -39,16 +38,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.232
-    - _ColourThreshold: 0.65
-    - _NoiseScale: 2.59
-    - _NormalThreshold: 0.42
-    - _OVERLAY: 0
-    - _Overlay: 1
-    - _QueueControl: 0
-    - _QueueOffset: -3
-    - _Step: -7.17
-    - _TYPE: 1
-    m_Colors:
-    - _OutlineColour: {r: 0, g: 0, b: 0, a: 0.2}
+    - _Blue: 1
+    - _Green: 0.167
+    - _Red: 0.194
+    m_Colors: []
   m_BuildTextureStacks: []

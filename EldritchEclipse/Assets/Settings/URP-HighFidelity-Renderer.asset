@@ -17,21 +17,7 @@ MonoBehaviour:
   injectionPoint: 600
   requirements: 6
   passIndex: 1
---- !u!114 &-8930594907473470793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbb6121597268e74e88a5424ce738503, type: 3}
-  m_Name: SobelOutlineRenderFeature
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  SobelShader: {fileID: 4800000, guid: 475c28b0cef02ae42b53c7cbc3ff5dea, type: 3}
---- !u!114 &-7538517076114137367
+--- !u!114 &-7681868554466317247
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,33 +27,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
-  m_Name: Test
+  m_Name: Posterize
   m_EditorClassIdentifier: 
-  m_Active: 0
-  injectionPoint: 600
-  fetchColorBuffer: 1
-  requirements: -1
-  passMaterial: {fileID: 2100000, guid: a4cefa4983ebb724789fef813cbf2e88, type: 2}
-  passIndex: 0
-  bindDepthStencilAttachment: 0
-  m_Version: 1
---- !u!114 &-7233464015135438547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
-  m_Name: Dither
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  injectionPoint: 600
+  m_Active: 1
+  injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4
-  passMaterial: {fileID: 2100000, guid: 5c82b0a624b53f54ba3e033cd9118847, type: 2}
+  passMaterial: {fileID: 2100000, guid: 274e3b5a9ccfe124fa2b8a7cd9d3a40c, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
@@ -83,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Pixelize
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 4
@@ -103,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Sharpen
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 4
@@ -123,8 +89,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Outline
   m_EditorClassIdentifier: 
-  m_Active: 0
-  injectionPoint: 600
+  m_Active: 1
+  injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 6
   passMaterial: {fileID: 2100000, guid: 495978f2eb1fd27408d8cd72f5a69d36, type: 2}
@@ -148,16 +114,15 @@ MonoBehaviour:
       type: 3}
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
-  - {fileID: -1518314994316937682}
-  - {fileID: -2808609011329739282}
-  - {fileID: -6766108863059691122}
-  - {fileID: -7538517076114137367}
-  - {fileID: -7233464015135438547}
+  - {fileID: 7138197662347941711}
+  - {fileID: -7681868554466317247}
   - {fileID: 9182091109868933918}
+  - {fileID: -1518314994316937682}
+  - {fileID: -6766108863059691122}
+  - {fileID: -2808609011329739282}
   - {fileID: 5945575568669886922}
   - {fileID: 7529854888884107792}
-  - {fileID: -8930594907473470793}
-  m_RendererFeatureMap: 2ef6969a8edcedeaeed5ba1efcd005d98e79b461d6f319a2e91e00f9a8ce61972d094882cd929d9b1e93023337576d7fca49cf8b7aed825210fa2c66206b7f68b79a217b3f271084
+  m_RendererFeatureMap: 4fd7c540f4f80f6341accaff3f8564951e93023337576d7f2ef6969a8edcedea8e79b461d6f319a2eed5ba1efcd005d9ca49cf8b7aed825210fa2c66206b7f68
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -215,7 +180,7 @@ MonoBehaviour:
   m_Active: 1
   settings:
     passTag: DrawCharacterBehind
-    Event: 300
+    Event: 550
     filterSettings:
       RenderQueueType: 0
       LayerMask:
@@ -242,6 +207,26 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &7138197662347941711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
+  m_Name: GreyScale
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  injectionPoint: 550
+  fetchColorBuffer: 1
+  requirements: 4
+  passMaterial: {fileID: 2100000, guid: 7b6a01621c502f140aff2ed1d0bcfc6f, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 0
+  m_Version: 1
 --- !u!114 &7529854888884107792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,21 +242,21 @@ MonoBehaviour:
   m_Active: 1
   settings:
     passTag: RenderObjects
-    Event: 300
+    Event: 550
     filterSettings:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 8
+        m_Bits: 72
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
     overrideShader: {fileID: 0}
     overrideShaderPassIndex: 0
-    overrideMode: 1
+    overrideMode: 0
     overrideDepthState: 0
-    depthCompareFunction: 4
-    enableWrite: 1
+    depthCompareFunction: 5
+    enableWrite: 0
     stencilSettings:
       overrideStencilState: 0
       stencilReference: 0
@@ -283,7 +268,7 @@ MonoBehaviour:
       overrideCamera: 0
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
-      cameraFieldOfView: 60
+      cameraFieldOfView: 55.6
 --- !u!114 &7896161455254070041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,7 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: PaletteSwap
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4

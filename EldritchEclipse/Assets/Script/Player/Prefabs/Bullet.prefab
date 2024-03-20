@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7604652308800685889}
   - component: {fileID: -1041212483252073375}
   - component: {fileID: 4428495652426828807}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 4090814153192302031}
   - component: {fileID: 5761969364632543861}
   - component: {fileID: 8224426791258529665}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}

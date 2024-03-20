@@ -8,25 +8,39 @@ public class PlayerMovement : MonoBehaviour
     public float MoveSpeed;
     Vector3 inputDir;
     Camera cam;
+    Transform camT;
     Vector3 dirToMouse;
     [SerializeField]
     GameObject bulletPrefab;
+    Vector3 mousePos;
+    [SerializeField]
+    LayerMask rayMask;
 
     private void Start()
     {
         cam = Camera.main;
+        camT = cam.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        inputDir = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+        Vector3 hori = new(x, 0, x);
+        Vector3 vert = new(-z, 0, z);
+        inputDir = hori + vert;     
         inputDir.Normalize();
 
         //rotate the player towards the mouse
-        Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        dirToMouse = mousePos - transform.position;
-        dirToMouse.Normalize();
+        Ray mouseRay = cam.ScreenPointToRay(Input.mousePosition);
+        if(Physics.Raycast(mouseRay,out RaycastHit hit,rayMask))
+        {
+            dirToMouse = hit.point - transform.position;
+            dirToMouse.Normalize();
+
+        }
+
         Vector3 forward = new(dirToMouse.x, 0, dirToMouse.z);
         transform.forward = forward;
 
@@ -43,5 +57,8 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawCube(mousePos,new(1,1,1));
+    }
 }

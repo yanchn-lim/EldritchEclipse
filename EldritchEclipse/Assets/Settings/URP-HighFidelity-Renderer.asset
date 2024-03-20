@@ -29,7 +29,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Posterize
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Pixelize
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 4
@@ -69,11 +69,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Sharpen
   m_EditorClassIdentifier: 
-  m_Active: 1
-  injectionPoint: 600
+  m_Active: 0
+  injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4
   passMaterial: {fileID: 2100000, guid: 0a5e927b4f6960f4092ccc4dde5852a1, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 0
+  m_Version: 1
+--- !u!114 &-1845998535297136447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
+  m_Name: Sobel
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  injectionPoint: 550
+  fetchColorBuffer: 1
+  requirements: 4
+  passMaterial: {fileID: 2100000, guid: 1027676abfd400046a5e66935c11d6f5, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
@@ -89,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Outline
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 6
@@ -118,12 +138,13 @@ MonoBehaviour:
   - {fileID: -7681868554466317247}
   - {fileID: 9182091109868933918}
   - {fileID: -1518314994316937682}
-  - {fileID: -6766108863059691122}
   - {fileID: -2808609011329739282}
+  - {fileID: -1845998535297136447}
+  - {fileID: -6766108863059691122}
   - {fileID: 5945575568669886922}
   - {fileID: 7529854888884107792}
-  m_RendererFeatureMap: 4fd7c540f4f80f6341accaff3f8564951e93023337576d7f2ef6969a8edcedea8e79b461d6f319a2eed5ba1efcd005d9ca49cf8b7aed825210fa2c66206b7f68
-  m_UseNativeRenderPass: 0
+  m_RendererFeatureMap: 4fd7c540f4f80f6341accaff3f8564951e93023337576d7f2ef6969a8edcedeaeed5ba1efcd005d9c108b9d71cb261e68e79b461d6f319a2ca49cf8b7aed825210fa2c66206b7f68
+  m_UseNativeRenderPass: 1
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -148,7 +169,7 @@ MonoBehaviour:
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 4294967295
   m_TransparentLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -219,7 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: GreyScale
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4
@@ -298,7 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: PaletteSwap
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4

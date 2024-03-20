@@ -15,19 +15,19 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: 0.41
+    m_Value: 1.06
   contrast:
     m_OverrideState: 1
-    m_Value: 19
+    m_Value: 35
   colorFilter:
     m_OverrideState: 0
-    m_Value: {r: 1.2383578, g: 1.2457464, b: 1.3602687, a: 1}
+    m_Value: {r: 0.7336905, g: 0.7336905, b: 0.7336905, a: 1}
   hueShift:
     m_OverrideState: 0
     m_Value: 180
   saturation:
     m_OverrideState: 1
-    m_Value: -11
+    m_Value: -28
 --- !u!114 &-3654027927011605659
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29fa0085f50d5e54f8144f766051a691, type: 3}
   m_Name: FilmGrain
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   type:
     m_OverrideState: 1
     m_Value: 2
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899c54efeace73346a0a16faa3afe726, type: 3}
   m_Name: Vignette
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   color:
     m_OverrideState: 1
     m_Value: {r: 0, g: 0, b: 0, a: 1}

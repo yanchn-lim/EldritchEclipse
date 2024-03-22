@@ -38,8 +38,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Blue: 1
-    - _Green: 0.167
-    - _Red: 0.194
+    - _Blue: 0.482
+    - _Brightness: 0.38
+    - _Green: 0.293
+    - _Red: 0.3
     m_Colors: []
   m_BuildTextureStacks: []

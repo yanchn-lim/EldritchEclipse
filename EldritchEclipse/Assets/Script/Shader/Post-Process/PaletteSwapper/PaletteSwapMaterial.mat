@@ -28,6 +28,34 @@ Material:
         m_Texture: {fileID: 2800000, guid: 3a590c5e20140c64a9ae18903a12878c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MainPalette:
+        m_Texture: {fileID: 2800000, guid: 2f174978cb1451d458c28b96b2f5a2da, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Palette_1:
+        m_Texture: {fileID: 2800000, guid: aeb335c9cfcc53e4b86d0478b52fbbc0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Palette_2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Palette_3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Palette_B:
+        m_Texture: {fileID: 2800000, guid: 2f174978cb1451d458c28b96b2f5a2da, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Palette_G:
+        m_Texture: {fileID: 2800000, guid: 2f174978cb1451d458c28b96b2f5a2da, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Palette_R:
+        m_Texture: {fileID: 2800000, guid: aeb335c9cfcc53e4b86d0478b52fbbc0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_586f5f83133a4b6181acd91e597a307d_Texture_1_Texture2D:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -63,5 +91,6 @@ Material:
     m_Ints: []
     m_Floats:
     - _SPLIT: 0
-    m_Colors: []
+    m_Colors:
+    - _MainPalette: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []

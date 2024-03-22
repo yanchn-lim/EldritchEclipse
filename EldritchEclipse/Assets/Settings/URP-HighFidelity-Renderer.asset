@@ -137,14 +137,14 @@ MonoBehaviour:
   - {fileID: 7138197662347941711}
   - {fileID: -7681868554466317247}
   - {fileID: 9182091109868933918}
+  - {fileID: 7529854888884107792}
   - {fileID: -1518314994316937682}
+  - {fileID: 5945575568669886922}
   - {fileID: -2808609011329739282}
   - {fileID: -1845998535297136447}
   - {fileID: -6766108863059691122}
-  - {fileID: 5945575568669886922}
-  - {fileID: 7529854888884107792}
   - {fileID: 6994160981203637685}
-  m_RendererFeatureMap: 4fd7c540f4f80f6341accaff3f8564951e93023337576d7f2ef6969a8edcedeaeed5ba1efcd005d9c108b9d71cb261e68e79b461d6f319a2ca49cf8b7aed825210fa2c66206b7f68b5558a125b401061
+  m_RendererFeatureMap: 4fd7c540f4f80f6341accaff3f8564951e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252eed5ba1efcd005d9c108b9d71cb261e68e79b461d6f319a2b5558a125b401061
   m_UseNativeRenderPass: 1
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: DrawCharacterBehind
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     passTag: DrawCharacterBehind
     Event: 550
@@ -228,7 +228,7 @@ MonoBehaviour:
       overrideCamera: 0
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
-      cameraFieldOfView: 60
+      cameraFieldOfView: 45
 --- !u!114 &6994160981203637685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
   m_Name: ScreenSpaceAmbientOcclusion
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   m_Settings:
     AOMethod: 0
     Downsample: 0

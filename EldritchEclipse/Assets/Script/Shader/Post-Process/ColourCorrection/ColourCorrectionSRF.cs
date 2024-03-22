@@ -12,6 +12,10 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
         RTHandle textureHandle;
         RenderTextureDescriptor textureDescriptor;
         static readonly int contrastId = Shader.PropertyToID("_Contrast");
+        static readonly int brightnessId = Shader.PropertyToID("_Brightness");
+        static readonly int saturationId = Shader.PropertyToID("_Saturation");
+        static readonly int gammaId = Shader.PropertyToID("_Gamma");
+
 
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
@@ -27,6 +31,10 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
                 return;
 
             mat.SetFloat(contrastId,setting.Contrast);
+            mat.SetFloat(brightnessId, setting.Brightness);
+            mat.SetFloat(saturationId, setting.Saturation);
+            mat.SetFloat(gammaId, setting.Gamma);
+
             //set material values
 
         }
@@ -120,6 +128,9 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
 public class ColorCorrectionSetting
 {
     [Range(0, 2f)] public float Contrast;
+    [Range(-1, 1f)] public float Brightness;
+    [Range(0, 3f)] public float Saturation;
+    [Range(0, 3f)] public float Gamma;
 }
 
 

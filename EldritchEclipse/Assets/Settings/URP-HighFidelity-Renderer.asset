@@ -29,7 +29,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Posterize
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Pixelize
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 4
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Sharpen
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4
@@ -144,8 +144,9 @@ MonoBehaviour:
   - {fileID: -1845998535297136447}
   - {fileID: -6766108863059691122}
   - {fileID: 6994160981203637685}
-  m_RendererFeatureMap: 4fd7c540f4f80f6341accaff3f8564951e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252eed5ba1efcd005d9c108b9d71cb261e68e79b461d6f319a2b5558a125b401061
-  m_UseNativeRenderPass: 1
+  - {fileID: 6448896506719735067}
+  m_RendererFeatureMap: 4fd7c540f4f80f6341accaff3f8564951e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252eed5ba1efcd005d9c108b9d71cb261e68e79b461d6f319a2b5558a125b4010611b8d498434157f59
+  m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -229,6 +230,25 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 45
+--- !u!114 &6448896506719735067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1845c471b5da7479f4c33fd46d6c32, type: 3}
+  m_Name: ColourCorrectionSRF
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  setting:
+    Contrast: 1
+    Brightness: 0.04
+    Saturation: 2.26
+  InjectionPoint: 600
+  shader: {fileID: 4800000, guid: 49efc3b20dce2e0489b1aa912780c5e9, type: 3}
 --- !u!114 &6994160981203637685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,7 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: GreyScale
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4
@@ -355,7 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: PaletteSwap
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4

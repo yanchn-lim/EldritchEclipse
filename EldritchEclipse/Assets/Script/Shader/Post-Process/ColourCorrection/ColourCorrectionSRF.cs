@@ -108,7 +108,7 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             var cameraData = renderingData.cameraData;
-            if (cameraData.camera.cameraType != CameraType.Game) return;
+            //if (cameraData.camera.cameraType != CameraType.Game) return;
 
             if (mat == null) return;
 

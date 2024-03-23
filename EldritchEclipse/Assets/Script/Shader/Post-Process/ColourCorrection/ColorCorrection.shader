@@ -18,9 +18,7 @@ Shader "Hidden/ColorCorrection"
             #pragma vertex Vert
             #pragma fragment frag
 
-        //TEXTURE2D_X(_CameraOpaqueTexture);
-        //SAMPLER(sampler_CameraOpaqueTexture);
-        SAMPLER(sampler_BlitTexture);
+            SAMPLER(sampler_BlitTexture);
 
             float _Contrast;
             float _Brightness;

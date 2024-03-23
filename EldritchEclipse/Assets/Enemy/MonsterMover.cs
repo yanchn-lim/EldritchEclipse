@@ -16,6 +16,7 @@ public class MonsterMover : MonoBehaviour
     [SerializeField] private LegPiece rightHindLegPiece;
     
     [SerializeField] private float durationToMoveLeg;
+    [SerializeField] private float distanceToTriggerMove;
     [SerializeField] private LegMovingState currentLegState;
 
     private List<LegPiece> legUsed; //can only move two legs at a time
@@ -39,18 +40,12 @@ public class MonsterMover : MonoBehaviour
         }
     }
 
-
-    
-
     private void RootLegs()
     {
-        for(int i = 0 ; i < legNotUsed.Count; i++)
+        foreach(LegPiece piece in legNotUsed)
         {
-            //make sure it is rooted in world space;
-            legNotUsed[i].leg.position = legNotUsed[i].originalPosition;
+            piece.leg.position = piece.originalPosition;
         }
-
-
     }
 
     #region ignore this first
@@ -86,14 +81,14 @@ public class MonsterMover : MonoBehaviour
         for(int i = 0; i < legUsed.Count; i++)        
         {
             var piece = legUsed[i];
-            if (!piece.CanMove)
-            {
-                //If cant move then dont move
-                legNotUsed.Add(piece);
+            if (piece.distance >= distanceToTriggerMove)
+            {//if can move then do the coroutine to move the leg
+                StartCoroutine(MoveLeg(piece));
             }
             else
             {
-                StartCoroutine(MoveLeg(i));
+                //If cant move then dont move
+                legNotUsed.Add(piece);
             }
         }
 
@@ -118,9 +113,9 @@ public class MonsterMover : MonoBehaviour
         RightLeg
     }
 
-    private IEnumerator MoveLeg(int index) //cant store a ref type
+    private IEnumerator MoveLeg(LegPiece  leg) //cant store a ref type
     {
-        LegPiece leg = legUsed[index];
+        print($"moving leg {leg.leg.name}");
         leg.isGrounded = false; //tell that it is not moving
 
         float elapseTime = 0f;
@@ -141,28 +136,25 @@ public class MonsterMover : MonoBehaviour
         leg.originalPosition = targetPosition;
         leg.isGrounded = true; //now it is grounded
 
-        legUsed[index] = leg; 
+        print($"Finish moving leg {leg.leg.name}");
     }
 
     #endregion
 }
 
 [Serializable]
-public struct LegPiece
+public class LegPiece
 {
     public Transform leg;
     public bool isGrounded;
     public TargetPosition newPosition;
     [HideInInspector] public Vector3 originalPosition;
-    public float DistanceToTriggerMovement;
-    [HideInInspector] public bool CanMove
+    
+    public float distance
     {
         get
         {
-            float distance = Vector3.Distance(leg.position, 
-                newPosition.targetPosition);
-            //can start moving
-            return distance >= DistanceToTriggerMovement;
+            return Vector3.Distance(leg.position, newPosition.targetPosition);
         }
     }
 

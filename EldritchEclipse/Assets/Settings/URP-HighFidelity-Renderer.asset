@@ -17,26 +17,6 @@ MonoBehaviour:
   injectionPoint: 600
   requirements: 6
   passIndex: 1
---- !u!114 &-7681868554466317247
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
-  m_Name: Posterize
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  injectionPoint: 550
-  fetchColorBuffer: 1
-  requirements: 4
-  passMaterial: {fileID: 2100000, guid: 274e3b5a9ccfe124fa2b8a7cd9d3a40c, type: 2}
-  passIndex: 0
-  bindDepthStencilAttachment: 0
-  m_Version: 1
 --- !u!114 &-6766108863059691122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49,7 +29,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Pixelize
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 4
@@ -69,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Sharpen
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4
@@ -109,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: Outline
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 6
@@ -135,7 +115,6 @@ MonoBehaviour:
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
   - {fileID: 7138197662347941711}
-  - {fileID: -7681868554466317247}
   - {fileID: 9182091109868933918}
   - {fileID: 7529854888884107792}
   - {fileID: -1518314994316937682}
@@ -144,8 +123,10 @@ MonoBehaviour:
   - {fileID: -1845998535297136447}
   - {fileID: -6766108863059691122}
   - {fileID: 6994160981203637685}
+  - {fileID: 4164362798019080763}
+  - {fileID: 8030492621656016145}
   - {fileID: 6448896506719735067}
-  m_RendererFeatureMap: 4fd7c540f4f80f6341accaff3f8564951e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252eed5ba1efcd005d9c108b9d71cb261e68e79b461d6f319a2b5558a125b4010611b8d498434157f59
+  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252eed5ba1efcd005d9c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -188,6 +169,25 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &4164362798019080763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3277d2e365cb1e849b1e347a953a32ef, type: 3}
+  m_Name: Colour Quantization
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  shader: {fileID: 4800000, guid: 816b2a1a0d5eee94890f7b4b3b638a1e, type: 3}
+  settings:
+    InjectionPoint: 600
+    Requirements: 4
+    ProfilerName: COLOUR_QUANTIZATION_BLIT
+    NumberOfColour: 16
 --- !u!114 &5945575568669886922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: DrawCharacterBehind
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: DrawCharacterBehind
     Event: 550
@@ -240,15 +240,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f1845c471b5da7479f4c33fd46d6c32, type: 3}
-  m_Name: ColourCorrectionSRF
+  m_Name: Colour Correction
   m_EditorClassIdentifier: 
   m_Active: 1
   setting:
-    Contrast: 1.21
+    InjectionPoint: 600
+    Requirements: 4
+    ProfilerName: COLOUR_CORRECTION_BLIT
+    Contrast: 1.4
     Brightness: 0.09
-    Saturation: 1
-    Gamma: 1
-  InjectionPoint: 600
+    Saturation: 0.83
+    Gamma: 1.22
   shader: {fileID: 4800000, guid: 49efc3b20dce2e0489b1aa912780c5e9, type: 3}
 --- !u!114 &6994160981203637685
 MonoBehaviour:
@@ -297,7 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: GreyScale
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4
@@ -317,7 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: RenderObjects
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: RenderObjects
     Event: 550
@@ -331,7 +333,7 @@ MonoBehaviour:
     overrideMaterialPassIndex: 0
     overrideShader: {fileID: 0}
     overrideShaderPassIndex: 0
-    overrideMode: 0
+    overrideMode: 1
     overrideDepthState: 0
     depthCompareFunction: 5
     enableWrite: 0
@@ -364,6 +366,25 @@ MonoBehaviour:
   injectionPoint: 600
   requirements: 4
   passIndex: 1
+--- !u!114 &8030492621656016145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb152904c60aab646b9a4b1e5085304d, type: 3}
+  m_Name: Sharpen
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  shader: {fileID: 4800000, guid: d8603b99b7799ec4a930c8f5912b50dd, type: 3}
+  settings:
+    InjectionPoint: 600
+    Requirements: 4
+    ProfilerName: SHARPEN_BLIT
+    Sharpen: 1.37
 --- !u!114 &9182091109868933918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,7 +397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: PaletteSwap
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 4

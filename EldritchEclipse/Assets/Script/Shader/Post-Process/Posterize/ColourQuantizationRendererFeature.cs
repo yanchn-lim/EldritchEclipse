@@ -5,14 +5,14 @@ using UnityEngine.Rendering.Universal;
 
 //THIS IS A TEMPLATE MADE FROM READING UNITY DOCS AND RENDERER FEATURES SCRIPTS
 //FOR USE IN URP ONLY!
-internal class RendererFeatureTemplate : ScriptableRendererFeature
+public class ColourQuantizationRendererFeatur : ScriptableRendererFeature
 {
-    TemplateRenderPass pass;
+    ColourQuantizationPass pass;
     Material mat;
 
     //exposed to be tweaked in the renderer settings
     [SerializeField] Shader shader;
-    [SerializeField] RendererSettingTemplate settings;
+    [SerializeField] QuantizeSetting settings;
 
     #region HELPER METHODS
     private bool GetMaterials()
@@ -37,7 +37,8 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
             Debug.LogErrorFormat("{0}.AddRenderPasses(): Missing material. {1} render pass will not be added.", GetType().Name, name);
             return;
         }
-        bool setup = pass.SetUp(ref mat,ref settings);
+
+        bool setup = pass.SetUp(ref mat, ref settings);
 
         if (setup)
             renderer.EnqueuePass(pass);
@@ -51,18 +52,18 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
     }
     #endregion
 
-    class TemplateRenderPass : ScriptableRenderPass
+    class ColourQuantizationPass : ScriptableRenderPass
     {
         ProfilingSampler profileSampler;
-        RendererSettingTemplate settings;
+        QuantizeSetting settings;
         Material mat;
         RTHandle tempTexture;
         RenderTextureDescriptor tempTextDesc;
-        
+
         //DECLARE ANY VARIABLES YOU NEED HERE
 
         #region HELPER METHODS
-        public bool SetUp(ref Material material,ref RendererSettingTemplate setting) //setup the render pass with all the data
+        public bool SetUp(ref Material material, ref QuantizeSetting setting) //setup the render pass with all the data
         {
             mat = material;
             settings = setting;
@@ -87,12 +88,12 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
         {
             //SET MATERIAL VALUES HERE
             //E.G.
-            //mat.SetFloat("_YourValue", settings.YourValue);
+            mat.SetFloat("_NumberOfColour", settings.NumberOfColour);
 
 
         }
         #endregion
-        
+
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
             //assign the correct size to the texture descriptor
@@ -100,7 +101,7 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
             tempTextDesc.height = cameraTextureDescriptor.height;
 
             //re allocate the texture and assign a name so it can be identified in frame debugger / memory profiler
-            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc, name: "_ASSIGN NAME HERE");
+            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc, name: "_COLOUR_QUANTIZE");
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -127,11 +128,12 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
 }
 
 [System.Serializable]
-internal class RendererSettingTemplate
+public class QuantizeSetting
 {
     public RenderPassEvent InjectionPoint; //this is where the shader will be injected for post-processing
     public ScriptableRenderPassInput Requirements; //this is the buffer the pass requires
-    public string ProfilerName = "YOUR PROFILER NAME HERE";
+    public string ProfilerName = "COLOUR_QUANTIZATION_BLIT";
 
     //put your settings here
+    public int NumberOfColour;
 }

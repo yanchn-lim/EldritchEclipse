@@ -5,14 +5,14 @@ using UnityEngine.Rendering.Universal;
 
 //THIS IS A TEMPLATE MADE FROM READING UNITY DOCS AND RENDERER FEATURES SCRIPTS
 //FOR USE IN URP ONLY!
-internal class RendererFeatureTemplate : ScriptableRendererFeature
+public class EdgeDetectionRendererFeature : ScriptableRendererFeature
 {
-    TemplateRenderPass pass;
+    EdgeDetectionPass pass;
     Material mat;
 
     //exposed to be tweaked in the renderer settings
     [SerializeField] Shader shader;
-    [SerializeField] RendererSettingTemplate settings;
+    [SerializeField] EdgeSetting settings;
 
     #region HELPER METHODS
     private bool GetMaterials()
@@ -37,7 +37,7 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
             Debug.LogErrorFormat("{0}.AddRenderPasses(): Missing material. {1} render pass will not be added.", GetType().Name, name);
             return;
         }
-        bool setup = pass.SetUp(ref mat,ref settings);
+        bool setup = pass.SetUp(ref mat, ref settings);
 
         if (setup)
             renderer.EnqueuePass(pass);
@@ -51,23 +51,24 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
     }
     #endregion
 
-    class TemplateRenderPass : ScriptableRenderPass
+    class EdgeDetectionPass : ScriptableRenderPass
     {
         ProfilingSampler profileSampler;
-        RendererSettingTemplate settings;
+        EdgeSetting settings;
         Material mat;
         RTHandle tempTexture;
         RenderTextureDescriptor tempTextDesc;
-        
+
         //DECLARE ANY VARIABLES YOU NEED HERE
 
         #region HELPER METHODS
-        public bool SetUp(ref Material material,ref RendererSettingTemplate setting) //setup the render pass with all the data
+        public bool SetUp(ref Material material, ref EdgeSetting setting) //setup the render pass with all the data
         {
             mat = material;
             settings = setting;
 
             ConfigureInput(settings.Requirements);
+            
             tempTextDesc = new(Screen.width, Screen.height, RenderTextureFormat.RGB111110Float, 0);
             UpdateShaderSettings();
             profileSampler = new(settings.ProfilerName); //assign a name to the profiler to be identified in frame debugger
@@ -92,7 +93,6 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
 
         }
         #endregion
-        
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
             //assign the correct size to the texture descriptor
@@ -100,7 +100,7 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
             tempTextDesc.height = cameraTextureDescriptor.height;
 
             //re allocate the texture and assign a name so it can be identified in frame debugger / memory profiler
-            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc, name: "_ASSIGN NAME HERE");
+            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc, name: "_EDGE_DETECTION");
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -111,14 +111,18 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
             if (mat == null) return; //another material check
 
             CommandBuffer cmd = CommandBufferPool.Get(); // get a command buffer from the pool
-            RTHandle cameraTexture = renderingData.cameraData.renderer.cameraColorTargetHandle; //get the camera texture
+            RTHandle cameraColourTexture = renderingData.cameraData.renderer.cameraColorTargetHandle; //get the camera texture
+            RTHandle cameraDepthTexture = renderingData.cameraData.renderer.cameraDepthTargetHandle;
+            ConfigureTarget(cameraColourTexture,cameraDepthTexture);
+
 
             //assigns a identification scope so it can be identified in the frame debugger
             using (new ProfilingScope(cmd, profileSampler))
             {
-                Blitter.BlitCameraTexture(cmd, cameraTexture, tempTexture, mat, 0); //copies the camera texture into our temporary texture and applies our shader on it
-                Blitter.BlitCameraTexture(cmd, tempTexture, cameraTexture); //copies the texture back into the camera to be displayed
+                Blitter.BlitCameraTexture(cmd, cameraDepthTexture, tempTexture, mat, 0); //copies the camera texture into our temporary texture and applies our shader on it
+                Blitter.BlitCameraTexture(cmd, tempTexture, cameraDepthTexture); //copies the texture back into the camera to be displayed
             }
+
             context.ExecuteCommandBuffer(cmd); //execute the shader
             cmd.Clear();
             CommandBufferPool.Release(cmd); //release the command buffer
@@ -127,11 +131,11 @@ internal class RendererFeatureTemplate : ScriptableRendererFeature
 }
 
 [System.Serializable]
-internal class RendererSettingTemplate
+public class EdgeSetting
 {
     public RenderPassEvent InjectionPoint; //this is where the shader will be injected for post-processing
     public ScriptableRenderPassInput Requirements; //this is the buffer the pass requires
-    public string ProfilerName = "YOUR PROFILER NAME HERE";
+    public string ProfilerName = "EDGE_DETECTION_BLIT";
 
     //put your settings here
 }

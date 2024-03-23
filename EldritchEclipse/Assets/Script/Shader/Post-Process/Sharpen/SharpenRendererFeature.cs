@@ -3,16 +3,14 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 
-//THIS IS A TEMPLATE MADE FROM READING UNITY DOCS AND RENDERER FEATURES SCRIPTS
-//FOR USE IN URP ONLY!
-public class RendererFeatureTemplate : ScriptableRendererFeature
+public class SharpenRendererFeature : ScriptableRendererFeature
 {
-    TemplateRenderPass pass;
+    SharpenRenderPass pass;
     Material mat;
 
     //exposed to be tweaked in the renderer settings
     [SerializeField] Shader shader;
-    [SerializeField] RendererSettingTemplate settings;
+    [SerializeField] SharpenSetting settings;
 
     #region HELPER METHODS
     private bool GetMaterials()
@@ -38,7 +36,7 @@ public class RendererFeatureTemplate : ScriptableRendererFeature
             return;
         }
 
-        bool setup = pass.SetUp(ref mat,ref settings);
+        bool setup = pass.SetUp(ref mat, ref settings);
 
         if (setup)
             renderer.EnqueuePass(pass);
@@ -52,18 +50,18 @@ public class RendererFeatureTemplate : ScriptableRendererFeature
     }
     #endregion
 
-    class TemplateRenderPass : ScriptableRenderPass
+    class SharpenRenderPass : ScriptableRenderPass
     {
         ProfilingSampler profileSampler;
-        RendererSettingTemplate settings;
+        SharpenSetting settings;
         Material mat;
         RTHandle tempTexture;
         RenderTextureDescriptor tempTextDesc;
-        
+
         //DECLARE ANY VARIABLES YOU NEED HERE
 
         #region HELPER METHODS
-        public bool SetUp(ref Material material,ref RendererSettingTemplate setting) //setup the render pass with all the data
+        public bool SetUp(ref Material material, ref SharpenSetting setting) //setup the render pass with all the data
         {
             mat = material;
             settings = setting;
@@ -73,7 +71,6 @@ public class RendererFeatureTemplate : ScriptableRendererFeature
             UpdateShaderSettings();
             profileSampler = new(settings.ProfilerName); //assign a name to the profiler to be identified in frame debugger
             renderPassEvent = settings.InjectionPoint;
-
             return material != null;
         }
 
@@ -88,12 +85,12 @@ public class RendererFeatureTemplate : ScriptableRendererFeature
         {
             //SET MATERIAL VALUES HERE
             //E.G.
-            //mat.SetFloat("_YourValue", settings.YourValue);
+            mat.SetFloat("_Sharpness", settings.Sharpen);
 
 
         }
         #endregion
-        
+
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
             //assign the correct size to the texture descriptor
@@ -101,7 +98,7 @@ public class RendererFeatureTemplate : ScriptableRendererFeature
             tempTextDesc.height = cameraTextureDescriptor.height;
 
             //re allocate the texture and assign a name so it can be identified in frame debugger / memory profiler
-            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc, name: "_ASSIGN NAME HERE");
+            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc, name: "_SHARPEN_BLIT");
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -113,13 +110,15 @@ public class RendererFeatureTemplate : ScriptableRendererFeature
 
             CommandBuffer cmd = CommandBufferPool.Get(); // get a command buffer from the pool
             RTHandle cameraTexture = renderingData.cameraData.renderer.cameraColorTargetHandle; //get the camera texture
-
-            //assigns a identification scope so it can be identified in the frame debugger
+            mat.SetVector("_TextureSize",new Vector2(tempTextDesc.width, tempTextDesc.height));
+            
+            //assigns ator2("_ScreenSize") identification scope so it can be identified in the frame debugger
             using (new ProfilingScope(cmd, profileSampler))
             {
                 Blitter.BlitCameraTexture(cmd, cameraTexture, tempTexture, mat, 0); //copies the camera texture into our temporary texture and applies our shader on it
                 Blitter.BlitCameraTexture(cmd, tempTexture, cameraTexture); //copies the texture back into the camera to be displayed
             }
+
             context.ExecuteCommandBuffer(cmd); //execute the shader
             cmd.Clear();
             CommandBufferPool.Release(cmd); //release the command buffer
@@ -128,11 +127,13 @@ public class RendererFeatureTemplate : ScriptableRendererFeature
 }
 
 [System.Serializable]
-public class RendererSettingTemplate
+public class SharpenSetting
 {
     public RenderPassEvent InjectionPoint; //this is where the shader will be injected for post-processing
     public ScriptableRenderPassInput Requirements; //this is the buffer the pass requires
-    public string ProfilerName = "YOUR PROFILER NAME HERE";
+    public string ProfilerName = "SHARPEN_BLIT";
 
     //put your settings here
+    public float Sharpen;
+    
 }

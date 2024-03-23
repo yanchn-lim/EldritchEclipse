@@ -8,8 +8,7 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
 {
     ColourCorrectionRenderPass m_ScriptablePass;
     [SerializeField] ColourCorrectionSetting setting;
-    [SerializeField]RenderPassEvent InjectionPoint;
-    public Shader shader;
+    [SerializeField] Shader shader;
     Material mat;
 
     private bool GetMaterials()
@@ -22,9 +21,7 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
     public override void Create()
     {
         if(m_ScriptablePass == null)
-            m_ScriptablePass = new(mat);
-
-        m_ScriptablePass.renderPassEvent = InjectionPoint;
+            m_ScriptablePass = new();
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
@@ -42,14 +39,6 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
         
     }
 
-    public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
-    {
-        if(renderingData.cameraData.cameraType == CameraType.Game)
-        {
-            m_ScriptablePass.ConfigureInput(ScriptableRenderPassInput.Color);
-        }   
-    }
-
     protected override void Dispose(bool disposing)
     {
         m_ScriptablePass?.Dispose();
@@ -59,23 +48,23 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
 
     class ColourCorrectionRenderPass : ScriptableRenderPass
     {
-        ProfilingSampler cc_PS = new("Color Correction Blit");
-        ColourCorrectionSetting setting;
+        ProfilingSampler profileSampler;
+        ColourCorrectionSetting settings;
         Material mat;
         RTHandle textureHandle;
-        RenderTextureDescriptor textDesc;
-
-        public ColourCorrectionRenderPass(Material material)
-        {
-            //mat = material;
-            textDesc = new(Screen.width, Screen.height, RenderTextureFormat.Default, 0);
-        }
+        RenderTextureDescriptor tempTextDesc;
 
         public bool SetUp(ref Material material,ColourCorrectionSetting setting)
         {
-            ConfigureInput(ScriptableRenderPassInput.Color);
+
             mat = material;
-            this.setting = setting;
+            settings = setting;
+
+            ConfigureInput(settings.Requirements);
+            tempTextDesc = new(Screen.width, Screen.height, RenderTextureFormat.RGB111110Float, 0);
+            UpdateShaderSetting();
+            profileSampler = new(settings.ProfilerName);
+            renderPassEvent = settings.InjectionPoint;
 
             return mat != null;
         }
@@ -83,39 +72,28 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
         private void UpdateShaderSetting()
         {
             //SET MATERIAL VALUES HERE
-            mat.SetFloat("_Contrast", setting.Contrast);
-            mat.SetFloat("_Brightness", setting.Brightness);
-            mat.SetFloat("_Saturation", setting.Saturation);
-            mat.SetFloat("_Gamma", setting.Gamma);
+            mat.SetFloat("_Contrast", settings.Contrast);
+            mat.SetFloat("_Brightness", settings.Brightness);
+            mat.SetFloat("_Saturation", settings.Saturation);
+            mat.SetFloat("_Gamma", settings.Gamma);
         }
 
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
-            textDesc.width = cameraTextureDescriptor.width;
-            textDesc.height = cameraTextureDescriptor.height;
-            RenderingUtils.ReAllocateIfNeeded(ref textureHandle, textDesc, name: "_ColourCorrection_Texture");
-        }
-
-        public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
-        {
-            //RenderTextureDescriptor camTargetDesc = renderingData.cameraData.cameraTargetDescriptor;
-            //UpdateShaderSetting();
-            //textDesc = camTargetDesc;
-            //RenderingUtils.ReAllocateIfNeeded(ref textureHandle, textDesc,name : "_ColourCorrection_Texture");
-            //ConfigureTarget(textureHandle);
+            tempTextDesc.width = cameraTextureDescriptor.width;
+            tempTextDesc.height = cameraTextureDescriptor.height;
+            RenderingUtils.ReAllocateIfNeeded(ref textureHandle, tempTextDesc, name: "_ColourCorrection_Texture");
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            var cameraData = renderingData.cameraData;
             //if (cameraData.camera.cameraType != CameraType.Game) return;
 
             if (mat == null) return;
 
             CommandBuffer cmd = CommandBufferPool.Get();            
             RTHandle cameraTexture = renderingData.cameraData.renderer.cameraColorTargetHandle;
-            
-            using (new ProfilingScope(cmd, cc_PS))
+            using (new ProfilingScope(cmd, profileSampler))
             {
                 UpdateShaderSetting();
                 //Blitter.BlitCameraTexture(cmd, textureHandle, textureHandle, mat, 0);
@@ -130,7 +108,7 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
 
         public void Dispose()
         {
-            textureHandle.Release();
+            //textureHandle.Release();
         }
 
     }
@@ -140,6 +118,10 @@ public class ColourCorrectionSRF : ScriptableRendererFeature
 [System.Serializable]
 public class ColourCorrectionSetting
 {
+    public RenderPassEvent InjectionPoint; //this is where the shader will be injected for post-processing
+    public ScriptableRenderPassInput Requirements; //this is the buffer the pass requires
+    public string ProfilerName = "COLOUR_CORRECTION_BLIT";
+
     [Range(0, 2f)] public float Contrast;
     [Range(-1, 1f)] public float Brightness;
     [Range(0, 3f)] public float Saturation;

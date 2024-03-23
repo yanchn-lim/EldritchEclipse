@@ -1,4 +1,4 @@
-Shader "Hidden/Test"
+Shader "Hidden/SHADER_NAME_HERE"
 {
   
     SubShader
@@ -9,7 +9,7 @@ Shader "Hidden/Test"
 
         Pass
         {
-            Name "TestPass"
+            Name "PASS_NAME_HERE"
 
             HLSLPROGRAM
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -18,15 +18,16 @@ Shader "Hidden/Test"
             #pragma vertex Vert
             #pragma fragment frag
 
-            //TEXTURE2D_X(_BlitTexture);
             SAMPLER(sampler_BlitTexture);
 
+            //declare your varaibles here
 
             half4 frag(Varyings input) : SV_Target
             {
-                float3 color = SAMPLE_TEXTURE2D_X(_BlitTexture,sampler_BlitTexture,input.texcoord).rgb;
+                //samples the texture
+                float3 color = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_BlitTexture, input.texcoord).rgb;
 
-                color += 0.1f;
+                //logic here
 
                 return float4(color,1);
             }

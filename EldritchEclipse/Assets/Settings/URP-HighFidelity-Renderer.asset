@@ -37,6 +37,24 @@ MonoBehaviour:
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
+--- !u!114 &-2037815180188544312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e25ce5b2c8547cb4981a1ded66d70283, type: 3}
+  m_Name: PixelArtRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    InjectionPoint: 600
+    Requirements: 4
+    ProfilerName: PIXEL_ART_BLIT
+    Steps: 8
 --- !u!114 &-1845998535297136447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,7 +124,8 @@ MonoBehaviour:
   - {fileID: 8030492621656016145}
   - {fileID: 6448896506719735067}
   - {fileID: 708054489449137121}
-  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59e1833c85ce83d309
+  - {fileID: -2037815180188544312}
+  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59e1833c85ce83d309c892f6f2e339b8e3
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -165,7 +184,7 @@ MonoBehaviour:
   shader: {fileID: 4800000, guid: 7ae524779f528194d8e42797cd794473, type: 3}
   settings:
     InjectionPoint: 600
-    Requirements: 0
+    Requirements: 6
     ProfilerName: EDGE_DETECTION_BLIT
 --- !u!114 &4164362798019080763
 MonoBehaviour:
@@ -245,8 +264,8 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: COLOUR_CORRECTION_BLIT
-    Contrast: 1.4
-    Brightness: 0.09
+    Contrast: 1.47
+    Brightness: 0.04
     Saturation: 0.83
     Gamma: 1.22
   shader: {fileID: 4800000, guid: 49efc3b20dce2e0489b1aa912780c5e9, type: 3}
@@ -382,7 +401,7 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: SHARPEN_BLIT
-    Sharpen: 1.37
+    Sharpen: 0.69
 --- !u!114 &9182091109868933918
 MonoBehaviour:
   m_ObjectHideFlags: 0

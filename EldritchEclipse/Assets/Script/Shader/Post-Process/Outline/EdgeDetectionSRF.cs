@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-
+using Unity.Mathematics;
 
 //THIS IS A TEMPLATE MADE FROM READING UNITY DOCS AND RENDERER FEATURES SCRIPTS
 //FOR USE IN URP ONLY!
@@ -70,7 +70,6 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             ConfigureInput(settings.Requirements);
             
             tempTextDesc = new(Screen.width, Screen.height, RenderTextureFormat.RGB111110Float, 0);
-            UpdateShaderSettings();
             profileSampler = new(settings.ProfilerName); //assign a name to the profiler to be identified in frame debugger
             renderPassEvent = settings.InjectionPoint;
 
@@ -88,16 +87,25 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
         {
             //SET MATERIAL VALUES HERE
             //E.G.
-            //mat.SetFloat("_YourValue", settings.YourValue);
+            int gridSize = Mathf.CeilToInt(settings.Spread * 3.0f);
 
+            if(gridSize % 2 == 0)
+            {
+                gridSize++;
+            }
 
+            mat.SetFloat("_Spread", settings.Spread);
+            mat.SetInt("_GridSize", gridSize);
+            mat.SetVector("_TexelSize", new Vector2(1f / tempTextDesc.width, 1f / tempTextDesc.height));
+            mat.SetFloat("_K", settings.K);
+            mat.SetFloat("_Scalar", settings.Scalar);
         }
         #endregion
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
             //assign the correct size to the texture descriptor
-            tempTextDesc.width = cameraTextureDescriptor.width / 8;
-            tempTextDesc.height = cameraTextureDescriptor.height / 8;
+            tempTextDesc.width = cameraTextureDescriptor.width;
+            tempTextDesc.height = cameraTextureDescriptor.height;
 
             //re allocate the texture and assign a name so it can be identified in frame debugger / memory profiler
             RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc,FilterMode.Point,TextureWrapMode.Clamp, name: "_EDGE_DETECTION");
@@ -113,6 +121,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             CommandBuffer cmd = CommandBufferPool.Get(); // get a command buffer from the pool
             RTHandle cameraColourTexture = renderingData.cameraData.renderer.cameraColorTargetHandle; //get the camera texture
             RTHandle cameraDepthTexture = renderingData.cameraData.renderer.cameraDepthTargetHandle;
+            UpdateShaderSettings();
 
             //assigns a identification scope so it can be identified in the frame debugger
             using (new ProfilingScope(cmd, profileSampler))
@@ -136,4 +145,7 @@ public class EdgeSetting
     public string ProfilerName = "EDGE_DETECTION_BLIT";
 
     //put your settings here
+    [Range(0.1f,20)]public float Spread;
+    [Range(0, 1f)] public float K;
+    [Range(1, 8f)] public float Scalar;
 }

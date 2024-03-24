@@ -15,6 +15,7 @@ Shader "Hidden/EDGE DETECTION"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareNormalsTexture.hlsl"
 
             #pragma vertex Vert
             #pragma fragment frag
@@ -25,8 +26,10 @@ Shader "Hidden/EDGE DETECTION"
 
             half4 frag(Varyings input) : SV_Target
             {
+                //_CameraNormalsTexture
+                //_CameraDepthTexture
                 //samples the texture
-                float3 color = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, input.texcoord).rgb;
+                float3 color = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, input.texcoord).rgb;
 
                 //logic here
 

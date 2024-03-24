@@ -96,11 +96,11 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
             //assign the correct size to the texture descriptor
-            tempTextDesc.width = cameraTextureDescriptor.width;
-            tempTextDesc.height = cameraTextureDescriptor.height;
+            tempTextDesc.width = cameraTextureDescriptor.width / 8;
+            tempTextDesc.height = cameraTextureDescriptor.height / 8;
 
             //re allocate the texture and assign a name so it can be identified in frame debugger / memory profiler
-            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc, name: "_EDGE_DETECTION");
+            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc,FilterMode.Point,TextureWrapMode.Clamp, name: "_EDGE_DETECTION");
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -113,14 +113,14 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             CommandBuffer cmd = CommandBufferPool.Get(); // get a command buffer from the pool
             RTHandle cameraColourTexture = renderingData.cameraData.renderer.cameraColorTargetHandle; //get the camera texture
             RTHandle cameraDepthTexture = renderingData.cameraData.renderer.cameraDepthTargetHandle;
-            ConfigureTarget(cameraColourTexture,cameraDepthTexture);
+            //ConfigureTarget(cameraColourTexture,cameraDepthTexture);
 
 
             //assigns a identification scope so it can be identified in the frame debugger
             using (new ProfilingScope(cmd, profileSampler))
             {
-                Blitter.BlitCameraTexture(cmd, cameraDepthTexture, tempTexture, mat, 0); //copies the camera texture into our temporary texture and applies our shader on it
-                Blitter.BlitCameraTexture(cmd, tempTexture, cameraDepthTexture); //copies the texture back into the camera to be displayed
+                Blitter.BlitCameraTexture(cmd, cameraColourTexture, tempTexture, mat, 0); //copies the camera texture into our temporary texture and applies our shader on it
+                Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture); //copies the texture back into the camera to be displayed
             }
 
             context.ExecuteCommandBuffer(cmd); //execute the shader

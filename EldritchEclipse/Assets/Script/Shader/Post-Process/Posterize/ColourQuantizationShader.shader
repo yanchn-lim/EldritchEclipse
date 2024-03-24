@@ -32,7 +32,7 @@ Shader "Hidden/SHADER_NAME_HERE"
                 color = floor(color);
                 color /= _NumberOfColour - 1;
 
-                return float4(color,1);
+                return float4(saturate(color),1);
             }
 
             ENDHLSL

@@ -40,7 +40,7 @@ Shader "Hidden/SHARPEN"
 
                 float3 currPixel = colour * 4 * _Sharpness + 1 + neighbourPix;
 
-                return float4(clamp(colour * currPixel,0,1),0);
+                return float4(saturate(colour * currPixel),1);
             }
 
             ENDHLSL

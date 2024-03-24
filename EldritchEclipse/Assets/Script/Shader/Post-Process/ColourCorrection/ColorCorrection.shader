@@ -32,12 +32,12 @@ Shader "Hidden/ColorCorrection"
 
                 //apply contrast + brightness
                 color = _Contrast * (color - 0.5) + 0.5 + _Brightness;
-                color = clamp(color,0,1); //clamp values before doing more processing
+                color = saturate(color) //clamp values before doing more processing
 
                 //apply saturation
                 float grayScale = dot(color,float3(0.299,0.587,0.114));
                 color = lerp(grayScale,color,_Saturation);
-                color = clamp(color.rgb, 0, 1); //clamp again
+                color = saturate(color); //clamp again
 
                 //apply gamma correction
                 color = pow(color, _Gamma);

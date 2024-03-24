@@ -32,7 +32,7 @@ Shader "Hidden/ColorCorrection"
 
                 //apply contrast + brightness
                 color = _Contrast * (color - 0.5) + 0.5 + _Brightness;
-                color = saturate(color) //clamp values before doing more processing
+                color = saturate(color); //clamp values before doing more processing
 
                 //apply saturation
                 float grayScale = dot(color,float3(0.299,0.587,0.114));

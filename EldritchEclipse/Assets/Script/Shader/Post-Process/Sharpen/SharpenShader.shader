@@ -22,15 +22,15 @@ Shader "Hidden/SHARPEN"
 
             //declare your varaibles here
             float _Sharpness;
-            float2 _TextureSize;
+            float2 _TextureUnit;
 
             half4 frag(Varyings input) : SV_Target
             {
                 //samples the texture
                 float3 colour = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_BlitTexture, input.texcoord).rgb;
                 
-                float2 x = float2(1 / _TextureSize.x , 0);
-                float2 y = float2(0 , 1 / _TextureSize.y);
+                float2 x = float2(_TextureUnit.x,0);
+                float2 y = float2(0,_TextureUnit.y);
 
                 float3 topPix = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_BlitTexture, input.texcoord + y).rgb * _Sharpness * -1;
                 float3 btmPix = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_BlitTexture, input.texcoord - y).rgb * _Sharpness * -1;

@@ -113,8 +113,6 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             CommandBuffer cmd = CommandBufferPool.Get(); // get a command buffer from the pool
             RTHandle cameraColourTexture = renderingData.cameraData.renderer.cameraColorTargetHandle; //get the camera texture
             RTHandle cameraDepthTexture = renderingData.cameraData.renderer.cameraDepthTargetHandle;
-            //ConfigureTarget(cameraColourTexture,cameraDepthTexture);
-
 
             //assigns a identification scope so it can be identified in the frame debugger
             using (new ProfilingScope(cmd, profileSampler))

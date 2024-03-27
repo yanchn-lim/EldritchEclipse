@@ -1,6 +1,5 @@
 Shader "Hidden/EDGE DETECTION"
 {
-  
     SubShader
     {
         Tags{ "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
@@ -14,9 +13,11 @@ Shader "Hidden/EDGE DETECTION"
         #pragma shader_feature TANH
         #pragma shader_feature INVERT
 
+        Texture2D _GaussianTex;
         float2 _TexelSize;
         float _Spread, _K, _Tau, _Threshold,_Phi;
         int _GridSize;
+        
 
         //generate gaussian value
         float gaussian(float sig,int x)
@@ -133,12 +134,14 @@ Shader "Hidden/EDGE DETECTION"
                         float4 D = (G.r - _Tau * G.g);
 
 #if THRESHOLDING
+
 #if TANH
                             D = (D >= _Threshold) ? 1 : 1 + tanh(_Phi * (D - _Threshold));
 #else
 
                             D = (D > -_Threshold) ? 1 : 0;
 #endif
+
 #endif
 
 #if INVERT

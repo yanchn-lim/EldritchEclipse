@@ -9,7 +9,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
 {
     EdgeDetectionPass pass;
     Material mat;
-
+    
     //exposed to be tweaked in the renderer settings
     [SerializeField] Shader shader;
     [SerializeField] EdgeSetting settings;
@@ -73,7 +73,6 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             profileSampler = new(settings.ProfilerName); //assign a name to the profiler to be identified in frame debugger
             renderPassEvent = settings.InjectionPoint;
 
-
             return material != null;
         }
 
@@ -97,7 +96,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
 
             mat.SetFloat("_Spread", settings.Spread);
             mat.SetInt("_GridSize", gridSize);
-            mat.SetVector("_TexelSize", new Vector2(1f / tempTextDesc.width, 1f / tempTextDesc.height));
+            mat.SetVector("_TexelSize", new Vector2(tempTexture.rt.texelSize.x, tempTexture.rt.texelSize.y));
             mat.SetFloat("_K", settings.K);
             mat.SetFloat("_Tau", settings.Tau);
             mat.SetFloat("_Threshold", settings.Threshold);
@@ -138,7 +137,9 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
                 //cmd.SetGlobalTexture("_GaussianTex", tempTexture);
                 Blitter.BlitCameraTexture(cmd, cameraColourTexture, tempTexture, mat, 0);
                 Blitter.BlitCameraTexture(cmd, cameraColourTexture,tempTexture ,mat,1);
-                Blitter.BlitCameraTexture(cmd, tempTexture, tempTexture, mat, 2);
+                //Blitter.BlitTexture(cmd, tempTexture,Vector4.one, mat, 2);
+                Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture);
+                Blitter.BlitCameraTexture(cmd, cameraColourTexture,tempTexture, mat, 2);
                 Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture);
             }
 

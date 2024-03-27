@@ -180,12 +180,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbb6121597268e74e88a5424ce738503, type: 3}
   m_Name: EdgeDetectionRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   shader: {fileID: 4800000, guid: 7ae524779f528194d8e42797cd794473, type: 3}
   settings:
     InjectionPoint: 600
-    Requirements: 6
+    Requirements: 4
     ProfilerName: EDGE_DETECTION_BLIT
+    Spread: 6
+    K: 0.109
+    Scalar: 1
+    Step: 0.01
 --- !u!114 &4164362798019080763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3277d2e365cb1e849b1e347a953a32ef, type: 3}
   m_Name: Colour Quantization
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   shader: {fileID: 4800000, guid: 816b2a1a0d5eee94890f7b4b3b638a1e, type: 3}
   settings:
     InjectionPoint: 600
@@ -259,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f1845c471b5da7479f4c33fd46d6c32, type: 3}
   m_Name: Colour Correction
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   setting:
     InjectionPoint: 600
     Requirements: 4
@@ -395,7 +399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb152904c60aab646b9a4b1e5085304d, type: 3}
   m_Name: Sharpen
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   shader: {fileID: 4800000, guid: d8603b99b7799ec4a930c8f5912b50dd, type: 3}
   settings:
     InjectionPoint: 600

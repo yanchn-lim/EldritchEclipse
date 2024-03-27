@@ -73,6 +73,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             profileSampler = new(settings.ProfilerName); //assign a name to the profiler to be identified in frame debugger
             renderPassEvent = settings.InjectionPoint;
 
+
             return material != null;
         }
 
@@ -98,8 +99,16 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             mat.SetInt("_GridSize", gridSize);
             mat.SetVector("_TexelSize", new Vector2(1f / tempTextDesc.width, 1f / tempTextDesc.height));
             mat.SetFloat("_K", settings.K);
-            mat.SetFloat("_Scalar", settings.Scalar);
+            mat.SetFloat("_Tau", settings.Tau);
+            mat.SetFloat("_Threshold", settings.Threshold);
+            mat.SetFloat("_Phi", settings.Phi);
+
+            mat.SetKeyword(new(mat.shader,"THRESHOLDING"),settings.THRESHOLDING);
+            mat.SetKeyword(new(mat.shader, "TANH"), settings.TANH);
+            mat.SetKeyword(new(mat.shader, "INVERT"), settings.INVERT);
+
         }
+
         #endregion
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
@@ -108,7 +117,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             tempTextDesc.height = cameraTextureDescriptor.height;
 
             //re allocate the texture and assign a name so it can be identified in frame debugger / memory profiler
-            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc,FilterMode.Point,TextureWrapMode.Clamp, name: "_EDGE_DETECTION");
+            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc,FilterMode.Point,TextureWrapMode.Clamp, name :"_GaussianTex");
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -126,8 +135,11 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             //assigns a identification scope so it can be identified in the frame debugger
             using (new ProfilingScope(cmd, profileSampler))
             {
-                Blitter.BlitCameraTexture(cmd, cameraColourTexture, tempTexture, mat, 0); //copies the camera texture into our temporary texture and applies our shader on it
-                Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture); //copies the texture back into the camera to be displayed
+                //cmd.SetGlobalTexture("_GaussianTex", tempTexture);
+                Blitter.BlitCameraTexture(cmd, cameraColourTexture, tempTexture, mat, 0);
+                Blitter.BlitCameraTexture(cmd, cameraColourTexture,tempTexture ,mat,1);
+                Blitter.BlitCameraTexture(cmd, tempTexture, tempTexture, mat, 2);
+                Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture);
             }
 
             context.ExecuteCommandBuffer(cmd); //execute the shader
@@ -147,5 +159,13 @@ public class EdgeSetting
     //put your settings here
     [Range(0.1f,20)]public float Spread;
     [Range(0, 1f)] public float K;
-    [Range(1, 8f)] public float Scalar;
+    [Range(1, 8f)] public float Tau;
+    [Range(0.01f,1)]public float Threshold;
+    public float Phi;
+
+    //keywords
+    public bool THRESHOLDING;
+    public bool TANH;
+    public bool INVERT;
+
 }

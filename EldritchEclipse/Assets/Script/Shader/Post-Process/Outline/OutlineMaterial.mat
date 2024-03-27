@@ -13,7 +13,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _TYPE_BOTH
+  - _TYPE_COLOREDGE
   m_InvalidKeywords:
   - _TYPE_OTHER
   m_LightmapFlags: 4
@@ -41,7 +41,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Alpha: 0.232
-    - _ColourThreshold: 0.28
+    - _ColourThreshold: 0.44
     - _Fullscreen_AlphaBlendOperation: 0
     - _Fullscreen_BlendMode: 1
     - _Fullscreen_ColorBlendOperation: 0
@@ -51,13 +51,13 @@ Material:
     - _Fullscreen_SrcAlphaBlend: 1
     - _Fullscreen_SrcColorBlend: 5
     - _NoiseScale: 2.59
-    - _NormalThreshold: 0.55
+    - _NormalThreshold: 1.22
     - _OVERLAY: 0
     - _Overlay: 1
     - _QueueControl: 0
     - _QueueOffset: -3
     - _Step: -7.17
-    - _TYPE: 2
+    - _TYPE: 0
     m_Colors:
-    - _OutlineColour: {r: 0, g: 0, b: 0, a: 0.30588236}
+    - _OutlineColour: {r: 1, g: 1, b: 1, a: 0.30588236}
   m_BuildTextureStacks: []

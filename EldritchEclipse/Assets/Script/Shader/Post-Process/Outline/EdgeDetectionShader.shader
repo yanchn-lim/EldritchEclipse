@@ -13,7 +13,7 @@ Shader "Hidden/EDGE DETECTION"
         #pragma shader_feature TANH
         #pragma shader_feature INVERT
 
-        Texture2D _GaussianTex;
+        sampler2D _GaussianTex,_GaussianTex2,_GaussianTex3,_TempTex;
         float2 _TexelSize;
         float _Spread, _K, _Tau, _Threshold,_Phi;
         int _GridSize;
@@ -25,6 +25,10 @@ Shader "Hidden/EDGE DETECTION"
             float sigmaSqu = sig * sig;
             //pow(E, -(x * x) / (2 * sigmaSqu))
             return (1 / sqrt(TWO_PI * sigmaSqu)) * exp(-(x * x) / (2 * sigmaSqu));
+        }
+
+        float luminance(float3 col) {
+            return dot(col, float3(0.299f, 0.587f, 0.114f));
         }
 
         ENDHLSL
@@ -59,8 +63,8 @@ Shader "Hidden/EDGE DETECTION"
                     float2 uv = input.texcoord + float2(_TexelSize.x * x, 0.0f);
                     float3 texCol = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, uv).rgb;
 
-                    col.r += gauss * length(texCol);
-                    col.g += gauss2 * length(texCol);
+                    col.r += gauss * luminance(texCol);
+                    col.g += gauss2 * luminance(texCol);
                 }
 
                 col.r /= gridSum;
@@ -103,13 +107,13 @@ Shader "Hidden/EDGE DETECTION"
                         gridSum2 += gauss2;
                         float2 uv = input.texcoord + float2(0.0f, _TexelSize.y * x);
                         float3 texCol = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, uv).rgb;
-                        col.r += gauss * length(texCol);
-                        col.g += gauss2 * length(texCol);
+                        col.r += gauss * luminance(texCol);
+                        col.g += gauss2 * luminance(texCol);
                     }
 
                     col.r /= gridSum;
                     col.g /= gridSum2;
-                    float2 texCol = SAMPLE_TEXTURE2D_X(_GaussianTex, sampler_PointClamp, input.texcoord).rg;
+                    float2 texCol = tex2D(_GaussianTex, input.texcoord).rg;
                     col = saturate(col + texCol);
                     return float4(col.r,col.g,0,1);
                 }
@@ -131,7 +135,7 @@ Shader "Hidden/EDGE DETECTION"
                 //NAMES FOR DIFFERENT TEXTURES IN UNITY
                 //_CameraNormalsTexture
                 //_CameraDepthTexture
-                float2 G = SAMPLE_TEXTURE2D_X(_GaussianTex, sampler_PointClamp, input.texcoord).rg;
+                float2 G = tex2D(_GaussianTex2, input.texcoord).rg;
                 
                 float4 D = (G.r - _Tau * G.g);
 
@@ -167,10 +171,13 @@ Shader "Hidden/EDGE DETECTION"
                 //NAMES FOR DIFFERENT TEXTURES IN UNITY
                 //_CameraNormalsTexture
                 //_CameraDepthTexture
-                float3 G = SAMPLE_TEXTURE2D_X(_GaussianTex, sampler_PointClamp, input.texcoord).rgb;
+                float3 G = tex2D(_GaussianTex3, input.texcoord).rgb;
                 float3 C = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, input.texcoord).rgb;
-                G *= _Colour;
-                return float4(G + C,1);
+               
+                
+                G *= _Colour / C;
+
+                return float4(G,1);
             }
             ENDHLSL
             

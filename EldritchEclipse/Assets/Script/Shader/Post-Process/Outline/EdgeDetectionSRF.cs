@@ -57,6 +57,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
         EdgeSetting settings;
         Material mat;
         RTHandle tempTexture;
+        RTHandle gaussTexture;
         RenderTextureDescriptor tempTextDesc;
 
         //DECLARE ANY VARIABLES YOU NEED HERE
@@ -93,7 +94,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             {
                 gridSize++;
             }
-
+            mat.SetColor("_Colour", settings.EdgeColour);
             mat.SetFloat("_Spread", settings.Spread);
             mat.SetInt("_GridSize", gridSize);
             mat.SetVector("_TexelSize", new Vector2(tempTexture.rt.texelSize.x, tempTexture.rt.texelSize.y));
@@ -116,7 +117,9 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             tempTextDesc.height = cameraTextureDescriptor.height;
 
             //re allocate the texture and assign a name so it can be identified in frame debugger / memory profiler
-            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc,FilterMode.Point,TextureWrapMode.Clamp, name :"_GaussianTex");
+            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc,FilterMode.Point,TextureWrapMode.Clamp, name :"_TempTex");
+            RenderingUtils.ReAllocateIfNeeded(ref gaussTexture, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_GaussianTex");
+
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -134,13 +137,14 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             //assigns a identification scope so it can be identified in the frame debugger
             using (new ProfilingScope(cmd, profileSampler))
             {
-                //cmd.SetGlobalTexture("_GaussianTex", tempTexture);
+
                 Blitter.BlitCameraTexture(cmd, cameraColourTexture, tempTexture, mat, 0);
+                cmd.SetGlobalTexture("_GaussianTex", tempTexture);
                 Blitter.BlitCameraTexture(cmd, cameraColourTexture,tempTexture ,mat,1);
-                //Blitter.BlitTexture(cmd, tempTexture,Vector4.one, mat, 2);
-                Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture);
-                Blitter.BlitCameraTexture(cmd, cameraColourTexture,tempTexture, mat, 2);
-                Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture);
+                //Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture);
+                //Blitter.BlitCameraTexture(cmd, cameraColourTexture,tempTexture, mat, 2);
+                Blitter.BlitCameraTexture(cmd, tempTexture, tempTexture,mat,2);
+                Blitter.BlitCameraTexture(cmd, cameraColourTexture, cameraColourTexture,mat,3);
             }
 
             context.ExecuteCommandBuffer(cmd); //execute the shader
@@ -158,10 +162,12 @@ public class EdgeSetting
     public string ProfilerName = "EDGE_DETECTION_BLIT";
 
     //put your settings here
+    public Color EdgeColour;
+
     [Range(0.1f,20)]public float Spread;
-    [Range(0, 1f)] public float K;
-    [Range(1, 8f)] public float Tau;
-    [Range(0.01f,1)]public float Threshold;
+    public float K;
+    public float Tau;
+    public float Threshold;
     public float Phi;
 
     //keywords

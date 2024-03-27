@@ -17,7 +17,7 @@ Shader "Hidden/EDGE DETECTION"
         float2 _TexelSize;
         float _Spread, _K, _Tau, _Threshold,_Phi;
         int _GridSize;
-        
+        float4 _Colour;
 
         //generate gaussian value
         float gaussian(float sig,int x)
@@ -65,7 +65,7 @@ Shader "Hidden/EDGE DETECTION"
 
                 col.r /= gridSum;
                 col.g /= gridSum2;
-
+                
                 return float4(col.r,col.g,0,1);
             }
 
@@ -109,48 +109,73 @@ Shader "Hidden/EDGE DETECTION"
 
                     col.r /= gridSum;
                     col.g /= gridSum2;
+                    float2 texCol = SAMPLE_TEXTURE2D_X(_GaussianTex, sampler_PointClamp, input.texcoord).rg;
+                    col = saturate(col + texCol);
                     return float4(col.r,col.g,0,1);
                 }
 
                 ENDHLSL
             }
 
-                Pass
+        Pass
+            {
+                Name "DoG"
+
+                HLSLPROGRAM
+                #pragma vertex Vert
+                #pragma fragment frag
+
+
+                half4 frag(Varyings input) : SV_Target
                 {
-                        Name "DoG"
-
-                        HLSLPROGRAM
-                        #pragma vertex Vert
-                        #pragma fragment frag
-
-
-                        half4 frag(Varyings input) : SV_Target
-                        {
-                        //NAMES FOR DIFFERENT TEXTURES IN UNITY
-                        //_CameraNormalsTexture
-                        //_CameraDepthTexture
-                        float2 G = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, input.texcoord).rg;
-                        
-                        float4 D = (G.r - _Tau * G.g);
+                //NAMES FOR DIFFERENT TEXTURES IN UNITY
+                //_CameraNormalsTexture
+                //_CameraDepthTexture
+                float2 G = SAMPLE_TEXTURE2D_X(_GaussianTex, sampler_PointClamp, input.texcoord).rg;
+                
+                float4 D = (G.r - _Tau * G.g);
 
 #if THRESHOLDING
 
 #if TANH
-                            D = (D >= _Threshold) ? 1 : 1 + tanh(_Phi * (D - _Threshold));
+                 D = (D >= _Threshold) ? 1 : 1 + tanh(_Phi * (D - _Threshold));
 #else
 
-                            D = (D > -_Threshold) ? 1 : 0;
+                 D = (D > -_Threshold) ? 1 : 0;
 #endif
 
 #endif
 
 #if INVERT
-                        D = 1 - D;
+                 D = 1 - D;
 #endif
-                        return D;
-                    }
-                    ENDHLSL
+                 return D;
+                 }
+                 ENDHLSL
             }
+
+        Pass
+        {
+            Name "Overlay"
+
+            HLSLPROGRAM
+            #pragma vertex Vert
+            #pragma fragment frag
+
+            half4 frag(Varyings input) : SV_Target
+            {
+                //NAMES FOR DIFFERENT TEXTURES IN UNITY
+                //_CameraNormalsTexture
+                //_CameraDepthTexture
+                float3 G = SAMPLE_TEXTURE2D_X(_GaussianTex, sampler_PointClamp, input.texcoord).rgb;
+                float3 C = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, input.texcoord).rgb;
+                G *= _Colour;
+                return float4(G + C,1);
+            }
+            ENDHLSL
+            
+        }
+
         
     }
 }

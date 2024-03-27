@@ -186,10 +186,15 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: EDGE_DETECTION_BLIT
+    EdgeColour: {r: 1, g: 0, b: 0.9104991, a: 0}
     Spread: 6
-    K: 0.109
-    Scalar: 1
-    Step: 0.01
+    K: -0.14
+    Tau: 1
+    Threshold: 0.2
+    Phi: 30.21
+    THRESHOLDING: 1
+    TANH: 1
+    INVERT: 0
 --- !u!114 &4164362798019080763
 MonoBehaviour:
   m_ObjectHideFlags: 0

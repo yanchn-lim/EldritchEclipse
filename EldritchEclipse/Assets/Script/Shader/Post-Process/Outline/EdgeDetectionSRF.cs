@@ -149,6 +149,8 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
                 Blitter.BlitCameraTexture(cmd, cameraColourTexture, tempTexture,mat,3);
                 mat.SetTexture("_TempTex", tempTexture);
                 Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture);
+                if (settings.ViewEdges)
+                    Blitter.BlitCameraTexture(cmd, gauss3, cameraColourTexture);
             }
 
             context.ExecuteCommandBuffer(cmd); //execute the shader
@@ -165,18 +167,23 @@ public class EdgeSetting
     public ScriptableRenderPassInput Requirements; //this is the buffer the pass requires
     public string ProfilerName = "EDGE_DETECTION_BLIT";
 
+    [Header("EDGE VALUES")]
     //put your settings here
     public Color EdgeColour;
 
     [Range(0.1f,20)]public float Spread;
-    public float K;
+    [Range(-1f,1f)]public float K;
     public float Tau;
-    public float Threshold;
+    [Range(0,1)]public float Threshold;
     public float Phi;
 
+    [Header("SHADER KEYWORDS")]
     //keywords
     public bool THRESHOLDING;
     public bool TANH;
     public bool INVERT;
+
+    [Header("DEBUG")]
+    public bool ViewEdges;
 
 }

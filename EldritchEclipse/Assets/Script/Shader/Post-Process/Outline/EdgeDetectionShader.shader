@@ -137,7 +137,7 @@ Shader "Hidden/EDGE DETECTION"
                 //_CameraDepthTexture
                 float2 G = tex2D(_GaussianTex2, input.texcoord).rg;
                 
-                float4 D = (G.r - _Tau * G.g);
+                float4 D = G.r - _Tau * G.g;
 
 #if THRESHOLDING
 
@@ -153,7 +153,7 @@ Shader "Hidden/EDGE DETECTION"
 #if INVERT
                  D = 1 - D;
 #endif
-                 return D;
+                 return saturate(D);
                  }
                  ENDHLSL
             }
@@ -175,8 +175,8 @@ Shader "Hidden/EDGE DETECTION"
                 float3 C = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, input.texcoord).rgb;
                
                 
-                G *= _Colour / C;
-
+                G = G * _Colour + C;
+                G = saturate(G);
                 return float4(G,1);
             }
             ENDHLSL

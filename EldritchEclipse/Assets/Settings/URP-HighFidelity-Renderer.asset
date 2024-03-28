@@ -125,7 +125,8 @@ MonoBehaviour:
   - {fileID: 708054489449137121}
   - {fileID: 6448896506719735067}
   - {fileID: -2037815180188544312}
-  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726fe1833c85ce83d3091b8d498434157f59c892f6f2e339b8e3
+  - {fileID: 7464672691116683309}
+  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726fe1833c85ce83d3091b8d498434157f59c892f6f2e339b8e32db0915643d89767
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -201,6 +202,7 @@ MonoBehaviour:
     StdDevScale: 0.1
     Sharpness: 93.3
     SoftThreshold: 0.55
+    AntiAlias: 0
     CALCDIFFBEFORECONVOLUTION: 0
     INVERT: 0
     BlendType: 0
@@ -348,6 +350,49 @@ MonoBehaviour:
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
+--- !u!114 &7464672691116683309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbb6121597268e74e88a5424ce738503, type: 3}
+  m_Name: XDoGRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  shader: {fileID: 4800000, guid: 7ae524779f528194d8e42797cd794473, type: 3}
+  settings:
+    InjectionPoint: 600
+    Requirements: 4
+    ProfilerName: XDoG_BLIT
+    StructureTensorDeviation: 1.68
+    DifferenceOfGaussianDeviation: 0.91
+    LineIntegralDeviation: 0
+    EdgeSmoothDeviation: 10
+    LineConvolutionStepSize: {x: 100, y: 100}
+    EdgeSmoothStepSize: {x: 1000, y: 1000}
+    WhitePoint_1: 46.2
+    WhitePoint_2: 100
+    WhitePoint_3: 100
+    WhitePoint_4: 100
+    QuantizerSteps: 4
+    THRESHOLDING: 1
+    StdDevScale: 0.1
+    Sharpness: 26.7
+    SoftThreshold: 0.98
+    AntiAlias: 0
+    CALCDIFFBEFORECONVOLUTION: 0
+    INVERT: 0
+    BlendType: 2
+    DoGStrength: 1.41
+    BlendStrength: 1.54
+    MinColor: {r: 0, g: 0, b: 0, a: 0}
+    MaxColor: {r: 1, g: 1, b: 1, a: 0}
+    ViewEdges: 0
+    ConvertColor: 1
 --- !u!114 &7529854888884107792
 MonoBehaviour:
   m_ObjectHideFlags: 0

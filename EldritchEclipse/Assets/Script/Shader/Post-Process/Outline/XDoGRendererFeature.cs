@@ -5,9 +5,9 @@ using Unity.Mathematics;
 
 //THIS IS A TEMPLATE MADE FROM READING UNITY DOCS AND RENDERER FEATURES SCRIPTS
 //FOR USE IN URP ONLY!
-public class EdgeDetectionRendererFeature : ScriptableRendererFeature
+public class XDoGRendererFeature : ScriptableRendererFeature
 {
-    EdgeDetectionPass pass;
+    XDoGPass pass;
     Material mat;
     
     //exposed to be tweaked in the renderer settings
@@ -51,7 +51,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
     }
     #endregion
 
-    class EdgeDetectionPass : ScriptableRenderPass
+    class XDoGPass : ScriptableRenderPass
     {
         ProfilingSampler profileSampler;
         EdgeSetting settings;
@@ -239,7 +239,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
 
                 if (settings.ConvertColor)
                 {
-                    Blitter.BlitCameraTexture(cmd, cameraColourTexture, color, mat, 6);
+                    Blitter.BlitCameraTexture(cmd, cameraColourTexture, color, mat, 7);
                 }
                 else
                 {
@@ -254,9 +254,18 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
                 Blitter.BlitCameraTexture(cmd,color,gauss1,mat,3);
                 Blitter.BlitCameraTexture(cmd, gauss1, gauss2, mat, 4);
 
-                Blitter.BlitCameraTexture(cmd, gauss2, DoG);
+                if (settings.AntiAlias)
+                {
+                    Blitter.BlitCameraTexture(cmd,gauss2,DoG,mat,5);
+                }
+                else
+                {
+                    Blitter.BlitCameraTexture(cmd, gauss2, DoG);
+                }
+
                 mat.SetTexture("_DoGTex", DoG);
-                Blitter.BlitCameraTexture(cmd, color, tempTexture,mat,5);
+
+                Blitter.BlitCameraTexture(cmd, color, tempTexture,mat,6);
                 Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture);
 
                 if(settings.ViewEdges)
@@ -275,7 +284,7 @@ public class EdgeSetting
 {
     public RenderPassEvent InjectionPoint; //this is where the shader will be injected for post-processing
     public ScriptableRenderPassInput Requirements; //this is the buffer the pass requires
-    public string ProfilerName = "EDGE_DETECTION_BLIT";
+    public string ProfilerName = "XDoG_BLIT";
 
     //sigmas
     [Header("DEVIATIONS")]
@@ -283,12 +292,11 @@ public class EdgeSetting
     [Range(0,10)]public float DifferenceOfGaussianDeviation;
     [Range(0,20)]public float LineIntegralDeviation;
     [Range(0,10)]public float EdgeSmoothDeviation;
-    [HideInInspector]public Vector2 LineConvolutionStepSize = Vector2.one;
-    [HideInInspector]public Vector2 EdgeSmoothStepSize = Vector2.one;
+    public Vector2 LineConvolutionStepSize = Vector2.one;
+    public Vector2 EdgeSmoothStepSize = Vector2.one;
 
     //thresholds
     [Header("THRESHOLD")]
-
     [Range(0, 100)]public float WhitePoint_1;
     [Range(0, 100)]public float WhitePoint_2, WhitePoint_3, WhitePoint_4;
     [Range(1,16)]public int QuantizerSteps;
@@ -298,6 +306,7 @@ public class EdgeSetting
     [Range(0.1f,5f)]public float StdDevScale;
     [Range(0,100)]public float Sharpness;
     [Range(0,10)]public float SoftThreshold;
+    public bool AntiAlias;
 
     [Header("SHADER KEYWORDS")]
     public bool CALCDIFFBEFORECONVOLUTION;
@@ -305,8 +314,8 @@ public class EdgeSetting
 
     [Header("BLEND")]
     public BlendMode BlendType;
-    public float DoGStrength;
-    public float BlendStrength;
+    [Range(0,5)]public float DoGStrength;
+    [Range(0,2)]public float BlendStrength;
     public Color MinColor;
     public Color MaxColor;
 

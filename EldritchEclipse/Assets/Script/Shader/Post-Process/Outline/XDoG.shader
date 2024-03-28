@@ -47,8 +47,8 @@ Shader "Hidden/XDoG"
             return dot(col, float3(0.299f, 0.587f, 0.114f));
         }
 
-        float3 GetBlitTexCol(float2 uv){
-            return SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, uv).rgb;
+        float4 GetBlitTexCol(float2 uv){
+            return SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, uv);
         }
 
         //color conversion
@@ -98,23 +98,23 @@ Shader "Hidden/XDoG"
             
                 //apply sobel operator
                 float3 Sx = float3(
-                    1.0f * GetBlitTexCol(input.texcoord + float2(-d.x, -d.y)) +
-                    2.0f * GetBlitTexCol(input.texcoord + float2(-d.x, 0)) +
-                    1.0f * GetBlitTexCol(input.texcoord + float2(-d.x, d.y)) +
+                    1.0f * GetBlitTexCol(input.texcoord + float2(-d.x, -d.y)).rgb +
+                    2.0f * GetBlitTexCol(input.texcoord + float2(-d.x, 0)).rgb  +
+                    1.0f * GetBlitTexCol(input.texcoord + float2(-d.x, d.y)).rgb  +
 
-                    -1.0f * GetBlitTexCol(input.texcoord + float2(d.x, -d.y)) +
-                    -2.0f * GetBlitTexCol(input.texcoord + float2(d.x, 0)) +
-                    -1.0f * GetBlitTexCol(input.texcoord + float2(d.x, d.y))
+                    -1.0f * GetBlitTexCol(input.texcoord + float2(d.x, -d.y)).rgb  +
+                    -2.0f * GetBlitTexCol(input.texcoord + float2(d.x, 0)).rgb  +
+                    -1.0f * GetBlitTexCol(input.texcoord + float2(d.x, d.y)).rgb 
                 )/4.0f;
 
                 float Sy = float3(
-                    1.0f * GetBlitTexCol(input.texcoord + float2(-d.x, -d.y)) +
-                    2.0f * GetBlitTexCol(input.texcoord + float2(0, -d.y)) +
-                    1.0f * GetBlitTexCol(input.texcoord + float2(d.x, -d.y)) +
+                    1.0f * GetBlitTexCol(input.texcoord + float2(-d.x, -d.y)).rgb  +
+                    2.0f * GetBlitTexCol(input.texcoord + float2(0, -d.y)).rgb  +
+                    1.0f * GetBlitTexCol(input.texcoord + float2(d.x, -d.y)).rgb  +
 
-                    -1.0f * GetBlitTexCol(input.texcoord + float2(-d.x, d.y)) +
-                    -2.0f * GetBlitTexCol(input.texcoord + float2(0, d.y)) +
-                    -1.0f * GetBlitTexCol(input.texcoord + float2(d.x, d.y))
+                    -1.0f * GetBlitTexCol(input.texcoord + float2(-d.x, d.y)).rgb  +
+                    -2.0f * GetBlitTexCol(input.texcoord + float2(0, d.y)).rgb  +
+                    -1.0f * GetBlitTexCol(input.texcoord + float2(d.x, d.y)).rgb 
                 )/4.0f;
 
                 return float4(dot(Sx,Sx),dot(Sy,Sy),dot(Sx,Sy),1);
@@ -410,6 +410,58 @@ Shader "Hidden/XDoG"
             ENDHLSL
         }
 
+        //anti-alias
+        Pass{
+            Name "Anti-Alias"
+            
+            HLSLPROGRAM
+
+            half4 frag(Varyings input) : SV_Target
+            {
+                float kernelSize = _SigmaA * 2;
+
+                float4 G = GetBlitTexCol(input.texcoord);
+                float w = 1.0f;
+
+                float2 v = _TFM.Sample(point_clamp_sampler, input.texcoord).xy * _TexelSize;
+
+                float2 st0 = input.texcoord;
+                float2 v0 = v;
+
+                [loop]
+                for (int d = 1; d < kernelSize; ++d) {
+                    st0 += v0 * _IntegralConvolutionStepSizes.z;
+                    float4 c = GetBlitTexCol(st0);
+                    float gauss1 = gaussian(_SigmaA, d);
+
+                    G += gauss1 * c;
+                    w += gauss1;
+
+                    v0 = _TFM.Sample(point_clamp_sampler, st0).xy * _TexelSize;
+                }
+
+                float2 st1 = input.texcoord;
+                float2 v1 = v;
+
+                [loop]
+                for (int d = 1; d < kernelSize; ++d) {
+                    st1 -= v1 * _IntegralConvolutionStepSizes.w;
+                    float4 c = GetBlitTexCol(st1);
+                    float gauss1 = gaussian(_SigmaA, d);
+
+                    G += gauss1 * c;
+                    w += gauss1;
+
+                    v1 = _TFM.Sample(point_clamp_sampler, st1).xy * _TexelSize;
+                }
+
+                return G / w;
+            }
+            ENDHLSL
+            
+        }
+        
+        //blend
         Pass{
             Name "Blend"
 
@@ -439,7 +491,8 @@ Shader "Hidden/XDoG"
             }
             ENDHLSL
         }
-
+        
+        //color convert
         Pass{
             Name "Color Conversion"
 

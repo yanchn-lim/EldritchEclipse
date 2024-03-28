@@ -123,9 +123,9 @@ MonoBehaviour:
   - {fileID: 4164362798019080763}
   - {fileID: 8030492621656016145}
   - {fileID: 6448896506719735067}
-  - {fileID: 708054489449137121}
   - {fileID: -2037815180188544312}
-  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59e1833c85ce83d309c892f6f2e339b8e3
+  - {fileID: 708054489449137121}
+  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59c892f6f2e339b8e3e1833c85ce83d309
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -186,15 +186,10 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: EDGE_DETECTION_BLIT
-    EdgeColour: {r: 0.047169805, g: 0.047169805, b: 0.047169805, a: 0}
-    Spread: 11.5
-    K: 1.71
-    Tau: -0.04
-    Threshold: 0.89
-    Phi: 30.46
-    THRESHOLDING: 1
-    TANH: 1
-    INVERT: 1
+    SigmaC: 4.07
+    SigmaE: 0
+    SigmaA: 0
+    SigmaM: 0
 --- !u!114 &4164362798019080763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3277d2e365cb1e849b1e347a953a32ef, type: 3}
   m_Name: Colour Quantization
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   shader: {fileID: 4800000, guid: 816b2a1a0d5eee94890f7b4b3b638a1e, type: 3}
   settings:
     InjectionPoint: 600
@@ -268,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f1845c471b5da7479f4c33fd46d6c32, type: 3}
   m_Name: Colour Correction
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   setting:
     InjectionPoint: 600
     Requirements: 4
@@ -404,7 +399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb152904c60aab646b9a4b1e5085304d, type: 3}
   m_Name: Sharpen
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   shader: {fileID: 4800000, guid: d8603b99b7799ec4a930c8f5912b50dd, type: 3}
   settings:
     InjectionPoint: 600

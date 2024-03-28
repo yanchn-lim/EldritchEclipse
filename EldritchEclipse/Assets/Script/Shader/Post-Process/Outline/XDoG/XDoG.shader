@@ -146,35 +146,6 @@ Shader "Hidden/XDoG"
                 }
 
                 return col / kernelSum;
-
-
-                /*
-                //old
-                float2 col = 0;
-                float gridSum = 0;
-                float gridSum2 = 0;
-                int upper = ((_GridSize - 1) / 2);
-                int lower = -upper;
-
-                for (int x = lower; x <= upper; x++)
-                {
-                    float gauss = gaussian(_Sigma,x);
-                    float gauss2 = gaussian(_Sigma * _K, x);
-
-                    gridSum += gauss;
-                    gridSum2 += gauss2;
-                    float2 uv = input.texcoord + float2(_TexelSize.x * x, 0.0f);
-                    float3 texCol = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, uv).rgb;
-
-                    col.r += gauss * luminance(texCol);
-                    col.g += gauss2 * luminance(texCol);
-                }
-
-                col.r /= gridSum;
-                col.g /= gridSum2;
-                
-                return float4(col.r,col.g,0,1);
-                */
             }
 
             ENDHLSL
@@ -202,32 +173,6 @@ Shader "Hidden/XDoG"
                 }
 
                 return col / kernelSum;
-
-                /*
-                float2 col = 0;
-                float gridSum = 0;
-                float gridSum2 = 0;
-                int upper = ((_GridSize - 1) / 2);
-                int lower = -upper;
-                
-                for (int x = lower; x <= upper; x++)
-                {
-                    float gauss = gaussian(_Sigma,x);
-                    float gauss2 = gaussian(_Sigma * _K, x);
-                    gridSum += gauss;
-                    gridSum2 += gauss2;
-                    float2 uv = input.texcoord + float2(0.0f, _TexelSize.y * x);
-                    float3 texCol = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, uv).rgb;
-                    col.r += gauss * luminance(texCol);
-                    col.g += gauss2 * luminance(texCol);
-                }
-                
-                col.r /= gridSum;
-                col.g /= gridSum2;
-                float2 texCol = tex2D(_GaussianTex, input.texcoord).rg;
-                col = saturate(col + texCol);
-                return float4(col.r,col.g,0,1);
-                */
             }
             ENDHLSL
         }
@@ -270,28 +215,6 @@ Shader "Hidden/XDoG"
                 col /= kernelSum;
 
                 return float4(col,(1 + _Tau) * (col.r * 100.0f) - _Tau * (col.g * 100.0f),1.0f);
-                //old
-                /*
-                float2 G = tex2D(_GaussianTex2, input.texcoord).rg;
-
-                float4 D = (1 + _Tau) * G.r - _Tau * G.g;
-
-#if THRESHOLDING
-
-#if TANH
-                D = (D >= _Threshold) ? 1 : 1 + tanh(_Phi * (D - _Threshold));
-#else
-
-                D = (D > -_Threshold) ? 1 : 0;
-#endif
-
-#endif
-
-#if INVERT
-                D = 1 - D;
-#endif
-                return saturate(D);
-                */
              }
              ENDHLSL
         }

@@ -362,7 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbb6121597268e74e88a5424ce738503, type: 3}
   m_Name: XDoGRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   shader: {fileID: 4800000, guid: 7ae524779f528194d8e42797cd794473, type: 3}
   settings:
     InjectionPoint: 600

@@ -12,7 +12,7 @@ public class XDoGRendererFeature : ScriptableRendererFeature
     
     //exposed to be tweaked in the renderer settings
     [SerializeField] Shader shader;
-    [SerializeField] EdgeSetting settings;
+    [SerializeField] XDoGSetting settings;
 
     #region HELPER METHODS
     private bool GetMaterials()
@@ -54,7 +54,7 @@ public class XDoGRendererFeature : ScriptableRendererFeature
     class XDoGPass : ScriptableRenderPass
     {
         ProfilingSampler profileSampler;
-        EdgeSetting settings;
+        XDoGSetting settings;
         Material mat;
         RTHandle tempTexture, gauss1,gauss2, color;
         RTHandle structTensor;
@@ -65,7 +65,7 @@ public class XDoGRendererFeature : ScriptableRendererFeature
         //DECLARE ANY VARIABLES YOU NEED HERE
 
         #region HELPER METHODS
-        public bool SetUp(ref Material material, ref EdgeSetting setting) //setup the render pass with all the data
+        public bool SetUp(ref Material material, ref XDoGSetting setting) //setup the render pass with all the data
         {
             mat = material;
             settings = setting;
@@ -135,26 +135,26 @@ public class XDoGRendererFeature : ScriptableRendererFeature
         {
             switch (settings.THRESHOLDING)
             {
-                case EdgeSetting.ThresholdType.TANH:
+                case XDoGSetting.ThresholdType.TANH:
                     mat.EnableKeyword("THRESHOLDING_1");
                     mat.DisableKeyword("THRESHOLDING_2");
                     mat.DisableKeyword("THRESHOLDING_3");
                     mat.DisableKeyword("THRESHOLDING_DEFAULT");
 
                     break;
-                case EdgeSetting.ThresholdType.QUANTIZATION:
+                case XDoGSetting.ThresholdType.QUANTIZATION:
                     mat.EnableKeyword("THRESHOLDING_2");
                     mat.DisableKeyword("THRESHOLDING_1");
                     mat.DisableKeyword("THRESHOLDING_3");
                     mat.DisableKeyword("THRESHOLDING_DEFAULT");
                     break;
-                case EdgeSetting.ThresholdType.SMOOTHQUANTIZATION:
+                case XDoGSetting.ThresholdType.SMOOTHQUANTIZATION:
                     mat.EnableKeyword("THRESHOLDING_3");
                     mat.DisableKeyword("THRESHOLDING_2");
                     mat.DisableKeyword("THRESHOLDING_1");
                     mat.DisableKeyword("THRESHOLDING_DEFAULT");
                     break;
-                case EdgeSetting.ThresholdType.NO_THRESHOLD:
+                case XDoGSetting.ThresholdType.NO_THRESHOLD:
                     mat.EnableKeyword("THRESHOLDING_DEFAULT");
                     mat.DisableKeyword("THRESHOLDING_2");
                     mat.DisableKeyword("THRESHOLDING_3");
@@ -170,17 +170,17 @@ public class XDoGRendererFeature : ScriptableRendererFeature
         {
             switch (settings.BlendType)
             {
-                case EdgeSetting.BlendMode.NO_BLEND:
+                case XDoGSetting.BlendMode.NO_BLEND:
                     mat.EnableKeyword("BLEND_NONE");
                     mat.DisableKeyword("BLEND_INTERPOLATE");
                     mat.DisableKeyword("BLEND_TWO_POINT_INTERPOLATE");
                     break;
-                case EdgeSetting.BlendMode.INTERPOLATE:
+                case XDoGSetting.BlendMode.INTERPOLATE:
                     mat.DisableKeyword("BLEND_NONE");
                     mat.EnableKeyword("BLEND_INTERPOLATE");
                     mat.DisableKeyword("BLEND_TWO_POINT_INTERPOLATE");
                     break;
-                case EdgeSetting.BlendMode.TWO_POINT_INTERPOLATE:
+                case XDoGSetting.BlendMode.TWO_POINT_INTERPOLATE:
                     mat.DisableKeyword("BLEND_NONE");
                     mat.DisableKeyword("BLEND_INTERPOLATE");
                     mat.EnableKeyword("BLEND_TWO_POINT_INTERPOLATE");
@@ -280,7 +280,7 @@ public class XDoGRendererFeature : ScriptableRendererFeature
 }
 
 [System.Serializable]
-public class EdgeSetting
+public class XDoGSetting
 {
     public RenderPassEvent InjectionPoint; //this is where the shader will be injected for post-processing
     public ScriptableRenderPassInput Requirements; //this is the buffer the pass requires

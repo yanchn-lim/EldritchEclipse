@@ -59,6 +59,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
         RTHandle tempTexture, gauss1,gauss2,gauss3;
         RTHandle structTensor;
         RTHandle eigen1, eigen2;
+        RTHandle DoG;
         RenderTextureDescriptor tempTextDesc;
 
         //DECLARE ANY VARIABLES YOU NEED HERE
@@ -91,26 +92,73 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             //E.G.
             mat.SetVector("_TexelSize", new Vector2(tempTexture.rt.texelSize.x, tempTexture.rt.texelSize.y));
 
-            mat.SetFloat("_SigmaC", settings.SigmaC);
-            mat.SetFloat("_SigmaE", settings.SigmaE);
-            mat.SetFloat("_SigmaA", settings.SigmaA);
-            mat.SetFloat("_SigmaM", settings.SigmaM);
+            mat.SetFloat("_K", settings.K);
+            mat.SetFloat("_Tau", settings.Tau);
+            mat.SetFloat("_Phi", settings.Phi);
+
+            mat.SetFloat("_SigmaC", settings.StructureTensorDeviation);
+            mat.SetFloat("_SigmaE", settings.DifferenceOfGaussianDeviation);
+            mat.SetFloat("_SigmaA", settings.EdgeSmoothDeviation);
+            mat.SetFloat("_SigmaM", settings.LineIntegralDeviation);
+
+            mat.SetFloat("_Threshold",settings.WhitePoint_1);
+            mat.SetFloat("_Threshold2", settings.WhitePoint_2);
+            mat.SetFloat("_Threshold3", settings.WhitePoint_3);
+            mat.SetFloat("_Threshold4", settings.WhitePoint_4);
+            mat.SetFloat("_Thresholds", settings.QuantizerSteps);
+
+            Vector4 stepSize = new(settings.LineConvolutionStepSize.x, settings.LineConvolutionStepSize.y, settings.EdgeSmoothStepSize.x, settings.EdgeSmoothStepSize.y);
+            mat.SetVector("_IntegralConvolutionStepSizes",stepSize);
+
+            SetThresholdType();
+            mat.SetKeyword(new(mat.shader, "INVERT"), settings.INVERT);
 
             /*
             mat.SetColor("_Colour", settings.EdgeColour);
             mat.SetFloat("_Sigma", settings.Sigma);
             mat.SetInt("_GridSize", settings.KernelSize);
-            mat.SetFloat("_K", settings.K);
-            mat.SetFloat("_Tau", settings.Tau);
             mat.SetFloat("_Threshold", settings.Threshold);
-            mat.SetFloat("_Phi", settings.Phi);
 
             mat.SetKeyword(new(mat.shader,"THRESHOLDING"),settings.THRESHOLDING);
             mat.SetKeyword(new(mat.shader, "TANH"), settings.TANH);
-            mat.SetKeyword(new(mat.shader, "INVERT"), settings.INVERT);
             */
         }
 
+        void SetThresholdType()
+        {
+            Shader s = mat.shader;
+            switch (settings.THRESHOLDING)
+            {
+                case EdgeSetting.ThresholdType.THRESHOLD1:
+                    mat.EnableKeyword("THRESHOLDING_1");
+                    mat.DisableKeyword("THRESHOLDING_2");
+                    mat.DisableKeyword("THRESHOLDING_3");
+                    mat.DisableKeyword("THRESHOLDING_DEFAULT");
+
+                    break;
+                case EdgeSetting.ThresholdType.THRESHOLD2:
+                    mat.EnableKeyword("THRESHOLDING_2");
+                    mat.DisableKeyword("THRESHOLDING_1");
+                    mat.DisableKeyword("THRESHOLDING_3");
+                    mat.DisableKeyword("THRESHOLDING_DEFAULT");
+                    break;
+                case EdgeSetting.ThresholdType.THRESHOLD3:
+                    mat.EnableKeyword("THRESHOLDING_3");
+                    mat.DisableKeyword("THRESHOLDING_2");
+                    mat.DisableKeyword("THRESHOLDING_1");
+                    mat.DisableKeyword("THRESHOLDING_DEFAULT");
+                    break;
+                case EdgeSetting.ThresholdType.DEFAULT:
+                    mat.EnableKeyword("THRESHOLDING_DEFAULT");
+                    mat.DisableKeyword("THRESHOLDING_2");
+                    mat.DisableKeyword("THRESHOLDING_3");
+                    mat.DisableKeyword("THRESHOLDING_1");
+                    break;
+                default:
+                    Debug.Log("COUDLNT GET A THRESHOLD TYPE");
+                    break;
+            }
+        }
         #endregion
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
@@ -128,8 +176,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             RenderingUtils.ReAllocateIfNeeded(ref eigen1, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_EigenTex1");
             RenderingUtils.ReAllocateIfNeeded(ref eigen2, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_EigenTex2");
 
-
-
+            RenderingUtils.ReAllocateIfNeeded(ref DoG, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_DOG");
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -162,8 +209,12 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
                 Blitter.BlitCameraTexture(cmd, cameraColourTexture, structTensor, mat, 0);
                 Blitter.BlitCameraTexture(cmd, structTensor, eigen1, mat, 1);
                 Blitter.BlitCameraTexture(cmd, eigen1, eigen2, mat, 2);
-                mat.SetTexture("_EigenTex", eigen2);
-                Blitter.BlitCameraTexture(cmd, eigen2, cameraColourTexture);
+                mat.SetTexture("_TFM", eigen2);
+                Blitter.BlitCameraTexture(cmd,cameraColourTexture,gauss1,mat,3);
+                Blitter.BlitCameraTexture(cmd, gauss1, gauss2, mat, 4);
+
+                
+                Blitter.BlitCameraTexture(cmd, gauss2, cameraColourTexture);
 
             }
 
@@ -181,24 +232,29 @@ public class EdgeSetting
     public ScriptableRenderPassInput Requirements; //this is the buffer the pass requires
     public string ProfilerName = "EDGE_DETECTION_BLIT";
 
-    public float SigmaC, SigmaE, SigmaA, SigmaM;
+    //sigmas
+    [Range(0,5)]public float StructureTensorDeviation;
+    [Range(0,10)]public float DifferenceOfGaussianDeviation;
+    [Range(0,20)]public float LineIntegralDeviation;
+    [Range(0,10)]public float EdgeSmoothDeviation;
+    [HideInInspector]public Vector2 LineConvolutionStepSize = Vector2.one;
+    [HideInInspector]public Vector2 EdgeSmoothStepSize = Vector2.one;
+
+    //thresholds
+    [Range(0,100)]public float WhitePoint_1, WhitePoint_2, WhitePoint_3, WhitePoint_4;
+    [Range(1,16)]public int QuantizerSteps;
     public ThresholdType THRESHOLDING;
 
     //[Header("EDGE VALUES")]
-    ////put your settings here
-    //public Color EdgeColour;
-    //[Range(0,20)]public int KernelSize;
-    //[Range(0.1f,20)]public float Sigma;
-    //[Range(-1f,1f)]public float K;
-    //public float Tau;
-    //[Range(0,1)]public float Threshold;
-    //public float Phi;
+    [Range(0.1f,5f)]public float K;
+    [Range(0,100)]public float Tau;
+    [Range(0,10)]public float Phi;
 
     //[Header("SHADER KEYWORDS")]
     ////keywords
     //public bool THRESHOLDING;
     //public bool TANH;
-    //public bool INVERT;
+    public bool INVERT;
 
     //[Header("DEBUG")]
     //public bool ViewEdges;

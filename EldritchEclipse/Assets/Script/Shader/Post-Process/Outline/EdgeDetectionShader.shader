@@ -9,7 +9,10 @@ Shader "Hidden/EDGE DETECTION"
         HLSLINCLUDE
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
-        #pragma shader_feature THRESHOLDING
+        #pragma shader_feature THRESHOLDING_1
+        #pragma shader_feature THRESHOLDING_2
+        #pragma shader_feature THRESHOLDING_3
+        #pragma shader_feature THRESHOLDING_DEFAULT
         #pragma shader_feature TANH
         #pragma shader_feature INVERT
         #pragma vertex Vert
@@ -17,17 +20,16 @@ Shader "Hidden/EDGE DETECTION"
 
         Texture2D _TFM;
         sampler2D _DoGTex;
-        sampler2D _EigenTex;
         SamplerState point_clamp_sampler;
 
+        float _Threshold,_Threshold2,_Threshold3,_Threshold4,_Thresholds;
         float _SigmaC, _SigmaE, _SigmaA,_SigmaM;
+        float _K, _Tau,_Phi;
         float2 _TexelSize;
         float4 _IntegralConvolutionStepSizes;
 
-
         sampler2D _GaussianTex,_GaussianTex2,_GaussianTex3,_TempTex;
 
-        float _Sigma, _K, _Tau, _Threshold,_Phi;
         int _GridSize;
         float4 _Colour;
 

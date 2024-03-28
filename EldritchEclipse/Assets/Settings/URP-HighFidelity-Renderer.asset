@@ -123,9 +123,9 @@ MonoBehaviour:
   - {fileID: 4164362798019080763}
   - {fileID: 8030492621656016145}
   - {fileID: 6448896506719735067}
-  - {fileID: -2037815180188544312}
   - {fileID: 708054489449137121}
-  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59c892f6f2e339b8e3e1833c85ce83d309
+  - {fileID: -2037815180188544312}
+  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59e1833c85ce83d309c892f6f2e339b8e3
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -186,10 +186,22 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: EDGE_DETECTION_BLIT
-    SigmaC: 4.07
-    SigmaE: 0
-    SigmaA: 0
-    SigmaM: 0
+    StructureTensorDeviation: 0.68
+    DifferenceOfGaussianDeviation: 1.06
+    LineIntegralDeviation: 1.5
+    EdgeSmoothDeviation: 0.98
+    LineConvolutionStepSize: {x: 1, y: 1}
+    EdgeSmoothStepSize: {x: 1, y: 1}
+    WhitePoint_1: 12.2
+    WhitePoint_2: 4.4
+    WhitePoint_3: 8.6
+    WhitePoint_4: 15.2
+    QuantizerSteps: 1
+    THRESHOLDING: 1
+    K: 0.98
+    Tau: 2.47
+    Phi: 0.59
+    INVERT: 1
 --- !u!114 &4164362798019080763
 MonoBehaviour:
   m_ObjectHideFlags: 0

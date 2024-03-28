@@ -122,10 +122,10 @@ MonoBehaviour:
   - {fileID: 6994160981203637685}
   - {fileID: 4164362798019080763}
   - {fileID: 8030492621656016145}
-  - {fileID: 6448896506719735067}
   - {fileID: 708054489449137121}
+  - {fileID: 6448896506719735067}
   - {fileID: -2037815180188544312}
-  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59e1833c85ce83d309c892f6f2e339b8e3
+  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726fe1833c85ce83d3091b8d498434157f59c892f6f2e339b8e3
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -180,28 +180,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbb6121597268e74e88a5424ce738503, type: 3}
   m_Name: EdgeDetectionRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   shader: {fileID: 4800000, guid: 7ae524779f528194d8e42797cd794473, type: 3}
   settings:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: EDGE_DETECTION_BLIT
-    StructureTensorDeviation: 0.68
-    DifferenceOfGaussianDeviation: 1.06
-    LineIntegralDeviation: 1.5
-    EdgeSmoothDeviation: 0.98
+    StructureTensorDeviation: 0.04
+    DifferenceOfGaussianDeviation: 3.48
+    LineIntegralDeviation: 9.5
+    EdgeSmoothDeviation: 2.2
     LineConvolutionStepSize: {x: 1, y: 1}
     EdgeSmoothStepSize: {x: 1, y: 1}
-    WhitePoint_1: 12.2
-    WhitePoint_2: 4.4
-    WhitePoint_3: 8.6
-    WhitePoint_4: 15.2
-    QuantizerSteps: 1
+    WhitePoint_1: 63.5
+    WhitePoint_2: 53.8
+    WhitePoint_3: 70.7
+    WhitePoint_4: 100
+    QuantizerSteps: 4
     THRESHOLDING: 1
-    K: 0.98
-    Tau: 2.47
-    Phi: 0.59
-    INVERT: 1
+    StdDevScale: 0.1
+    Sharpness: 93.3
+    SoftThreshold: 0.55
+    CALCDIFFBEFORECONVOLUTION: 0
+    INVERT: 0
+    BlendType: 0
+    DoGStrength: 1
+    BlendStrength: 1
+    MinColor: {r: 0.8584906, g: 0, b: 0.05283039, a: 0}
+    MaxColor: {r: 0, g: 0.9811895, b: 1, a: 0}
+    ViewEdges: 0
+    ConvertColor: 0
 --- !u!114 &4164362798019080763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,10 +288,10 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: COLOUR_CORRECTION_BLIT
-    Contrast: 1.47
-    Brightness: 0.04
-    Saturation: 0.83
-    Gamma: 1.22
+    Contrast: 1
+    Brightness: 0.11
+    Saturation: 1.14
+    Gamma: 1.31
   shader: {fileID: 4800000, guid: 49efc3b20dce2e0489b1aa912780c5e9, type: 3}
 --- !u!114 &6994160981203637685
 MonoBehaviour:

@@ -1,4 +1,4 @@
-Shader "Hidden/EDGE DETECTION"
+Shader "Hidden/XDoG"
 {
     SubShader
     {
@@ -9,12 +9,16 @@ Shader "Hidden/EDGE DETECTION"
         HLSLINCLUDE
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+        #pragma shader_feature CALCDIFFBEFORECONVOLUTION
         #pragma shader_feature THRESHOLDING_1
         #pragma shader_feature THRESHOLDING_2
         #pragma shader_feature THRESHOLDING_3
         #pragma shader_feature THRESHOLDING_DEFAULT
-        #pragma shader_feature TANH
+        #pragma shader_feature BLEND_NONE
+        #pragma shader_feature BLEND_INTERPOLATE
+        #pragma shader_feature BLEND_TWO_POINT_INTERPOLATE
         #pragma shader_feature INVERT
+
         #pragma vertex Vert
         #pragma fragment frag
 
@@ -25,13 +29,12 @@ Shader "Hidden/EDGE DETECTION"
         float _Threshold,_Threshold2,_Threshold3,_Threshold4,_Thresholds;
         float _SigmaC, _SigmaE, _SigmaA,_SigmaM;
         float _K, _Tau,_Phi;
+        float _DoGStrength,_BlendStrength;
         float2 _TexelSize;
+        float3 _MinColor,_MaxColor;
         float4 _IntegralConvolutionStepSizes;
 
         sampler2D _GaussianTex,_GaussianTex2,_GaussianTex3,_TempTex;
-
-        int _GridSize;
-        float4 _Colour;
 
         //generate gaussian value
         float gaussian(float sig,int x)
@@ -46,6 +49,40 @@ Shader "Hidden/EDGE DETECTION"
 
         float3 GetBlitTexCol(float2 uv){
             return SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, uv).rgb;
+        }
+
+        //color conversion
+        float3 rgb2xyz(float3 c) {
+            float3 tmp;
+
+            tmp.x = (c.r > 0.04045) ? pow((c.r + 0.055) / 1.055, 2.4) : c.r / 12.92;
+            tmp.y = (c.g > 0.04045) ? pow((c.g + 0.055) / 1.055, 2.4) : c.g / 12.92,
+            tmp.z = (c.b > 0.04045) ? pow((c.b + 0.055) / 1.055, 2.4) : c.b / 12.92;
+            
+            const float3x3 mat = float3x3(
+                0.4124, 0.3576, 0.1805,
+                0.2126, 0.7152, 0.0722,
+                0.0193, 0.1192, 0.9505 
+            );
+
+            return 100.0 * mul(tmp, mat);
+        }
+
+        float3 xyz2lab(float3 c) {
+            float3 n = c / float3(95.047, 100, 108.883);
+            float3 v;
+
+            v.x = (n.x > 0.008856) ? pow(n.x, 1.0 / 3.0) : (7.787 * n.x) + (16.0 / 116.0);
+            v.y = (n.y > 0.008856) ? pow(n.y, 1.0 / 3.0) : (7.787 * n.y) + (16.0 / 116.0);
+            v.z = (n.z > 0.008856) ? pow(n.z, 1.0 / 3.0) : (7.787 * n.z) + (16.0 / 116.0);
+
+            return float3((116.0 * v.y) - 16.0, 500.0 * (v.x - v.y), 200.0 * (v.y - v.z));
+        }
+
+        float3 rgb2lab(float3 c) {
+            float3 lab = xyz2lab(rgb2xyz(c));
+
+            return float3(lab.x / 100.0f, 0.5 + 0.5 * (lab.y / 127.0), 0.5 + 0.5 * (lab.z / 127.0));
         }
         ENDHLSL
 
@@ -288,7 +325,6 @@ Shader "Hidden/EDGE DETECTION"
                 for(int d = 1; d <= kernelSize; d++){
                     st0 += v0 * _IntegralConvolutionStepSizes.x;
                     float3 c = GetBlitTexCol(st0).rgb;
-
                     float gauss1  = gaussian(_SigmaM,d);
 
                     #if CALCDIFFBEFORECONVOLUTION
@@ -374,6 +410,48 @@ Shader "Hidden/EDGE DETECTION"
             ENDHLSL
         }
 
+        Pass{
+            Name "Blend"
+
+            HLSLPROGRAM
+            half4 frag(Varyings input) : SV_Target{
+                float4 D = tex2D(_DoGTex, input.texcoord) * _DoGStrength;
+                float3 col = GetBlitTexCol(input.texcoord);
+
+                float4 output = 0.0f;
+
+                #if BLEND_NONE
+                    output.rgb = lerp(_MinColor, _MaxColor, D.r);
+                #endif
+
+                #if BLEND_INTERPOLATE
+                    output.rgb = lerp(_MinColor, col, D.r);
+                #endif
+
+                #if BLEND_TWO_POINT_INTERPOLATE
+                    if (D.r < 0.5f)
+                        output.rgb = lerp(_MinColor, col, D.r * 2.0f);
+                    else
+                        output.rgb = lerp(col, _MaxColor, (D.r - 0.5f) * 2.0f);
+                #endif
+
+                return saturate(float4(lerp(col, output, _BlendStrength), 1.0f));
+            }
+            ENDHLSL
+        }
+
+        Pass{
+            Name "Color Conversion"
+
+            HLSLPROGRAM
+
+            half4 frag(Varyings input) : SV_Target
+            {
+                return float4(rgb2lab(GetBlitTexCol(input.texcoord)), 1.0f);
+            }
+            ENDHLSL
+        }
+
         Pass
         {
             Name "Overlay"
@@ -389,7 +467,7 @@ Shader "Hidden/EDGE DETECTION"
                 float3 C = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, input.texcoord).rgb;
                
                 
-                G = G * _Colour + C;
+                G = G + C;
                 G = saturate(G);
                 return float4(G,1);
             }

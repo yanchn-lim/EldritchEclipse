@@ -56,7 +56,7 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
         ProfilingSampler profileSampler;
         EdgeSetting settings;
         Material mat;
-        RTHandle tempTexture, gauss1,gauss2,gauss3;
+        RTHandle tempTexture, gauss1,gauss2, color;
         RTHandle structTensor;
         RTHandle eigen1, eigen2;
         RTHandle DoG;
@@ -92,9 +92,9 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             //E.G.
             mat.SetVector("_TexelSize", new Vector2(tempTexture.rt.texelSize.x, tempTexture.rt.texelSize.y));
 
-            mat.SetFloat("_K", settings.K);
-            mat.SetFloat("_Tau", settings.Tau);
-            mat.SetFloat("_Phi", settings.Phi);
+            mat.SetFloat("_K", settings.StdDevScale);
+            mat.SetFloat("_Tau", settings.Sharpness);
+            mat.SetFloat("_Phi", settings.SoftThreshold);
 
             mat.SetFloat("_SigmaC", settings.StructureTensorDeviation);
             mat.SetFloat("_SigmaE", settings.DifferenceOfGaussianDeviation);
@@ -107,12 +107,19 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             mat.SetFloat("_Threshold4", settings.WhitePoint_4);
             mat.SetFloat("_Thresholds", settings.QuantizerSteps);
 
+            mat.SetFloat("_DoGStrength",settings.DoGStrength);
+            mat.SetFloat("_BlendStrength",settings.BlendStrength);
+
             Vector4 stepSize = new(settings.LineConvolutionStepSize.x, settings.LineConvolutionStepSize.y, settings.EdgeSmoothStepSize.x, settings.EdgeSmoothStepSize.y);
             mat.SetVector("_IntegralConvolutionStepSizes",stepSize);
 
             SetThresholdType();
             mat.SetKeyword(new(mat.shader, "INVERT"), settings.INVERT);
+            mat.SetKeyword(new(mat.shader, "CALCDIFFBEFORECONVOLUTION"), settings.CALCDIFFBEFORECONVOLUTION);
 
+            SetBlendMode();
+            mat.SetColor("_MinColor", settings.MinColor);
+            mat.SetColor("_MaxColor", settings.MaxColor);
             /*
             mat.SetColor("_Colour", settings.EdgeColour);
             mat.SetFloat("_Sigma", settings.Sigma);
@@ -126,29 +133,28 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
 
         void SetThresholdType()
         {
-            Shader s = mat.shader;
             switch (settings.THRESHOLDING)
             {
-                case EdgeSetting.ThresholdType.THRESHOLD1:
+                case EdgeSetting.ThresholdType.TANH:
                     mat.EnableKeyword("THRESHOLDING_1");
                     mat.DisableKeyword("THRESHOLDING_2");
                     mat.DisableKeyword("THRESHOLDING_3");
                     mat.DisableKeyword("THRESHOLDING_DEFAULT");
 
                     break;
-                case EdgeSetting.ThresholdType.THRESHOLD2:
+                case EdgeSetting.ThresholdType.QUANTIZATION:
                     mat.EnableKeyword("THRESHOLDING_2");
                     mat.DisableKeyword("THRESHOLDING_1");
                     mat.DisableKeyword("THRESHOLDING_3");
                     mat.DisableKeyword("THRESHOLDING_DEFAULT");
                     break;
-                case EdgeSetting.ThresholdType.THRESHOLD3:
+                case EdgeSetting.ThresholdType.SMOOTHQUANTIZATION:
                     mat.EnableKeyword("THRESHOLDING_3");
                     mat.DisableKeyword("THRESHOLDING_2");
                     mat.DisableKeyword("THRESHOLDING_1");
                     mat.DisableKeyword("THRESHOLDING_DEFAULT");
                     break;
-                case EdgeSetting.ThresholdType.DEFAULT:
+                case EdgeSetting.ThresholdType.NO_THRESHOLD:
                     mat.EnableKeyword("THRESHOLDING_DEFAULT");
                     mat.DisableKeyword("THRESHOLDING_2");
                     mat.DisableKeyword("THRESHOLDING_3");
@@ -156,6 +162,31 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
                     break;
                 default:
                     Debug.Log("COUDLNT GET A THRESHOLD TYPE");
+                    break;
+            }
+        }
+
+        void SetBlendMode()
+        {
+            switch (settings.BlendType)
+            {
+                case EdgeSetting.BlendMode.NO_BLEND:
+                    mat.EnableKeyword("BLEND_NONE");
+                    mat.DisableKeyword("BLEND_INTERPOLATE");
+                    mat.DisableKeyword("BLEND_TWO_POINT_INTERPOLATE");
+                    break;
+                case EdgeSetting.BlendMode.INTERPOLATE:
+                    mat.DisableKeyword("BLEND_NONE");
+                    mat.EnableKeyword("BLEND_INTERPOLATE");
+                    mat.DisableKeyword("BLEND_TWO_POINT_INTERPOLATE");
+                    break;
+                case EdgeSetting.BlendMode.TWO_POINT_INTERPOLATE:
+                    mat.DisableKeyword("BLEND_NONE");
+                    mat.DisableKeyword("BLEND_INTERPOLATE");
+                    mat.EnableKeyword("BLEND_TWO_POINT_INTERPOLATE");
+                    break;
+                default:
+                    Debug.Log("Could not get a blend mode");
                     break;
             }
         }
@@ -167,10 +198,10 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
             tempTextDesc.height = cameraTextureDescriptor.height;
 
             //re allocate the texture and assign a name so it can be identified in frame debugger / memory profiler
-            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc,FilterMode.Point,TextureWrapMode.Clamp, name :"_GaussianTexTemp");
-            RenderingUtils.ReAllocateIfNeeded(ref gauss1, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_GaussianTex1");
-            RenderingUtils.ReAllocateIfNeeded(ref gauss2, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_GaussianTex2");
-            RenderingUtils.ReAllocateIfNeeded(ref gauss3, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_GaussianTex3");
+            RenderingUtils.ReAllocateIfNeeded(ref color, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_ColorTex");
+            RenderingUtils.ReAllocateIfNeeded(ref tempTexture, tempTextDesc,FilterMode.Point,TextureWrapMode.Clamp, name :"_XDoGTemp");
+            RenderingUtils.ReAllocateIfNeeded(ref gauss1, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_XDoGTex1");
+            RenderingUtils.ReAllocateIfNeeded(ref gauss2, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_XDoGTex2");
 
             RenderingUtils.ReAllocateIfNeeded(ref structTensor, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_StructureTensorTex");
             RenderingUtils.ReAllocateIfNeeded(ref eigen1, tempTextDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_EigenTex1");
@@ -206,16 +237,30 @@ public class EdgeDetectionRendererFeature : ScriptableRendererFeature
                 //if (settings.ViewEdges)
                 //    Blitter.BlitCameraTexture(cmd, gauss3, cameraColourTexture);
 
-                Blitter.BlitCameraTexture(cmd, cameraColourTexture, structTensor, mat, 0);
+                if (settings.ConvertColor)
+                {
+                    Blitter.BlitCameraTexture(cmd, cameraColourTexture, color, mat, 6);
+                }
+                else
+                {
+                    Blitter.BlitCameraTexture(cmd, cameraColourTexture, color);
+                }
+
+
+                Blitter.BlitCameraTexture(cmd, color, structTensor, mat, 0);
                 Blitter.BlitCameraTexture(cmd, structTensor, eigen1, mat, 1);
                 Blitter.BlitCameraTexture(cmd, eigen1, eigen2, mat, 2);
                 mat.SetTexture("_TFM", eigen2);
-                Blitter.BlitCameraTexture(cmd,cameraColourTexture,gauss1,mat,3);
+                Blitter.BlitCameraTexture(cmd,color,gauss1,mat,3);
                 Blitter.BlitCameraTexture(cmd, gauss1, gauss2, mat, 4);
 
-                
-                Blitter.BlitCameraTexture(cmd, gauss2, cameraColourTexture);
+                Blitter.BlitCameraTexture(cmd, gauss2, DoG);
+                mat.SetTexture("_DoGTex", DoG);
+                Blitter.BlitCameraTexture(cmd, color, tempTexture,mat,5);
+                Blitter.BlitCameraTexture(cmd, tempTexture, cameraColourTexture);
 
+                if(settings.ViewEdges)
+                    Blitter.BlitCameraTexture(cmd, DoG, cameraColourTexture);           
             }
 
             context.ExecuteCommandBuffer(cmd); //execute the shader
@@ -233,6 +278,7 @@ public class EdgeSetting
     public string ProfilerName = "EDGE_DETECTION_BLIT";
 
     //sigmas
+    [Header("DEVIATIONS")]
     [Range(0,5)]public float StructureTensorDeviation;
     [Range(0,10)]public float DifferenceOfGaussianDeviation;
     [Range(0,20)]public float LineIntegralDeviation;
@@ -241,30 +287,45 @@ public class EdgeSetting
     [HideInInspector]public Vector2 EdgeSmoothStepSize = Vector2.one;
 
     //thresholds
-    [Range(0,100)]public float WhitePoint_1, WhitePoint_2, WhitePoint_3, WhitePoint_4;
+    [Header("THRESHOLD")]
+
+    [Range(0, 100)]public float WhitePoint_1;
+    [Range(0, 100)]public float WhitePoint_2, WhitePoint_3, WhitePoint_4;
     [Range(1,16)]public int QuantizerSteps;
     public ThresholdType THRESHOLDING;
 
-    //[Header("EDGE VALUES")]
-    [Range(0.1f,5f)]public float K;
-    [Range(0,100)]public float Tau;
-    [Range(0,10)]public float Phi;
+    [Header("EDGE VALUES")]
+    [Range(0.1f,5f)]public float StdDevScale;
+    [Range(0,100)]public float Sharpness;
+    [Range(0,10)]public float SoftThreshold;
 
-    //[Header("SHADER KEYWORDS")]
-    ////keywords
-    //public bool THRESHOLDING;
-    //public bool TANH;
+    [Header("SHADER KEYWORDS")]
+    public bool CALCDIFFBEFORECONVOLUTION;
     public bool INVERT;
 
-    //[Header("DEBUG")]
-    //public bool ViewEdges;
+    [Header("BLEND")]
+    public BlendMode BlendType;
+    public float DoGStrength;
+    public float BlendStrength;
+    public Color MinColor;
+    public Color MaxColor;
+
+    [Header("DEBUG")]
+    public bool ViewEdges;
+    public bool ConvertColor;
 
     public enum ThresholdType
     {
-        THRESHOLD1,
-        THRESHOLD2,
-        THRESHOLD3,
-        DEFAULT
+        TANH,
+        QUANTIZATION,
+        SMOOTHQUANTIZATION,
+        NO_THRESHOLD
     }
 
+    public enum BlendMode
+    {
+        NO_BLEND,
+        INTERPOLATE,
+        TWO_POINT_INTERPOLATE
+    }
 }

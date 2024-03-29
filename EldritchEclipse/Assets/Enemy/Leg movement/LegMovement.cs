@@ -1,77 +1,105 @@
-using Assets.Enemy;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LegMovement : MonoBehaviour
+namespace BodyPartLogic
 {
-    [SerializeField] private Transform body;
-    [SerializeField] private float distanceOffset;
-    [SerializeField] private float distanceOfRayCast;
-    [SerializeField] private LayerMask maskTargeting;
-
-    [Header("Walking")]
-    [SerializeField] private float stepDistance;
-    [SerializeField] private float stepHeight;
-    [SerializeField] private float timeToStep;
-    private float elapseTime;
-
-
-    [Header("leg reference")]
-    [SerializeField] private bool isLeft;
-    [SerializeField] private BodyMover connector;
-    [SerializeField] private LegMovement otherLeg;
-    public bool isGrounded { get; private set; }
-
-    [Header("Debugging")]
-    [SerializeField] private float sizeOfSphere;
-    private Vector3 rayCastingPosition;
-    private Vector3 dummyTargetPosition;
-
-    private Vector3 oldPosition;
-    private Vector3 originalPosition;
-    private Vector3 newPosition;
-
-    private void Start()
+    public class LegMovement : MonoBehaviour
     {
-        oldPosition = transform.position;
-        originalPosition = transform.position;
-        newPosition = transform.position;
-        elapseTime = float.PositiveInfinity;
-        isGrounded = true;
-    }
+        [SerializeField] private Transform jointConnection;
+        [SerializeField] private float distanceOffset;
+        [SerializeField] private float distanceOfRayCast = 2f;
+        [SerializeField] private LayerMask maskTargeting;
 
-    private void Update()
-    {
-        transform.position = originalPosition;
+        [Header("Walking")]
+        [SerializeField] private float stepDistance = 0.32f;
+        [SerializeField] private float stepHeight = 0.4f;
+        [SerializeField] private float timeToStep = 0.12f;
 
-        rayCastingPosition = body.position + (body.right * distanceOffset);
+        private float elapseTime;
+        //for dual legs
+        private DualLegs connector;
 
-        Ray ray = new Ray(rayCastingPosition, Vector3.down);
+        public bool isGrounded { get; private set; }
 
-        Debug.DrawRay(rayCastingPosition, Vector3.down * distanceOfRayCast, Color.yellow);
+        [Header("Debugging")]
+        [SerializeField] private float sizeOfSphere;
+        private Vector3 rayCastingPosition;
+        private Vector3 dummyTargetPosition;
 
-        if (Physics.Raycast(ray, out var hitinfo, distanceOfRayCast, maskTargeting))
+        private Vector3 oldPosition;
+        private Vector3 originalPosition;
+        private Vector3 newPosition;
+
+        private void Awake()
         {
-            dummyTargetPosition = hitinfo.point;
-            if (Vector3.Distance(newPosition, hitinfo.point) >= stepDistance )
-            {//meet the requirement to move
-                newPosition = dummyTargetPosition;
-                elapseTime = 0f;
+            maskTargeting = LayerMask.NameToLayer("Everything");
+        }
+        private void Start()
+        {
+            oldPosition = transform.position;
+            originalPosition = transform.position;
+            newPosition = transform.position;
+            elapseTime = float.PositiveInfinity;
+            isGrounded = true;
+
+            //find the distance offset
+            distanceOffset =  transform.position.x - jointConnection.position.x ;
+            
+        }
+
+        private void Update()
+        {
+            transform.position = originalPosition;
+
+            rayCastingPosition = jointConnection.position + jointConnection.right * distanceOffset;
+
+            Ray ray = new Ray(rayCastingPosition, Vector3.down);
+
+            Debug.DrawRay(rayCastingPosition, Vector3.down * distanceOfRayCast, Color.yellow);
+
+            if (Physics.Raycast(ray, out var hitinfo, distanceOfRayCast, maskTargeting))
+            {
+                dummyTargetPosition = hitinfo.point;
+                if (Vector3.Distance(newPosition, hitinfo.point) >= stepDistance)
+                {//meet the requirement to move
+                    newPosition = dummyTargetPosition;
+                    elapseTime = 0f;
+                }
+            }
+            if (connector != null)
+            {
+                MoveForTwoLegs();
+            }
+            else
+            {
+                MoveLeg();
             }
         }
 
-        if(otherLeg.isGrounded && 
-            (connector.leftLegStart == isLeft) &&
-            isGrounded)
+        private void MoveForTwoLegs()
         {
-            //is both legs are grounded and the connector say that the assign leg can start first
-            isGrounded = false;
-            connector.ToggleLeg(); //switch such that the next leg move
-            //can start moving 
-            
+            if (connector.GetOtherLeg(this).isGrounded &&
+                        connector.CanMoveLeg(this) &&
+                        isGrounded)
+            {
+                //is both legs are grounded and the connector say that the assign leg can start first
+                isGrounded = false;
+                connector.ToggleLeg(); //switch such that the next leg move
+                                       //can start moving 
+
+            }
+            else if (isGrounded == false)
+            {
+                MoveLeg();
+            }
+            else
+            {
+                return; //dont move
+            }
         }
-        else if (isGrounded == false)
+
+        private void MoveLeg()
         {
             //is moving
             if (elapseTime < timeToStep)
@@ -91,26 +119,32 @@ public class LegMovement : MonoBehaviour
                 oldPosition = newPosition;
             }
         }
-        else
+
+        //debugging purpose
+        private void OnDrawGizmos()
         {
-            return; //dont move
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(rayCastingPosition, sizeOfSphere);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(dummyTargetPosition, sizeOfSphere);
+
+            Gizmos.color = Color.black;
+            Gizmos.DrawSphere(originalPosition, sizeOfSphere);
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(newPosition, sizeOfSphere);
         }
+
+        public void SetUpConnector(DualLegs bodyMover)
+        {
+            connector = bodyMover;
+        }
+
+        public void JointConnection(Transform joint)
+        {
+            jointConnection = joint;
+        }
+
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(rayCastingPosition, sizeOfSphere);
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(dummyTargetPosition, sizeOfSphere);
-
-        Gizmos.color = Color.black;
-        Gizmos.DrawSphere(originalPosition, sizeOfSphere);
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(newPosition, sizeOfSphere);
-    }
-
-
 }

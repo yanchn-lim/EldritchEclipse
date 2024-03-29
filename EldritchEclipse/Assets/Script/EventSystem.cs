@@ -69,6 +69,9 @@ namespace YC
         }
     }
 
+    /// <summary>
+    /// Contains all the arguments needed to execute the event
+    /// </summary>
     public struct EventArgs
     {
         public string Name { get; private set; }
@@ -86,6 +89,9 @@ namespace YC
         }
     }
 
+    /// <summary>
+    /// Container for all the data being returned from the event
+    /// </summary>
     public struct EventReturn
     {
         public Hashtable Payload;

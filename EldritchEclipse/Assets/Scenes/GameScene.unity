@@ -2246,6 +2246,9 @@ MonoBehaviour:
   _bulletPerShot: 0
   _bulletPrefab: {fileID: 4627363856819732176, guid: 5e21eb94f433b3241a0cae2189373802,
     type: 3}
+  _ammoCount: 0
+  _maxAmmoCount: 10
+  _reloadSpeed: 1000
 --- !u!1 &1183377486
 GameObject:
   m_ObjectHideFlags: 0
@@ -2642,7 +2645,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaff0ea0d4da3954aab4f96634ecf3db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeTick: 0.02
 --- !u!4 &1436769232
 Transform:
   m_ObjectHideFlags: 0

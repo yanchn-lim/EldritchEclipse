@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
-    float timeTick;
+    public float timeTick;
     float maxTime = 1200;
     public static float Timer;
 

@@ -29,17 +29,10 @@ public class PlayerMovement : MonoBehaviour
         {
             dirToMouse = hit.point - transform.position;
             dirToMouse.Normalize();
-
         }
 
         Vector3 forward = new(dirToMouse.x, 0, dirToMouse.z);
         transform.forward = forward;
-
-        if (input.FirePressed)
-        {
-            var bul = Instantiate(bulletPrefab,transform.position,Quaternion.identity);
-            bul.transform.up = forward;
-        }
     }
 
     private void FixedUpdate()

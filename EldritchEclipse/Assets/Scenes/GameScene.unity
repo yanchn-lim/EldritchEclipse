@@ -2187,6 +2187,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1135000545}
   - component: {fileID: 1135000546}
+  - component: {fileID: 1135000547}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -2229,6 +2230,22 @@ MonoBehaviour:
   rayMask:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &1135000547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1135000544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d09fa574ec11e4cfd9f1716936d4ec2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _delayBetweenShots: 0.2
+  _bulletPerShot: 0
+  _bulletPrefab: {fileID: 4627363856819732176, guid: 5e21eb94f433b3241a0cae2189373802,
+    type: 3}
 --- !u!1 &1183377486
 GameObject:
   m_ObjectHideFlags: 0

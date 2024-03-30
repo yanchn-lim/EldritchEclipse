@@ -38,6 +38,7 @@ public class InputHandler
     }
     public Ray MouseScreenToWorldRay { get; private set; }
     public bool FirePressed { get; private set; }
+    public bool FireHeld { get; private set; }
 
     public void Update()
     {
@@ -49,5 +50,6 @@ public class InputHandler
         MouseScreenToWorldRay = mainCam.ScreenPointToRay(Input.mousePosition);
 
         FirePressed = Input.GetMouseButtonDown(0);
+        FireHeld = Input.GetMouseButton(0);
     }
 }

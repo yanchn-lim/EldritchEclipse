@@ -16,7 +16,7 @@ public class PlayerHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        //MovePlayer();
     }
     #endregion
 

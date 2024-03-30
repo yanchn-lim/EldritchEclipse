@@ -18,7 +18,7 @@ namespace Modular
         {
             foreach (BodyPartInformation part in BodyParts)
             {
-                if (part.child.transform == part.connection.transform) continue;//cyclic
+                if (part?.child?.transform == part?.connection?.transform) continue;//cyclic
                 if(part.child != null)
                 {
                     part.child.SetParent(this);

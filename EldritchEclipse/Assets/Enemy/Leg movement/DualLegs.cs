@@ -10,17 +10,18 @@ namespace BodyPartLogic
     public class DualLegs : MonoBehaviour
     {
         [SerializeField]private bool leftLegStart;
-        public bool LeftLegStart { get; private set; }
 
         [Header("legs")]
         [SerializeField] private LegMovement leftLeg;
         [SerializeField] private LegMovement rightLeg;
 
 
-        private void Start()
+        public void RemoveLegs()
         {
-            LeftLegStart = leftLegStart;
-            //set up JointConnection between the two legs
+            leftLeg.DismentalConnection();
+            rightLeg.DismentalConnection();
+            leftLeg = null;
+            rightLeg = null;
         }
 
         public void SetUpLegs(LegMovement leftLeg, LegMovement rightLeg)
@@ -34,7 +35,7 @@ namespace BodyPartLogic
 
         public void ToggleLeg()
         {
-            LeftLegStart = !LeftLegStart;
+            leftLegStart = !leftLegStart;
         }
 
         public LegMovement GetOtherLeg(LegMovement currentLeg)
@@ -53,7 +54,7 @@ namespace BodyPartLogic
         {
             if(leftLeg == currentLeg)
             {
-                return LeftLegStart == true;
+                return leftLegStart == true;
             }
             else
             {

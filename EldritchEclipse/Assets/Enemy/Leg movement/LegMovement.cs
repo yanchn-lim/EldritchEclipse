@@ -14,7 +14,7 @@ namespace BodyPartLogic
         [Header("Walking")]
         [SerializeField] private float stepDistance = 0.32f;
         [SerializeField] private float stepHeight = 0.4f;
-        [SerializeField] private float timeToStep = 0.12f;
+        [SerializeField] private float speedToStep = 0.12f;
 
         private float elapseTime;
         //for dual legs
@@ -31,10 +31,7 @@ namespace BodyPartLogic
         private Vector3 originalPosition;
         private Vector3 newPosition;
 
-        private void Awake()
-        {
-            maskTargeting = LayerMask.NameToLayer("Everything");
-        }
+        
         private void Start()
         {
             oldPosition = transform.position;
@@ -102,16 +99,16 @@ namespace BodyPartLogic
         private void MoveLeg()
         {
             //is moving
-            if (elapseTime < timeToStep)
+            if (elapseTime < 1)
             {
-                float progress = elapseTime / timeToStep;
+                float progress = elapseTime / 1;
 
                 Vector3 footPosition = Vector3.Lerp(oldPosition, newPosition, progress);
                 footPosition.y += Mathf.Sin(progress * Mathf.PI) * stepHeight;
 
                 originalPosition = footPosition;
                 isGrounded = false;
-                elapseTime += Time.deltaTime;
+                elapseTime += Time.deltaTime * speedToStep;
             }
             else
             {
@@ -146,5 +143,17 @@ namespace BodyPartLogic
             jointConnection = joint;
         }
 
+        public void DismentalConnection()
+        {
+            
+            connector = null;
+        }
+
+        private void OnDestroy()
+        {
+            connector.RemoveLegs();
+        }
+
+        
     }
 }

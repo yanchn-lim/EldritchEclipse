@@ -14,6 +14,11 @@ public class GameManager : MonoBehaviour
         GameStart();
     }
 
+    private void Update()
+    {
+        InputHandler.Instance.Update();
+    }
+
     void GameStart()
     {
         StartTimer();

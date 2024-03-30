@@ -4,36 +4,27 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
     public float MoveSpeed;
-    Vector3 inputDir;
-    Camera cam;
-    Transform camT;
+
     Vector3 dirToMouse;
     [SerializeField]
     GameObject bulletPrefab;
     Vector3 mousePos;
     [SerializeField]
     LayerMask rayMask;
+    InputHandler input;
 
+    Ray mouseRay;
     private void Start()
     {
-        cam = Camera.main;
-        camT = cam.transform;
+        input = InputHandler.Instance;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-        Vector3 hori = new(x, 0, x);
-        Vector3 vert = new(-z, 0, z);
-        inputDir = hori + vert;     
-        inputDir.Normalize();
-
         //rotate the player towards the mouse
-        Ray mouseRay = cam.ScreenPointToRay(Input.mousePosition);
+        mouseRay = input.MouseScreenToWorldRay;
         if(Physics.Raycast(mouseRay,out RaycastHit hit,rayMask))
         {
             dirToMouse = hit.point - transform.position;
@@ -44,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 forward = new(dirToMouse.x, 0, dirToMouse.z);
         transform.forward = forward;
 
-        if (Input.GetMouseButtonDown(0))
+        if (input.FirePressed)
         {
             var bul = Instantiate(bulletPrefab,transform.position,Quaternion.identity);
             bul.transform.up = forward;
@@ -53,12 +44,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position += inputDir * Time.fixedDeltaTime * MoveSpeed;
-
+        Move();
     }
 
-    private void OnDrawGizmos()
+    public void Move()
     {
-        Gizmos.DrawCube(mousePos,new(1,1,1));
+        //switch this to proper movement
+        transform.position += MoveSpeed * Time.fixedDeltaTime * input.MovementAdjusted;
+
     }
+
 }

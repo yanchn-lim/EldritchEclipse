@@ -21,33 +21,33 @@ namespace YC
                 return instance;
             }
         }
-        string DebugFormat = "EVENT SYSTEM : ";
+        string _debugFormat = "EVENT SYSTEM : ";
 
         Dictionary<string, EventBase> EventList = new();
-
+        
         // adding / removing
         public void AddEvent(string name)
         {
             if (EventList.ContainsKey(name))
             {
-                Debug.LogError($"{DebugFormat}EVENT ALREADY IN LIST!");
+                Debug.LogError($"{_debugFormat}EVENT ALREADY IN LIST!");
                 return;
             }
 
             if (!EventList.TryAdd(name, new(name)))
-                Debug.LogError($"{DebugFormat}ERROR ADDING EVENT!");               
+                Debug.LogError($"{_debugFormat}ERROR ADDING EVENT!");               
         }
 
         public void RemoveEvent(string name)
         {
             if (!EventList.ContainsKey(name))
             {
-                Debug.LogError($"{DebugFormat}EVENT NOT IN LIST!");
+                Debug.LogError($"{_debugFormat}EVENT NOT IN LIST!");
                 return;
             }
 
             if (!EventList.Remove(name))
-                Debug.LogError($"{DebugFormat}ERROR REMOVING EVENT!");
+                Debug.LogError($"{_debugFormat}ERROR REMOVING EVENT!");
         }
 
 
@@ -72,7 +72,7 @@ namespace YC
     /// <summary>
     /// Contains all the arguments needed to execute the event
     /// </summary>
-    public struct EventArgs
+    public class EventArgs
     {
         public string Name { get; private set; }
         public Hashtable Payload;
@@ -82,9 +82,9 @@ namespace YC
             Payload.Add(name, data);
         }
 
-        public EventArgs(string name)
+        public EventArgs(string EventName)
         {
-            Name = name;
+            Name = EventName + "_ARGSA";
             Payload = new();
         }
     }
@@ -92,9 +92,9 @@ namespace YC
     /// <summary>
     /// Container for all the data being returned from the event
     /// </summary>
-    public struct EventReturn
+    public class EventReturn
     {
-        public Hashtable Payload;
+        public Hashtable Payload = new();
 
         public void AddData(string name, object data)
         {
@@ -111,7 +111,7 @@ namespace YC
         public EventReturn Execute()
         {
             Debug.Log($"EVENT SYSTEM : EXECUTING \"EVENT_{Name}\"");
-
+            
             //do check if event requires data
 
             //if Action, ask for args

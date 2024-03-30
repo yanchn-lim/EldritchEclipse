@@ -247,9 +247,9 @@ MonoBehaviour:
     Requirements: 4
     ProfilerName: COLOUR_CORRECTION_BLIT
     Contrast: 1
-    Brightness: 0.11
-    Saturation: 1.14
-    Gamma: 1.31
+    Brightness: 0.21
+    Saturation: 2.09
+    Gamma: 1.15
   shader: {fileID: 4800000, guid: 49efc3b20dce2e0489b1aa912780c5e9, type: 3}
 --- !u!114 &6994160981203637685
 MonoBehaviour:
@@ -324,31 +324,31 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: XDoG_BLIT
-    StructureTensorDeviation: 1.68
-    DifferenceOfGaussianDeviation: 0.68
-    LineIntegralDeviation: 4.8
-    EdgeSmoothDeviation: 10
-    LineConvolutionStepSize: {x: 100, y: 100}
-    EdgeSmoothStepSize: {x: 1000, y: 1000}
-    WhitePoint_1: 46.2
-    WhitePoint_2: 100
-    WhitePoint_3: 100
-    WhitePoint_4: 100
-    QuantizerSteps: 4
-    THRESHOLDING: 1
+    StructureTensorDeviation: 0.4
+    DifferenceOfGaussianDeviation: 6.04
+    LineIntegralDeviation: 1.53
+    EdgeSmoothDeviation: 0
+    LineConvolutionStepSize: {x: 150, y: 150}
+    EdgeSmoothStepSize: {x: 100, y: 100}
+    WhitePoint_1: 8.5
+    WhitePoint_2: 24.7
+    WhitePoint_3: 84.3
+    WhitePoint_4: 51.9
+    QuantizerSteps: 1
+    THRESHOLDING: 2
     StdDevScale: 0.1
-    Sharpness: 26.7
-    SoftThreshold: 0.98
-    AntiAlias: 0
+    Sharpness: 12.8
+    SoftThreshold: 10
+    AntiAlias: 1
     CALCDIFFBEFORECONVOLUTION: 0
     INVERT: 0
     BlendType: 2
-    DoGStrength: 1.41
-    BlendStrength: 1.54
-    MinColor: {r: 0, g: 0, b: 0, a: 0}
+    DoGStrength: 2.59
+    BlendStrength: 1.12
+    MinColor: {r: 0, g: 0.092446424, b: 0.16037738, a: 0}
     MaxColor: {r: 1, g: 1, b: 1, a: 0}
     ViewEdges: 0
-    ConvertColor: 1
+    ConvertColor: 0
 --- !u!114 &7529854888884107792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,7 +426,7 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: SHARPEN_BLIT
-    Sharpen: 1.22
+    Sharpen: 0.56
 --- !u!114 &9182091109868933918
 MonoBehaviour:
   m_ObjectHideFlags: 0

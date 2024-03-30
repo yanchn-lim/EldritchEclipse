@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,12 @@ public class PlayerCombatHandler : MonoBehaviour
     float _reloadSpeed;
 
     bool _reloadTrigger;
+    bool _reloadComplete;
+
+
+    //sequence
+    //shoot => no ammo => no shoot until reloaded
+    //shoot => delay(still got ammo) => auto-reload => can cancel anytime by shooting
 
     private void Start()
     {
@@ -45,21 +52,29 @@ public class PlayerCombatHandler : MonoBehaviour
     IEnumerator Fire()
     {
         //SpawnBullet();
-        while (input.FireHeld && CheckAmmo())
+        while (input.FireHeld)
         {
-            if (_reloadTrigger)
-                yield break;
+            if (!CheckAmmo())
+            {
+                //trigger reload
+                StartCoroutine(Reload());
+                Debug.Log("START WAITING FOR RELOAD");
+                yield return new WaitForReload(_reloadComplete);
+                Debug.Log("WAITED FOR RELOAD COMPLETE");
+            }
+
             SpawnBullet();
 
             yield return new WaitForSeconds(_delayBetweenShots);
             //SpawnBullet();
-
+            
         }
     }
 
     IEnumerator Reload()
     {
         _reloadTrigger = false;
+        _reloadComplete = false;
 
         float progress = 0;
         Debug.Log("reload start");
@@ -68,8 +83,10 @@ public class PlayerCombatHandler : MonoBehaviour
             yield return new WaitForSeconds(gm.timeTick);
             progress += _reloadSpeed * gm.timeTick;
         }
+
         Debug.Log("reload complete");
         _ammoCount = _maxAmmoCount;
+        _reloadComplete = true;
     }
 
     bool SpawnBullet()
@@ -89,5 +106,20 @@ public class PlayerCombatHandler : MonoBehaviour
         bool check = _ammoCount > 0;
         _reloadTrigger = check ? false: true;
         return _ammoCount > 0;
+    }
+
+    public class WaitForReload : CustomYieldInstruction
+    {
+        bool check;
+
+        public override bool keepWaiting
+        {
+            get { return check; }
+        }
+
+        public WaitForReload(bool Check)
+        {
+            check = Check;
+        }
     }
 }

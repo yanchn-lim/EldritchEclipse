@@ -41,7 +41,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Alpha: 0.232
-    - _ColourThreshold: 0.44
+    - _ColourThreshold: 0.1
     - _Fullscreen_AlphaBlendOperation: 0
     - _Fullscreen_BlendMode: 1
     - _Fullscreen_ColorBlendOperation: 0
@@ -51,7 +51,7 @@ Material:
     - _Fullscreen_SrcAlphaBlend: 1
     - _Fullscreen_SrcColorBlend: 5
     - _NoiseScale: 2.59
-    - _NormalThreshold: 1.22
+    - _NormalThreshold: 0.001
     - _OVERLAY: 0
     - _Overlay: 1
     - _QueueControl: 0

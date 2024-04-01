@@ -12,19 +12,18 @@ public class PlayerMovement : MonoBehaviour
     Vector3 mousePos;
     [SerializeField]
     LayerMask rayMask;
-    InputHandler input;
 
     Ray mouseRay;
     private void Start()
     {
-        input = InputHandler.Instance;
+
     }
 
     // Update is called once per frame
     void Update()
     {
         //rotate the player towards the mouse
-        mouseRay = input.MouseScreenToWorldRay;
+        mouseRay = InputHandler.MouseScreenToWorldRay;
         if(Physics.Raycast(mouseRay,out RaycastHit hit,rayMask))
         {
             dirToMouse = hit.point - transform.position;
@@ -43,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     public void Move()
     {
         //switch this to proper movement
-        transform.position += MoveSpeed * Time.fixedDeltaTime * input.MovementAdjusted;
+        transform.position += MoveSpeed * Time.fixedDeltaTime * InputHandler.MovementAdjusted;
 
     }
 

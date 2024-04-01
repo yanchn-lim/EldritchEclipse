@@ -5,28 +5,10 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 public class InputHandler
 {
-    private static InputHandler instance;
 
-    public static InputHandler Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new();
-            }
-            return instance;
-        }
-    }
-
-    public InputHandler()
-    {
-        mainCam = Camera.main;
-    }
-
-    Camera mainCam;
-    public Vector2 MovementInput { get; private set;}
-    public Vector3 MovementAdjusted { get
+    static Camera mainCam = Camera.main;
+    public static Vector2 MovementInput { get; private set;}
+    public static Vector3 MovementAdjusted { get
         {
             Vector3 dir = new(
                 MovementInput.x - MovementInput.y,
@@ -36,11 +18,11 @@ public class InputHandler
             return dir.normalized;
         }
     }
-    public Ray MouseScreenToWorldRay { get; private set; }
-    public bool FirePressed { get; private set; }
-    public bool FireHeld { get; private set; }
+    public static Ray MouseScreenToWorldRay { get; private set; }
+    public static bool FirePressed { get; private set; }
+    public static bool FireHeld { get; private set; }
 
-    public void Update()
+    public static void Update()
     {
         MovementInput = new(
             Input.GetAxis("Horizontal"),

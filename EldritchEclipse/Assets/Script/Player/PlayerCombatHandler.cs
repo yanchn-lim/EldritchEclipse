@@ -2,12 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
+using UnityEngine.UI;
 public class PlayerCombatHandler : MonoBehaviour
 {
-    InputHandler input;
-    [SerializeField]
-    GameManager gm;
     [SerializeField]
     float _delayBetweenShots;
     [SerializeField]
@@ -15,111 +13,85 @@ public class PlayerCombatHandler : MonoBehaviour
     [SerializeField]
     GameObject _bulletPrefab;
 
-    float _fireRate;
-
     //temporary stats, to be moved a stat handler
-    public int _ammoCount;
+    [SerializeField]
+    int _ammoCount;
     [SerializeField]
     int _maxAmmoCount;
+
+    [SerializeField]
+    float delayBeforeReload;
     [SerializeField]
     float _reloadSpeed;
 
-    bool _reloadTrigger;
-    bool _reloadComplete;
+    public Slider reloadBar;
 
 
+    //perma
+    FSM _fsm;
+    PlayerCombatState_Idle _idleState;
+    PlayerCombatState_Shooting _shootState;
+    PlayerCombatState_Reload _reloadState;
+
+
+
+
+    public TMP_Text debugtxt;
+    
     //sequence
     //shoot => no ammo => no shoot until reloaded
     //shoot => delay(still got ammo) => auto-reload => can cancel anytime by shooting
 
     private void Start()
     {
-        input = InputHandler.Instance;
         _ammoCount = _maxAmmoCount;
+
+
+        _fsm = new();
+        _idleState = new((int)CombatStates.IDLE, _fsm, this, delayBeforeReload);
+        _shootState = new((int)CombatStates.SHOOTING, _fsm, this);
+        _reloadState = new((int)CombatStates.RELOAD, _fsm, this);
+        _fsm.AddState(_idleState, _shootState, _reloadState);
+        _fsm.SwitchState(_idleState);
+
+        ToggleReloadBar();
     }
 
     private void Update()
     {
-        if (input.FirePressed)
-            StartCoroutine(Fire());
-
-        if (_reloadTrigger)
-        {
-            StartCoroutine(Reload());
-        }
+        _fsm.Update();
+        debugtxt.text = $"{_fsm._currentState.ToString()}";
     }
 
-    IEnumerator Fire()
+    public void Reload()
     {
-        //SpawnBullet();
-        while (input.FireHeld)
-        {
-            if (!CheckAmmo())
-            {
-                //trigger reload
-                StartCoroutine(Reload());
-                Debug.Log("START WAITING FOR RELOAD");
-                yield return new WaitForReload(_reloadComplete);
-                Debug.Log("WAITED FOR RELOAD COMPLETE");
-            }
-
-            SpawnBullet();
-
-            yield return new WaitForSeconds(_delayBetweenShots);
-            //SpawnBullet();
-            
-        }
-    }
-
-    IEnumerator Reload()
-    {
-        _reloadTrigger = false;
-        _reloadComplete = false;
-
-        float progress = 0;
-        Debug.Log("reload start");
-        while(progress < 100f)
-        {
-            yield return new WaitForSeconds(gm.timeTick);
-            progress += _reloadSpeed * gm.timeTick;
-        }
-
-        Debug.Log("reload complete");
         _ammoCount = _maxAmmoCount;
-        _reloadComplete = true;
     }
 
-    bool SpawnBullet()
+    public void ToggleReloadBar()
     {
-        if (_reloadTrigger)
-            return false;
+        reloadBar.gameObject.SetActive(!reloadBar.gameObject.active);
+    }
 
+    public void UpdateReloadBar(float val)
+    {
+        reloadBar.value = val;
+    }
+
+    public void SpawnBullet()
+    {
         Vector3 forward = transform.forward;
-        var bullet = Instantiate(_bulletPrefab,transform.position,Quaternion.identity);
+        var bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
         bullet.transform.up = forward;
         _ammoCount--;
-        return true;
     }
 
-    bool CheckAmmo()
-    {
-        bool check = _ammoCount > 0;
-        _reloadTrigger = check ? false: true;
-        return _ammoCount > 0;
-    }
+    #region GETTER
+    public float AmmoPercentage { get { return ((float)_ammoCount / (float)_maxAmmoCount); } }
+    public float DelayBetweenShots { get { return _delayBetweenShots; } }
+    public int AmmoCount { get { return _ammoCount; } set { _ammoCount = value; } }
+    public float ReloadSpeed { get { return _reloadSpeed; } }
+    #endregion
 
-    public class WaitForReload : CustomYieldInstruction
-    {
-        bool check;
-
-        public override bool keepWaiting
-        {
-            get { return check; }
-        }
-
-        public WaitForReload(bool Check)
-        {
-            check = Check;
-        }
-    }
+    
 }

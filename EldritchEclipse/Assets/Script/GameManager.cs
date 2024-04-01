@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField]
-    public float timeTick;
-    float maxTime = 1200;
-    public static float Timer;
-
     private void Start()
     {
         GameStart();
@@ -16,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        InputHandler.Instance.Update();
+        InputHandler.Update();
     }
 
     void GameStart()
@@ -26,16 +21,16 @@ public class GameManager : MonoBehaviour
 
     void StartTimer()
     {
-        Timer = maxTime;
+        GameVariables.CurrentTime = GameVariables.GameTime;
         StartCoroutine(GameTimer());
     }
 
     IEnumerator GameTimer()
     {
-        while(Timer > 0)
+        while(GameVariables.CurrentTime > 0)
         {
-            Timer -= timeTick;
-            yield return new WaitForSeconds(timeTick);
+            GameVariables.CurrentTime -= GameVariables.TimeTick;
+            yield return new WaitForSeconds(GameVariables.TimeTick);
         }
 
         Debug.Log("OUT OF TIME");

@@ -1807,7 +1807,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 782440260}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -2055,9 +2055,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 0.21
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2631,7 +2631,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d09fa574ec11e4cfd9f1716936d4ec2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gm: {fileID: 1436769231}
   _delayBetweenShots: 0.2
   _bulletPerShot: 0
   _bulletPrefab: {fileID: 4627363856819732176, guid: 5e21eb94f433b3241a0cae2189373802,
@@ -2640,6 +2639,7 @@ MonoBehaviour:
   _maxAmmoCount: 10
   delayBeforeReload: 0
   _reloadSpeed: 100
+  reloadBar: {fileID: 847585805}
   debugtxt: {fileID: 797097236}
 --- !u!1 &1183377486
 GameObject:

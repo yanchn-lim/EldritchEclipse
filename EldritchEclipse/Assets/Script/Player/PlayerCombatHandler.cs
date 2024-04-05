@@ -7,34 +7,22 @@ using UnityEngine.UI;
 public class PlayerCombatHandler : MonoBehaviour
 {
     [SerializeField]
+    Weapon w;
     float _delayBetweenShots;
-    [SerializeField]
     int _bulletPerShot;
-    [SerializeField]
     GameObject _bulletPrefab;
-
-    //temporary stats, to be moved a stat handler
-    [SerializeField]
     int _ammoCount;
-    [SerializeField]
     int _maxAmmoCount;
-
-    [SerializeField]
     float delayBeforeReload;
-    [SerializeField]
     float _reloadSpeed;
 
     public Slider reloadBar;
-
 
     //perma
     FSM _fsm;
     PlayerCombatState_Idle _idleState;
     PlayerCombatState_Shooting _shootState;
     PlayerCombatState_Reload _reloadState;
-
-
-
 
     public TMP_Text debugtxt;
     
@@ -44,8 +32,17 @@ public class PlayerCombatHandler : MonoBehaviour
 
     private void Start()
     {
-        _ammoCount = _maxAmmoCount;
+        Initialize();
+    }
 
+    void Initialize()
+    {
+        _bulletPerShot = w.BulletsPerShot;
+        _delayBetweenShots = w.FireRate * w.FireRateMultiplier;
+        _maxAmmoCount = w.MaxAmmoCount;
+        _reloadSpeed = w.ReloadSpeed * w.ReloadSpeedMultiplier;
+        _ammoCount = _maxAmmoCount;
+        _bulletPrefab = w.BulletPrefab;
 
         _fsm = new();
         _idleState = new((int)CombatStates.IDLE, _fsm, this, delayBeforeReload);

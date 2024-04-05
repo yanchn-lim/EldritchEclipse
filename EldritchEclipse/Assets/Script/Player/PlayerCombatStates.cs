@@ -109,6 +109,7 @@ public class PlayerCombatState_Reload : PlayerCombatState_Base
     {
         reload = combatHandler.StartCoroutine(Reload());
         _reloadComplete = false;
+        combatHandler.UpdateReloadBar(0);
         combatHandler.ToggleReloadBar();
     }
 

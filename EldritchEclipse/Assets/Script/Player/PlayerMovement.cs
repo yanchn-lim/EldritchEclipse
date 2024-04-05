@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //rotate the player towards the mouse
         mouseRay = InputHandler.MouseScreenToWorldRay;
-        if(Physics.Raycast(mouseRay,out RaycastHit hit,rayMask))
+        if(Physics.Raycast(mouseRay,out RaycastHit hit,999f,rayMask))
         {
             dirToMouse = hit.point - transform.position;
             dirToMouse.Normalize();

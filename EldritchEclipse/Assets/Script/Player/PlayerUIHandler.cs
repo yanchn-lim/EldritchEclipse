@@ -5,10 +5,18 @@ using UnityEngine.UI;
 
 public class PlayerUIHandler : MonoBehaviour
 {
-    [SerializeField]
-    Slider xpBar;
+    public Slider xpBar;
+    public GameObject levelUpPanel;
+    private void Awake()
+    {
+        xpBar = GameObject.Find("XP_Bar").GetComponent<Slider>();
+        levelUpPanel = GameObject.Find("LevelUp_Panel");
 
-    public void Initialize(float xptonext)
+        //hide some panels 
+        levelUpPanel.SetActive(false);
+    }
+
+    public void InitializeXPBar(float xptonext)
     {
         xpBar.maxValue = xptonext;
     }
@@ -22,5 +30,10 @@ public class PlayerUIHandler : MonoBehaviour
     {
         xpBar.maxValue = xpToNext;
         xpBar.value = xp;
+    }
+
+    public void OpenLevelUpPanel()
+    {
+        levelUpPanel.SetActive(true);
     }
 }

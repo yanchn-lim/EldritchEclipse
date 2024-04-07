@@ -21,7 +21,7 @@ public class PlayerStats : MonoBehaviour
     private void Start()
     {
         Initialize();
-        ui.Initialize(xpToLevel);
+        ui.InitializeXPBar(xpToLevel); // change
     }
 
     void Initialize()
@@ -89,7 +89,9 @@ public class PlayerStats : MonoBehaviour
         xp = temp;
         xpToLevel *= 1.3f;
         ui.UpdateXP(xp, xpToLevel);
+
         //do other level logic
+        ui.OpenLevelUpPanel();
     }
 
 

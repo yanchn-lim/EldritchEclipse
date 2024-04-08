@@ -19,8 +19,7 @@ public class XPDetection : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {
-        
+    {    
         if (other.GetComponent<XpOrb>())
         {
             other.GetComponent<XpOrb>().FlyToPlayer(transform);

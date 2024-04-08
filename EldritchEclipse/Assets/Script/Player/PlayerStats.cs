@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    int HP;
-    int maxHP;
+    float HP;
+    float maxHP;
     float baseMoveSpeed;
     float moveSpeed;
     float moveSpeedMultiplier = 1;
@@ -17,6 +17,13 @@ public class PlayerStats : MonoBehaviour
     Stat stat;
     [SerializeField]
     PlayerUIHandler ui;
+
+    EventManager em = EventManager.Instance;
+
+    private void Awake()
+    {
+        em.AddListener<float>(Event.PLAYER_XP_GAIN,GainXP);
+    }
 
     private void Start()
     {
@@ -33,40 +40,40 @@ public class PlayerStats : MonoBehaviour
     }
 
     #region Health
-    public void RecoverHealth(int hp)
+    public void RecoverHealth(float hp)
     {
         HP = Mathf.Clamp(HP + hp, 0, maxHP);
     }
 
-    public void ReduceHealth(int hp)
+    public void ReduceHealth(float hp)
     {
         HP = Mathf.Clamp(HP - hp,0,maxHP);
     }
 
-    public void IncreaseMaxHealth(int hp)
+    public void IncreaseMaxHealth(float hp)
     {
         maxHP += hp;
     }
 
-    public void DecreaseMaxHealth(int hp)
+    public void DecreaseMaxHealth(float hp)
     {
         maxHP -= hp;
     }
     #endregion
 
-    public void IncreaseMoveSpeed(float percentage)
+    void IncreaseMoveSpeed(float percentage)
     {
         moveSpeedMultiplier += percentage;
         moveSpeed = baseMoveSpeed * moveSpeedMultiplier;
     }
 
-    public void ReduceMoveSpeed(float percentage)
+    void ReduceMoveSpeed(float percentage)
     {
         moveSpeedMultiplier -= percentage;
         moveSpeed = baseMoveSpeed * moveSpeedMultiplier;
     }
 
-    public void GainXP(float gain)
+    void GainXP(float gain)
     {
         xp += gain;
         //update UI;
@@ -77,12 +84,12 @@ public class PlayerStats : MonoBehaviour
         ui.UpdateXP(xp);
     }
 
-    public bool CheckIfLevelUp()
+    bool CheckIfLevelUp()
     {
         return xp >= xpToLevel;
     }
 
-    public void LevelUp()
+    void LevelUp()
     {
         Debug.Log("LEVEL UP!");
         float temp = xp - xpToLevel;

@@ -296,6 +296,6 @@ public class EventManager
 //list of possible events
 public enum Event
 {
-
+    PLAYER_XP_GAIN
 }
 

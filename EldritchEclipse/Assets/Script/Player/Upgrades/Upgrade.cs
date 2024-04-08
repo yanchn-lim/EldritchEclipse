@@ -8,4 +8,6 @@ public abstract class Upgrade
     public Sprite Icon;
     public string Name;
     public string Description;
+
+    public abstract void Effect();
 }

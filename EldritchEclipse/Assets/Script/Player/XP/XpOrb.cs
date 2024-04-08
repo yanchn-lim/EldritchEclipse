@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class XpOrb : MonoBehaviour
 {
-
     public float xpValue = 5;
-
+    public float flySpeed = 1;
     public void FlyToPlayer(Transform player)
     {
         StartCoroutine(FlyTowards(player));
@@ -18,7 +17,7 @@ public class XpOrb : MonoBehaviour
         {
             Vector3 dir = player.position - transform.position;
             dir.Normalize();
-            transform.position += dir * 1f * Time.fixedDeltaTime;
+            transform.position += dir * flySpeed * Time.fixedDeltaTime;
             
             yield return null;
         }
@@ -28,8 +27,7 @@ public class XpOrb : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            PlayerStats s = other.GetComponentInParent<PlayerStats>();
-            s.GainXP(5);
+            EventManager.Instance.TriggerEvent(Event.PLAYER_XP_GAIN, xpValue);
             Destroy(gameObject);
         }
     }

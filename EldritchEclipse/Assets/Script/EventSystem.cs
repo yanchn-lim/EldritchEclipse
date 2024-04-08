@@ -26,7 +26,7 @@ namespace YC
         Dictionary<string, EventBase> EventList = new();
         
         // adding / removing
-        public void AddEvent(string name)
+        public void CreateEvent(string name)
         {
             if (EventList.ContainsKey(name))
             {
@@ -51,6 +51,17 @@ namespace YC
         }
 
 
+        public void AddDelegates(string eventName, Delegate del)
+        {
+            if (!EventList.ContainsKey(eventName))
+            {
+                Debug.LogWarning($"{_debugFormat}EVENT DOES NOT EXIST!\nCREATING A NEW {eventName} EVENT...");
+                CreateEvent(eventName);
+            }
+
+            EventList[eventName].AddListeners(del);
+        }
+
         //event handling
         public EventReturn TriggetEvent(string name)
         {
@@ -60,13 +71,13 @@ namespace YC
             return data;
         }
 
-        public EventReturn TriggetEvent<T>(string name, EventArgs args)
-        {
-            var evnt = EventList[name];
-            var returnData = evnt.Execute();
+        //public EventReturn TriggetEvent(string name, EventArgs args)
+        //{
+        //    var evnt = EventList[name];
+        //    var returnData = evnt.Execute();
 
-            return returnData;
-        }
+        //    return returnData;
+        //}
     }
 
     /// <summary>
@@ -75,7 +86,7 @@ namespace YC
     public class EventArgs
     {
         public string Name { get; private set; }
-        public Hashtable Payload;
+        public Dictionary<string,object> Payload;
 
         public void AddArgs(string name, object data)
         {
@@ -94,7 +105,7 @@ namespace YC
     /// </summary>
     public class EventReturn
     {
-        public Hashtable Payload = new();
+        public Dictionary<string,object> Payload = new();
 
         public void AddData(string name, object data)
         {
@@ -107,6 +118,12 @@ namespace YC
     {
         public string Name { get; private set; }
         Queue<Delegate> _listeners;
+        List<Delegate> test;
+
+        public void AddListeners(Delegate del)
+        {
+            test.Add(del);
+        }
 
         public EventReturn Execute()
         {

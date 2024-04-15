@@ -53,6 +53,16 @@ namespace Movement
                 (LegMovement)bodyPartLookUp[Quadpedal.LOWERRIGHTLEG],
                 this
                 ));
+
+            movementStateMachine.Add((int)MovementState.RUNNING, new RunningState(
+                movementStateMachine,
+                (int)MovementState.RUNNING,
+                (LegMovement)bodyPartLookUp[Quadpedal.UPPERLEFTLEG],
+                (LegMovement)bodyPartLookUp[Quadpedal.LOWERLEFTLEG],
+                (LegMovement)bodyPartLookUp[Quadpedal.UPPERRIGHTLEG],
+                (LegMovement)bodyPartLookUp[Quadpedal.LOWERRIGHTLEG],
+                this
+                ));
             movementStateMachine.SetCurrentState((int)MovementState.WALKING);
         }
 
@@ -192,6 +202,30 @@ namespace Movement
         {
             WALKING,
             RUNNING
+        }
+
+        public void ChangeToRunningState()
+        {
+            movementStateMachine.SetCurrentState((int)MovementState.RUNNING);
+        }
+
+        
+        public void ChangeToWalkingState()
+        {
+            movementStateMachine.SetCurrentState((int)MovementState.WALKING);
+        }
+
+        private void OnGUI()
+        {
+            if (GUI.Button(new Rect(10, 10, 150, 100), "walk"))
+            {
+                ChangeToWalkingState();
+            }
+
+            if (GUI.Button(new Rect(200, 10, 150, 100), "Run"))
+            {
+                ChangeToRunningState();
+            }
         }
     }
 }

@@ -148,6 +148,7 @@ MonoBehaviour:
   stepDistance: 0.1
   stepHeight: 0.4
   speedToStep: 6.18
+  ankleRotationSpeed: 10
   sizeOfSphere: 0.04
 --- !u!1 &7411850033864322956
 GameObject:

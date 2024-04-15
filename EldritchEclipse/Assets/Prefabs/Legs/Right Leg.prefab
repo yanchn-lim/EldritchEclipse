@@ -222,6 +222,7 @@ MonoBehaviour:
   stepDistance: 0.1
   stepHeight: 0.4
   speedToStep: 6.18
+  ankleRotationSpeed: 10
   sizeOfSphere: 0.04
 --- !u!1001 &1344734431371164550
 PrefabInstance:

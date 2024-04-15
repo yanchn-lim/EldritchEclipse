@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Movement
@@ -33,7 +32,8 @@ namespace Movement
         private Vector3 dummyTargetPosition;
         private Vector3 CurrentPosition;
         private string legName;
-        
+        //[SerializeField] private Vector3 ankleUp = Vector3.one;
+
 
         private void Start()
         {
@@ -43,7 +43,7 @@ namespace Movement
             //find the distance offset
             horizontalDistanceOffset = transform.position.x - jointConnection.position.x;
             core = jointConnection.parent;
-            legName = transform.parent.parent.parent.parent.parent.name+ " " + transform.parent.parent.parent.name;
+            legName = transform.parent.parent.parent.parent.parent.name + " " + transform.parent.parent.parent.name;
         }
 
         private void Update()
@@ -61,11 +61,11 @@ namespace Movement
             //                   The Starting Point            How much right is added 
             rayCastingPosition = jointConnection.position +
                 (core.right * horizontalDistanceOffset) +
-                (jointConnection.forward * verticalDistanceOffset);
+                (core.forward * verticalDistanceOffset);
 
             Ray ray = new Ray(rayCastingPosition, Vector3.down);
 
-            Debug.DrawRay(rayCastingPosition, Vector3.down * distanceOfRayCast, Color.yellow);
+            //Debug.DrawRay(rayCastingPosition, Vector3.down * distanceOfRayCast, Color.yellow);
             if (Physics.Raycast(ray, out var hitinfo, distanceOfRayCast, maskTargeting))
             {
                 dummyTargetPosition = hitinfo.point;
@@ -83,7 +83,6 @@ namespace Movement
             //cannot move at all
             CanMove = false;
 
-
             //for the ankle rotation
             AnkleAdjustment();
 
@@ -93,25 +92,15 @@ namespace Movement
                 Ray ray = new Ray(transform.position, Vector3.down);
                 if (Physics.Raycast(ray, out var hit, distanceOfRayCast, maskTargeting))
                 {
-                    //find the angle to rotate at
-                    //Quaternion targetRotation = Quaternion.LookRotation(hit.normal, transform.forward);
-                    //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
-                    //    ankleRotationSpeed * Time.deltaTime);
-                    Debug.DrawRay(transform.position, hit.normal * 2, Color.black);
-                    if(hit.normal != Vector3.up)
-                    {
-                        transform.up = Vector3.Slerp(transform.up, hit.normal, ankleRotationSpeed * Time.deltaTime);
-                    }
-                    else
-                    {
-                        transform.rotation = Quaternion.identity;
-                    }
-
+                    //for debugging puposes
+                    //Debug.DrawRay(transform.position, hit.normal * 2, Color.black);
+                    Quaternion targetRotation = Quaternion.LookRotation(core.forward, hit.normal);
+                    transform.rotation = Quaternion.Slerp(transform.rotation,
+                        targetRotation,
+                        Time.deltaTime * ankleRotationSpeed);
                 }
             }
-
         }
-
 
         public void MoveLeg()
         {
@@ -151,11 +140,6 @@ namespace Movement
             Gizmos.color = Color.blue;
             Gizmos.DrawSphere(newPosition, sizeOfSphere);
         }
-
-        //public void SetUpConnector(DualLegs bodyMover)
-        //{
-        //    connector = bodyMover;
-        //}
 
         public void JointConnection(Transform joint)
         {

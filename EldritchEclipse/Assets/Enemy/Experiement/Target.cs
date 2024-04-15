@@ -8,8 +8,11 @@ public class Target : MonoBehaviour
 
     private void Update()
     {
-        Vector3 vector3 = transform.position;
-        vector3.y = fixY;
-        transform.position = vector3;
+        if(Physics.Raycast(transform.position, Vector3.down,out var hit))
+        {
+            var newPos = transform.position;
+            newPos.y = hit.point.y + fixY;
+            transform.position = newPos;
+        }
     }
 }

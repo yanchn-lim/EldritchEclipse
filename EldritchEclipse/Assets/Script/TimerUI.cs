@@ -11,12 +11,12 @@ public class TimerUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float time = GameManager.Timer;
+        float time = GameVariables.CurrentTime;
         int min = Mathf.FloorToInt(time / 60);
         int sec = Mathf.FloorToInt(time % 60);
 
-        string minString = min > 10 ? min.ToString() : $"0{min}";
-        string secString = sec > 10 ? sec.ToString() : $"0{sec}";
+        string minString = min >= 10 ? min.ToString() : $"0{min}";
+        string secString = sec >= 10 ? sec.ToString() : $"0{sec}";
         timerText.text = $"{minString} : {secString}";    
     }
 }

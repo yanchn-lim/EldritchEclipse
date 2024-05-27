@@ -1,5 +1,22 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9054474871305538000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
+  m_Name: Outline
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  passMaterial: {fileID: 2100000, guid: 495978f2eb1fd27408d8cd72f5a69d36, type: 2}
+  injectionPoint: 600
+  requirements: 6
+  passIndex: 1
 --- !u!114 &-6766108863059691122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20,7 +37,7 @@ MonoBehaviour:
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
---- !u!114 &-1878332245247344467
+--- !u!114 &-2037815180188544312
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29,32 +46,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
-  m_Name: SSAO
+  m_Script: {fileID: 11500000, guid: e25ce5b2c8547cb4981a1ded66d70283, type: 3}
+  m_Name: PixelArtRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
-  m_Settings:
-    AOMethod: 1
-    Downsample: 0
-    AfterOpaque: 0
-    Source: 1
-    NormalSamples: 1
-    Intensity: 0.5
-    DirectLightingStrength: 0.25
-    Radius: 0.25
-    Samples: 0
-    BlurQuality: 0
-    Falloff: 100
-    SampleCount: -1
-  m_BlueNoise256Textures:
-  - {fileID: 2800000, guid: 36f118343fc974119bee3d09e2111500, type: 3}
-  - {fileID: 2800000, guid: 4b7b083e6b6734e8bb2838b0b50a0bc8, type: 3}
-  - {fileID: 2800000, guid: c06cc21c692f94f5fb5206247191eeee, type: 3}
-  - {fileID: 2800000, guid: cb76dd40fa7654f9587f6a344f125c9a, type: 3}
-  - {fileID: 2800000, guid: e32226222ff144b24bf3a5a451de54bc, type: 3}
-  - {fileID: 2800000, guid: 3302065f671a8450b82c9ddf07426f3a, type: 3}
-  - {fileID: 2800000, guid: 56a77a3e8d64f47b6afe9e3c95cb57d5, type: 3}
-  m_Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3}
+  m_Active: 0
+  settings:
+    InjectionPoint: 600
+    Requirements: 4
+    ProfilerName: PIXEL_ART_BLIT
+    Steps: 8
 --- !u!114 &-1845998535297136447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,13 +120,12 @@ MonoBehaviour:
   - {fileID: -1845998535297136447}
   - {fileID: -6766108863059691122}
   - {fileID: 6994160981203637685}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726fe1833c85ce83d3091b8d498434157f59c892f6f2e339b8e32db0915643d89767
+  - {fileID: 4164362798019080763}
+  - {fileID: 8030492621656016145}
+  - {fileID: 6448896506719735067}
+  - {fileID: -2037815180188544312}
+  - {fileID: 7464672691116683309}
+  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59c892f6f2e339b8e32db0915643d89767
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -169,7 +168,7 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
---- !u!114 &708054489449137121
+--- !u!114 &4164362798019080763
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -178,49 +177,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbb6121597268e74e88a5424ce738503, type: 3}
-  m_Name: EdgeDetectionRendererFeature
+  m_Script: {fileID: 11500000, guid: 3277d2e365cb1e849b1e347a953a32ef, type: 3}
+  m_Name: Colour Quantization
   m_EditorClassIdentifier: 
   m_Active: 0
-  mat: {fileID: 0}
-  shader: {fileID: 4800000, guid: 7ae524779f528194d8e42797cd794473, type: 3}
+  shader: {fileID: 4800000, guid: 816b2a1a0d5eee94890f7b4b3b638a1e, type: 3}
   settings:
     InjectionPoint: 600
     Requirements: 4
-    ProfilerName: EDGE_DETECTION_BLIT
-    StructureTensorDeviation: 0.04
-    DifferenceOfGaussianDeviation: 3.48
-    LineIntegralDeviation: 9.5
-    EdgeSmoothDeviation: 2.2
-    LineConvolutionStepSize: {x: 1, y: 1}
-    EdgeSmoothStepSize: {x: 1, y: 1}
-    WhitePoint_1: 63.5
-    WhitePoint_2: 53.8
-    WhitePoint_3: 70.7
-    WhitePoint_4: 100
-    QuantizerSteps: 4
-    THRESHOLDING: 1
-    StdDevScale: 0.1
-    Sharpness: 93.3
-    SoftThreshold: 0.55
-    AntiAlias: 0
-    CALCDIFFBEFORECONVOLUTION: 0
-    INVERT: 0
-    BlendType: 0
-    DoGStrength: 1
-    BlendStrength: 1
-    MinColor:
-      r: 0.8584906
-      g: 0
-      b: 0.05283039
-      a: 0
-    MaxColor:
-      r: 0
-      g: 0.9811895
-      b: 1
-      a: 0
-    ViewEdges: 0
-    ConvertColor: 0
+    ProfilerName: COLOUR_QUANTIZATION_BLIT
+    NumberOfColour: 16
 --- !u!114 &5945575568669886922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,6 +229,28 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 45
+--- !u!114 &6448896506719735067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1845c471b5da7479f4c33fd46d6c32, type: 3}
+  m_Name: Colour Correction
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  setting:
+    InjectionPoint: 600
+    Requirements: 4
+    ProfilerName: COLOUR_CORRECTION_BLIT
+    Contrast: 1
+    Brightness: 0.21
+    Saturation: 2.09
+    Gamma: 1.15
+  shader: {fileID: 4800000, guid: 49efc3b20dce2e0489b1aa912780c5e9, type: 3}
 --- !u!114 &6994160981203637685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,45 +319,36 @@ MonoBehaviour:
   m_Name: XDoGRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 0
-  mat: {fileID: 0}
   shader: {fileID: 4800000, guid: 7ae524779f528194d8e42797cd794473, type: 3}
   settings:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: XDoG_BLIT
-    StructureTensorDeviation: 1.68
-    DifferenceOfGaussianDeviation: 0.91
-    LineIntegralDeviation: 0
-    EdgeSmoothDeviation: 10
-    LineConvolutionStepSize: {x: 100, y: 100}
-    EdgeSmoothStepSize: {x: 1000, y: 1000}
-    WhitePoint_1: 46.2
-    WhitePoint_2: 100
-    WhitePoint_3: 100
-    WhitePoint_4: 100
-    QuantizerSteps: 4
-    THRESHOLDING: 1
+    StructureTensorDeviation: 0.4
+    DifferenceOfGaussianDeviation: 6.04
+    LineIntegralDeviation: 1.53
+    EdgeSmoothDeviation: 0
+    LineConvolutionStepSize: {x: 150, y: 150}
+    EdgeSmoothStepSize: {x: 100, y: 100}
+    WhitePoint_1: 8.5
+    WhitePoint_2: 24.7
+    WhitePoint_3: 84.3
+    WhitePoint_4: 51.9
+    QuantizerSteps: 1
+    THRESHOLDING: 2
     StdDevScale: 0.1
-    Sharpness: 26.7
-    SoftThreshold: 0.98
-    AntiAlias: 0
+    Sharpness: 12.8
+    SoftThreshold: 10
+    AntiAlias: 1
     CALCDIFFBEFORECONVOLUTION: 0
     INVERT: 0
     BlendType: 2
-    DoGStrength: 1.41
-    BlendStrength: 1.54
-    MinColor:
-      r: 0
-      g: 0
-      b: 0
-      a: 0
-    MaxColor:
-      r: 1
-      g: 1
-      b: 1
-      a: 0
+    DoGStrength: 2.59
+    BlendStrength: 1.12
+    MinColor: {r: 0, g: 0.092446424, b: 0.16037738, a: 0}
+    MaxColor: {r: 1, g: 1, b: 1, a: 0}
     ViewEdges: 0
-    ConvertColor: 1
+    ConvertColor: 0
 --- !u!114 &7529854888884107792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -422,14 +401,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
-  m_Name: FullScreenPassRendererFeature
+  m_Name: Pixelize
   m_EditorClassIdentifier: 
-  m_Active: 0
-  passMaterial: {fileID: -876546973899608171, guid: cf7411b25ee7f8e4ca8e6cb45149c7ed,
-    type: 3}
+  m_Active: 1
+  passMaterial: {fileID: 2100000, guid: 2456053f80a5a9544b5abf7fd7dee4f2, type: 2}
   injectionPoint: 600
   requirements: 4
-  passIndex: 0
+  passIndex: 1
+--- !u!114 &8030492621656016145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb152904c60aab646b9a4b1e5085304d, type: 3}
+  m_Name: Sharpen
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  shader: {fileID: 4800000, guid: d8603b99b7799ec4a930c8f5912b50dd, type: 3}
+  settings:
+    InjectionPoint: 600
+    Requirements: 4
+    ProfilerName: SHARPEN_BLIT
+    Sharpen: 0.56
 --- !u!114 &9182091109868933918
 MonoBehaviour:
   m_ObjectHideFlags: 0

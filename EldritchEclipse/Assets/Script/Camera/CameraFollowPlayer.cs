@@ -7,9 +7,13 @@ public class CameraFollowPlayer : MonoBehaviour
     [SerializeField]
     Transform player;
     [SerializeField]
-    float height;
+    float height,distance;
     private void Update()
     {
-        transform.position = player.position + (Vector3.up * height);
+        //Vector3 dirToPlayer = transform.position - player.position;
+        //dirToPlayer.Normalize();
+        //transform.forward = dirToPlayer;
+
+        transform.position = player.position + (Vector3.up * height) + (-transform.forward * distance);
     }
 }

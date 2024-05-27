@@ -11,7 +11,7 @@ namespace Movement
         protected LegMovement rightUpperLeg;
         protected LegMovement rightLowerLeg;
         protected MovementManager movementManager;
-        public MovementState(FSM fsm,
+        public MovementState(PGGE.Patterns.FSM fsm,
             int id,
             LegMovement LUL,
             LegMovement LLL,
@@ -33,7 +33,7 @@ namespace Movement
         private bool LeftLegStart;
         private float elapseTime;
 
-        public WalkingState(FSM fsm, int id, LegMovement LUL, LegMovement LLL, LegMovement RUL, LegMovement RLL, MovementManager movementManager) : base(fsm, id, LUL, LLL, RUL, RLL, movementManager) { }
+        public WalkingState(PGGE.Patterns.FSM fsm, int id, LegMovement LUL, LegMovement LLL, LegMovement RUL, LegMovement RLL, MovementManager movementManager) : base(fsm, id, LUL, LLL, RUL, RLL, movementManager) { }
 
         public override void Enter()
         {
@@ -110,7 +110,7 @@ namespace Movement
     {
         float elapseTime;
         bool frontLegStart;
-        public RunningState(FSM fsm, int id, LegMovement LUL, LegMovement LLL, LegMovement RUL, LegMovement RLL, MovementManager movementManager) : base(fsm, id, LUL, LLL, RUL, RLL, movementManager)
+        public RunningState(PGGE.Patterns.FSM fsm, int id, LegMovement LUL, LegMovement LLL, LegMovement RUL, LegMovement RLL, MovementManager movementManager) : base(fsm, id, LUL, LLL, RUL, RLL, movementManager)
         {
         }
 

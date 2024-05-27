@@ -28,8 +28,8 @@ namespace Movement
         [SerializeField] private float fkDamping = 1f;
 
         //the lookup must start at the core
-        private FSM movementStateMachine;
-
+        private PGGE.Patterns.FSM movementStateMachine;
+        
         public float RotationSpeed { get => rotationSpeed; }
         public float WalkingPauseTime { get => walkingPauseTime;}
         public float PreferredHeight { get => preferredHeight;}
@@ -42,7 +42,7 @@ namespace Movement
             ImplantComponent();
             ImplantFKBody();
             //DebuggingBodyLookUp();
-            movementStateMachine = new FSM();
+            movementStateMachine = new PGGE.Patterns.FSM();
 
             movementStateMachine.Add((int)MovementState.WALKING, new WalkingState(
                 movementStateMachine,

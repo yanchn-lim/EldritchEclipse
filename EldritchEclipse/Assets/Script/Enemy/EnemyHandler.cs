@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyHandler : MonoBehaviour
 {
+    [SerializeField]
     EnemyStat stat;
     Transform player;
     float moveSpeed = 3;
@@ -17,13 +18,22 @@ public class EnemyHandler : MonoBehaviour
     void Update()
     {
         //move towards player
-        dir = transform.position - player.position;
+        dir = player.position - transform.position;
         dir.y = 0;
         dir.Normalize();
+        stat.Test();
     }
 
     private void FixedUpdate()
     {
         transform.position += dir * moveSpeed * Time.fixedDeltaTime;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player_Projectile"))
+        {
+            Debug.Log("AM HITTED");
+        }
     }
 }

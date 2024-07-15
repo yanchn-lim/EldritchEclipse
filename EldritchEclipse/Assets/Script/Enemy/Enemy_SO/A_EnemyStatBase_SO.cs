@@ -6,4 +6,6 @@ public abstract class EnemyStat : ScriptableObject
 {
     public float HP;
     public float Damage;
+
+    public abstract void Test();
 }

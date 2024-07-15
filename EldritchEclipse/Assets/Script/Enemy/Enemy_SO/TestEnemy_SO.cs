@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestMechanics : MonoBehaviour
+public class TestEnemyStat_SO : EnemyStat
 {
     
 }

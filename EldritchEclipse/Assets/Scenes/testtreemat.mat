@@ -86,7 +86,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture:
-        m_Texture: {fileID: 2800000, guid: 34c9d30c104e2bd448add27b0f797a51, type: 3}
+        m_Texture: {fileID: 2800000, guid: dca25d6556d28c1459a353afd7eba960, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -119,10 +119,10 @@ Material:
     - _EffectBlend: 1
     - _EnvironmentReflections: 1
     - _Float: 1.17
-    - _Float_1: 2.32
-    - _Float_2: 1
-    - _Float_3: 1
-    - _Float_4: 0
+    - _Float_1: 2.67
+    - _Float_2: 0.77
+    - _Float_3: 0.661
+    - _Float_4: 0.77
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -140,7 +140,7 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
-    - _noiseScal: 0.19
+    - _noiseScal: 0.1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

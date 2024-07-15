@@ -54,7 +54,7 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: PIXEL_ART_BLIT
-    Steps: 8
+    Steps: 12
 --- !u!114 &-1845998535297136447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,7 +186,7 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: COLOUR_QUANTIZATION_BLIT
-    NumberOfColour: 16
+    NumberOfColour: 64
 --- !u!114 &5945575568669886922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,10 +246,10 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: COLOUR_CORRECTION_BLIT
-    Contrast: 1
-    Brightness: 0.21
-    Saturation: 2.09
-    Gamma: 1.15
+    Contrast: 1.09
+    Brightness: 0.06
+    Saturation: 1.06
+    Gamma: 1.44
   shader: {fileID: 4800000, guid: 49efc3b20dce2e0489b1aa912780c5e9, type: 3}
 --- !u!114 &6994160981203637685
 MonoBehaviour:
@@ -361,7 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: RenderObjects
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     passTag: RenderObjects
     Event: 550
@@ -426,7 +426,7 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: SHARPEN_BLIT
-    Sharpen: 0.56
+    Sharpen: 14.96
 --- !u!114 &9182091109868933918
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class UI_AniHandler : MonoBehaviour
 {   
+    [SerializeField]
     UI_Animation[] _animations;
 
-    void PlayAnimations()
+    private void Update()
     {
-        foreach (var ani in _animations)
-        {
-            StartCoroutine(ani.PlayAnimation());
-        }
+        
     }
 }

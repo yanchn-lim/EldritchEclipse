@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class EnemyHandler : MonoBehaviour
 {
-    EnemyStat stat;
+    [SerializeField]
+    EnemyStat_SO stat_SO;
     Transform player;
     float moveSpeed = 3;
     Vector3 dir;
+
+    #region MONOBEHAVIOUR
     void Start()
     {
         player = GameObject.Find("Player").transform;
@@ -17,7 +20,7 @@ public class EnemyHandler : MonoBehaviour
     void Update()
     {
         //move towards player
-        dir = transform.position - player.position;
+        dir = player.position - transform.position;
         dir.y = 0;
         dir.Normalize();
     }
@@ -25,5 +28,24 @@ public class EnemyHandler : MonoBehaviour
     private void FixedUpdate()
     {
         transform.position += dir * moveSpeed * Time.fixedDeltaTime;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player_Projectile"))
+        {
+            Debug.Log("AM HITTED");
+            GetHit();
+        }
+    }
+    #endregion
+
+    void InitializeEnemy()
+    {
+
+    }
+
+    void GetHit()
+    {
     }
 }

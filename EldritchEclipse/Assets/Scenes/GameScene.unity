@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18378858, g: 0.22912624, b: 0.30427837, a: 1}
+  m_IndirectSpecularColor: {r: 0.18378882, g: 0.22912678, b: 0.30427933, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1813,11 +1813,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 551539485}
+  - component: {fileID: 551539489}
   - component: {fileID: 551539488}
   - component: {fileID: 551539487}
   - component: {fileID: 551539486}
-  - component: {fileID: 551539489}
-  m_Layer: 0
+  - component: {fileID: 551539490}
+  m_Layer: 9
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1922,6 +1923,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb4913b918dec6c49ae73590d22db85a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stat: {fileID: 11400000, guid: beb1398917ed5f2499cb3eec9b6f7fe8, type: 2}
+--- !u!54 &551539490
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551539484}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &603411136
 GameObject:
   m_ObjectHideFlags: 0
@@ -2223,7 +2252,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 694237691}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7750,7 +7779,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.44, y: 0.1, z: -9.58}
-  m_LocalScale: {x: 0.58457, y: 0.58457, z: 0.58457}
+  m_LocalScale: {x: 0.34482613, y: 0.34482613, z: 0.34482613}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3745622628110387970}

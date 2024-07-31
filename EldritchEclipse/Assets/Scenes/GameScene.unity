@@ -2289,6 +2289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stat_SO: {fileID: 11400000, guid: beb1398917ed5f2499cb3eec9b6f7fe8, type: 2}
+  xpOrb: {fileID: 3817197688722177580, guid: e138c81dbf704b2409fe7e5ad5614b1f, type: 3}
   ai: {fileID: 0}
   hitbox: {fileID: 0}
   player: {fileID: 0}

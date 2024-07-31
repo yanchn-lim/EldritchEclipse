@@ -11,7 +11,7 @@ public class TimerUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float time = GameVariables.CurrentTime;
+        float time = GameVariables.RemainingTime;
         int min = Mathf.FloorToInt(time / 60);
         int sec = Mathf.FloorToInt(time % 60);
 

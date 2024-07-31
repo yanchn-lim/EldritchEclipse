@@ -19,20 +19,25 @@ public class GameManager : MonoBehaviour
         StartTimer();
     }
 
+    #region TIME
     void StartTimer()
     {
-        GameVariables.CurrentTime = GameVariables.GameTime;
+        GameVariables.ElapsedTime = 0;
+        GameVariables.RemainingTime = GameVariables.GameTime;
         StartCoroutine(GameTimer());
     }
 
     IEnumerator GameTimer()
     {
-        while(GameVariables.CurrentTime > 0)
+        while(GameVariables.RemainingTime > 0)
         {
-            GameVariables.CurrentTime -= GameVariables.TimeTick;
+            GameVariables.RemainingTime -= GameVariables.TimeTick;
+            GameVariables.ElapsedTime += GameVariables.TimeTick;
             yield return new WaitForSeconds(GameVariables.TimeTick);
         }
 
         Debug.Log("OUT OF TIME");
     }
+
+    #endregion
 }

@@ -261,3 +261,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xpValue: 5
+  flySpeed: 1

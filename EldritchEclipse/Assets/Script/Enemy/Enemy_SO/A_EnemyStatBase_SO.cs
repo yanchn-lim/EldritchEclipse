@@ -8,6 +8,8 @@ public abstract class EnemyStat_SO : ScriptableObject
     public float HP;
     public float Damage;
     public float Speed;
+    public float XP;
+
 
     public abstract void Test();
 }

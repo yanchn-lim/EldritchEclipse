@@ -6,14 +6,13 @@ public class EnemyHandler : MonoBehaviour
 {
     [SerializeField]
     EnemyStat_SO stat_SO; //assigned
+
+    Enemy_AI ai;
+    EnemyStat stat = new();
+    Enemy_Hitbox hitbox;
+    Transform player;
     [SerializeField]
-    GameObject xpOrb;
-
-
-    public Enemy_AI ai;
-    public EnemyStat stat = new();
-    public Enemy_Hitbox hitbox;
-    public Transform player;
+    Transform worldCanvas;
 
     #region MONOBEHAVIOUR
     private void Awake()
@@ -56,15 +55,24 @@ public class EnemyHandler : MonoBehaviour
     }
     #endregion
 
-    public void GetHit()
+    #region Taking Damage
+    public void GetHit(float dmg)
     {
         //play hit reaction
-        stat.TakeDamage(CalculationType.FLAT,1);
-
+        stat.TakeDamage(CalculationType.FLAT,dmg);
+        var popup = Instantiate(GameAssets.dmgPopUp, worldCanvas);
+        popup.GetComponent<DamagePopUpAnimation>().BeginAnimation(dmg);
         if (stat.IsDead)
         {
-            Instantiate(xpOrb,transform.position,Quaternion.identity);
-            Destroy(gameObject);
+            Die();
         }
     }
+
+    void Die()
+    {
+        var xp = Instantiate(GameAssets.xporb, transform.position, Quaternion.identity);
+        xp.GetComponent<XpOrb>().ChangeValue(stat.XP);
+        Destroy(gameObject);
+    }
+    #endregion
 }

@@ -13,9 +13,9 @@ public class PlayerCombatHandler : MonoBehaviour
     GameObject _bulletPrefab;
     int _ammoCount;
     int _maxAmmoCount;
-    float delayBeforeReload;
+    float _delayBeforeReload;
     float _reloadSpeed;
-
+    float _damage;
     public Slider reloadBar;
 
     //perma
@@ -25,16 +25,20 @@ public class PlayerCombatHandler : MonoBehaviour
     PlayerCombatState_Reload _reloadState;
 
     public TMP_Text debugtxt;
-    
+
     //sequence
     //shoot => no ammo => no shoot until reloaded
     //shoot => delay(still got ammo) => auto-reload => can cancel anytime by shooting
+
+    //event managers
+    EventManager<EnemyEvents> em_e = EventSystem.Enemy;
 
     private void Start()
     {
         Initialize();
     }
 
+    #region Initialization
     void Initialize()
     {
         _bulletPerShot = w.BulletsPerShot;
@@ -43,17 +47,26 @@ public class PlayerCombatHandler : MonoBehaviour
         _reloadSpeed = w.ReloadSpeed * w.ReloadSpeedMultiplier;
         _ammoCount = _maxAmmoCount;
         _bulletPrefab = w.BulletPrefab;
+        _damage = w.BaseDamage * w.DamageMultiplier;
 
         _fsm = new();
-        _idleState = new((int)CombatStates.IDLE, _fsm, this, delayBeforeReload);
+        _idleState = new((int)CombatStates.IDLE, _fsm, this, _delayBeforeReload);
         _shootState = new((int)CombatStates.SHOOTING, _fsm, this);
         _reloadState = new((int)CombatStates.RELOAD, _fsm, this);
         _fsm.AddState(_idleState, _shootState, _reloadState);
         _fsm.SwitchState(_idleState);
 
+        EventSubscribing();
+
         ToggleReloadBar();
     }
 
+    void EventSubscribing()
+    {
+        em_e.AddListener(EnemyEvents.TAKE_DAMAGE, () => Damage);
+    }
+
+    #endregion
     private void Update()
     {
         _fsm.Update();
@@ -67,7 +80,7 @@ public class PlayerCombatHandler : MonoBehaviour
 
     public void ToggleReloadBar()
     {
-        reloadBar.gameObject.SetActive(!reloadBar.gameObject.active);
+        reloadBar.gameObject.SetActive(!reloadBar.gameObject.activeSelf);
     }
 
     public void UpdateReloadBar(float val)
@@ -88,6 +101,7 @@ public class PlayerCombatHandler : MonoBehaviour
     public float DelayBetweenShots { get { return _delayBetweenShots; } }
     public int AmmoCount { get { return _ammoCount; } set { _ammoCount = value; } }
     public float ReloadSpeed { get { return _reloadSpeed; } }
+    public float Damage => _damage;
     #endregion
 
     

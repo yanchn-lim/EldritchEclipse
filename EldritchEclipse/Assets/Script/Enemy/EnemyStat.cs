@@ -16,12 +16,14 @@ public class EnemyStat
     float _hp, _maxhp, _bhp;
     float _spd, _bspd;
     float _dmg, _bdmg;
+    float _xp;
 
     public void Initialize(EnemyStat_SO so)
     {
         _bhp = _hp = _maxhp = so.HP;
         _spd = _bspd = so.Speed;
         _dmg = _bdmg = so.Damage;
+        _xp = so.XP;
     }
 
     public void TakeDamage(CalculationType type, float val)
@@ -98,5 +100,6 @@ public class EnemyStat
     #region Getter
     public float Speed => _spd;
     public bool IsDead => _hp <= 0;
+    public float XP => _xp;
     #endregion
 }

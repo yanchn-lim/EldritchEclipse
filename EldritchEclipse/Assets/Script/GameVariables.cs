@@ -12,6 +12,13 @@ public static class GameVariables
     public static float MaxEnemyHP = 999f;
 }
 
+public static class GameAssets
+{
+    public static GameObject xporb { get { return Resources.Load<GameObject>("Prefabs/xp_orb"); } }
+    public static GameObject dmgPopUp { get { return Resources.Load<GameObject>("Prefabs/DamagePopUpText"); } }
+
+}
+
 public enum CalculationType
 {
     FLAT,

@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class XpOrb : MonoBehaviour
 {
-    public float xpValue = 5;
+    public float xpValue;
     public float flySpeed = 1;
+
+    public void ChangeValue(float val)
+    {
+        xpValue = val;
+    }
+
     public void FlyToPlayer(Transform player)
     {
         StartCoroutine(FlyTowards(player));

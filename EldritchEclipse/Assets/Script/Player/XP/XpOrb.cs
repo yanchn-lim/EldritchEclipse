@@ -27,7 +27,7 @@ public class XpOrb : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            EventManager.Instance.TriggerEvent(Event.PLAYER_XP_GAIN, xpValue);
+            EventSystem.Player.TriggerEvent(PlayerEvents.PLAYER_XP_GAIN, xpValue);
             Destroy(gameObject);
         }
     }

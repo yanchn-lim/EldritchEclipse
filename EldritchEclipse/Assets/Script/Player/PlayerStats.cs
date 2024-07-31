@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+    [SerializeField]
     float HP;
     float maxHP;
     float baseMoveSpeed;
+    [SerializeField]
     float moveSpeed;
     float moveSpeedMultiplier = 1;
 
@@ -18,11 +20,11 @@ public class PlayerStats : MonoBehaviour
     [SerializeField]
     PlayerUIHandler ui;
 
-    EventManager em = EventManager.Instance;
+    EventManager<PlayerEvents> em_p = EventSystem.Player;
 
     private void Awake()
     {
-        em.AddListener<float>(Event.PLAYER_XP_GAIN,GainXP);
+        em_p.AddListener<float>(PlayerEvents.PLAYER_XP_GAIN,GainXP);
     }
 
     private void Start()

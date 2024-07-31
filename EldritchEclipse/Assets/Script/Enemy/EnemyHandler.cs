@@ -5,47 +5,66 @@ using UnityEngine;
 public class EnemyHandler : MonoBehaviour
 {
     [SerializeField]
-    EnemyStat_SO stat_SO;
-    Transform player;
-    float moveSpeed = 3;
-    Vector3 dir;
+    EnemyStat_SO stat_SO; //assigned
+    [SerializeField]
+    GameObject xpOrb;
+
+
+    public Enemy_AI ai;
+    public EnemyStat stat = new();
+    public Enemy_Hitbox hitbox;
+    public Transform player;
 
     #region MONOBEHAVIOUR
-    void Start()
+    private void Awake()
     {
-        player = GameObject.Find("Player").transform;
+        Initialize(); //change to be handled by SLS?
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //move towards player
-        dir = player.position - transform.position;
-        dir.y = 0;
-        dir.Normalize();
+        
     }
 
     private void FixedUpdate()
     {
-        transform.position += dir * moveSpeed * Time.fixedDeltaTime;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player_Projectile"))
-        {
-            Debug.Log("AM HITTED");
-            GetHit();
-        }
+        ai.MoveTowardsPlayer(stat.Speed);
     }
     #endregion
 
-    void InitializeEnemy()
+    #region Initialization
+    void Initialize()
     {
-
+        GetReference();
+        InitializeComponents();
     }
 
-    void GetHit()
+    void GetReference()
     {
+        ai = GetComponent<Enemy_AI>();
+        hitbox = GetComponentInChildren<Enemy_Hitbox>();
+
+        //player
+        player = GameObject.Find("Player").transform;
+    }
+
+    void InitializeComponents()
+    {
+        stat.Initialize(stat_SO);
+        ai.Initialize(player);
+        hitbox.Initialize(this);
+    }
+    #endregion
+
+    public void GetHit()
+    {
+        //play hit reaction
+        stat.TakeDamage(CalculationType.FLAT,1);
+
+        if (stat.IsDead)
+        {
+            Instantiate(xpOrb,transform.position,Quaternion.identity);
+            Destroy(gameObject);
+        }
     }
 }

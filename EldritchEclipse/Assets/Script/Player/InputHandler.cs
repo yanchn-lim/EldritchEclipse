@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
-public class InputHandler
-{
 
+public static class InputHandler
+{ 
     static Camera mainCam = Camera.main;
     public static Vector2 MovementInput { get; private set;}
     public static Vector3 MovementAdjusted { get

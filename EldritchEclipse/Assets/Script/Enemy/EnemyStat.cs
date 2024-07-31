@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyStat 
+[System.Serializable]
+public class EnemyStat
 {
     /*
      * b = base
@@ -14,8 +15,16 @@ public class EnemyStat
 
     float _hp, _maxhp, _bhp;
     float _spd, _bspd;
+    float _dmg, _bdmg;
 
-    public void TakeDamage(CalculationType type,float val)
+    public void Initialize(EnemyStat_SO so)
+    {
+        _bhp = _hp = _maxhp = so.HP;
+        _spd = _bspd = so.Speed;
+        _dmg = _bdmg = so.Damage;
+    }
+
+    public void TakeDamage(CalculationType type, float val)
     {
         float dmg;
 
@@ -36,7 +45,7 @@ public class EnemyStat
                 break;
         }
 
-        _hp = Mathf.Clamp(_hp - dmg,0,_maxhp);
+        _hp = Mathf.Clamp(_hp - dmg, 0, _maxhp);
     }
 
     public void RecoverHP(CalculationType type, float val)
@@ -85,4 +94,9 @@ public class EnemyStat
         }
         _maxhp = Mathf.Clamp(_maxhp + ihp, 0, GameVariables.MaxEnemyHP);
     }
+
+    #region Getter
+    public float Speed => _spd;
+    public bool IsDead => _hp <= 0;
+    #endregion
 }

@@ -7,6 +7,7 @@ public abstract class EnemyStat_SO : ScriptableObject
 {
     public float HP;
     public float Damage;
+    public float Speed;
 
     public abstract void Test();
 }

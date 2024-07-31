@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d46b0e2b3aa0de74faf939b9bd94af2a, type: 3}
   m_Name: TestEnemyStats
   m_EditorClassIdentifier: 
-  HP: 0
-  Damage: 0
+  HP: 5
+  Damage: 1
+  Speed: 2

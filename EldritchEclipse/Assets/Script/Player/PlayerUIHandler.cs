@@ -13,7 +13,7 @@ public class PlayerUIHandler : MonoBehaviour
         levelUpPanel = GameObject.Find("LevelUp_Panel");
 
         //hide some panels 
-        levelUpPanel.SetActive(false);
+        //levelUpPanel.SetActive(false);
     }
 
     public void InitializeXPBar(float xptonext)

@@ -5,7 +5,7 @@ using UnityEngine;
 public class XPDetection : MonoBehaviour
 {
     SphereCollider detection;
-    float baseRange = 5;
+    float baseRange = 2.5f;
     float rangeMultiplier = 1;
 
     private void Start()

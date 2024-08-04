@@ -12,14 +12,14 @@ public class PlayerLevelHandler : MonoBehaviour
 
     private void Awake()
     {
-        UpgradePanels[0] = GameObject.Find("Upgrade_1");
-        UpgradePanels[1] = GameObject.Find("Upgrade_2");
-        UpgradePanels[2] = GameObject.Find("Upgrade_3");
+        //UpgradePanels[0] = GameObject.Find("Upgrade_1");
+        //UpgradePanels[1] = GameObject.Find("Upgrade_2");
+        //UpgradePanels[2] = GameObject.Find("Upgrade_3");
 
-        foreach (var item in UpgradeList)
-        {
-            UpgradeWeightList.Add(item, item.RarityWeightValue);
-        }
+        //foreach (var item in UpgradeList)
+        //{
+        //    UpgradeWeightList.Add(item, item.RarityWeightValue);
+        //}
     }
 
     void DisplayUpgrade()
@@ -28,8 +28,7 @@ public class PlayerLevelHandler : MonoBehaviour
         {
             //get a random upgrade
             var upgrade = Probability.SelectWeightedItem(UpgradeWeightList);
-            panel.GetComponent<UpgradeHandler>().DisplayUpgrade(upgrade);
-            
+            panel.GetComponent<UpgradeHandler>().DisplayUpgrade(upgrade);         
         }
     }
 }

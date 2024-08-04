@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     Vector3 dirToMouse;
     [SerializeField]
     GameObject bulletPrefab;
-    Vector3 mousePos;
     [SerializeField]
     LayerMask rayMask;
 
@@ -43,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //switch this to proper movement
         transform.position += MoveSpeed * Time.fixedDeltaTime * InputHandler.MovementAdjusted;
-
+        
     }
 
 }

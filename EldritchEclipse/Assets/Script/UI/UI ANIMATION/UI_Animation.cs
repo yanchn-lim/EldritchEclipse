@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static EasingFunctions;
+using System.Threading.Tasks;
 
 [System.Serializable]
 public abstract class UI_Animation
@@ -11,4 +12,6 @@ public abstract class UI_Animation
     public EasingFunction EasingFunc;
 
     public abstract void Update();
+
+    //public abstract async Task Play();
 }

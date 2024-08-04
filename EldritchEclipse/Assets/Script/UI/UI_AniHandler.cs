@@ -7,8 +7,6 @@ public class UI_AniHandler : MonoBehaviour
     [SerializeField]
     UI_Animation[] _animations;
 
-    private void Update()
-    {
-        
-    }
+    
+
 }

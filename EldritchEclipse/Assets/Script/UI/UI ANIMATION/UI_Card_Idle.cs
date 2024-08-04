@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
 {
+    [Header("Idle + Hover animation")]
     [SerializeField]
-    float autoTiltAmt,manualTiltAmt,tiltSpeed,scale,scaleSpeed;
+    float autoTiltAmt;
+    [SerializeField]
+    float manualTiltAmt,tiltSpeed,scale,scaleSpeed;
         
     float tick = GameVariables.TimeTick;
  
@@ -15,6 +18,14 @@ public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
     [SerializeField]
     Transform card;
     float timeInHover = 0;
+
+    [Header("Spinning animation")]
+    [SerializeField]
+    int rotSpeed;
+    bool reachedSlot;
+    [SerializeField]
+    GameObject cardBack,shadow;
+    
     public void Initialize()
     {
 
@@ -22,12 +33,52 @@ public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
 
     private void OnEnable()
     {
-        ani_Cor = StartCoroutine(Animation());
+        StartCoroutine(SpawnAnimation());
     }
 
     private void OnDisable()
     {
         StopCoroutine(ani_Cor);
+    }
+
+    IEnumerator SpawnAnimation() 
+    {
+        card.localPosition = new(-2000, 0, 0);
+        float time = 0;
+        StartCoroutine(SpinAnimation());
+        yield return new WaitForSeconds(1f);
+        while (time < 1)
+        {
+            card.localPosition = Vector3.Lerp(card.localPosition,Vector3.zero, time);
+            time += tick;
+            yield return new WaitForSeconds(tick);
+        }
+        reachedSlot = true;
+        ani_Cor = StartCoroutine(Animation());
+    }
+
+    IEnumerator SpinAnimation()
+    {
+        int rotationCounter = 0;
+
+        while (true)
+        {
+            card.transform.Rotate(new(0,rotSpeed,0));
+            rotationCounter += rotSpeed;
+
+            if(rotationCounter % 180 == 0)
+            {
+                cardBack.SetActive(!cardBack.activeSelf);
+            }
+
+            if (reachedSlot)
+            {
+                cardBack.SetActive(false);
+                break;
+            }
+
+            yield return new WaitForSeconds(tick);
+        }
     }
 
     IEnumerator Animation()
@@ -58,6 +109,7 @@ public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
             yield return new WaitForSeconds(tick);
         }
     }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         mouseHover = true;

@@ -43,3 +43,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Card
+    uniqueID: 55219641
+    locked: 0

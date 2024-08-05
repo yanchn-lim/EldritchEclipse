@@ -11,7 +11,11 @@ public abstract class UI_Animation
     public float Speed;
     public EasingFunction EasingFunc;
 
-    public abstract void Update();
+    //public abstract void Update();
 
-    //public abstract async Task Play();
+    public virtual async Task Play() 
+    {
+        
+    }
 }
+

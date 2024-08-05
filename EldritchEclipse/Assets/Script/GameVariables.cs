@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class GameVariables
 {
-    public static float TimeTick { get { return 0.02f; } }
+    public static float TimeTick { get { return 0.01f; } }
     public static float TimeTickMiliSec { get { return TimeTick * 1000; } }
 
     public static float GameTime { get { return 1200f; } }
@@ -16,7 +16,21 @@ public static class GameVariables
 
 public static class GameAssets
 {
+    public static GameObject RetrieveGameObject(string path)
+    {
+        try
+        {
+            return Resources.Load<GameObject>("Prefabs/xp_orb");
+        }
+        catch
+        {
+            Debug.Log("Problem retrieving...");
+            return null;
+        }
+    } 
+
     public static GameObject xporb { get { return Resources.Load<GameObject>("Prefabs/xp_orb"); } }
+
     public static GameObject dmgPopUp { get { return Resources.Load<GameObject>("Prefabs/DamagePopUpText"); } }
 
 }

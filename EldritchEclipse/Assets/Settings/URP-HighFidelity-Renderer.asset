@@ -125,20 +125,15 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 7529854888884107792}
-  - {fileID: 0}
   - {fileID: 5945575568669886922}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 6994160981203637685}
   - {fileID: 4164362798019080763}
   - {fileID: 8030492621656016145}
   - {fileID: 6448896506719735067}
   - {fileID: -2037815180188544312}
   - {fileID: 7464672691116683309}
-  m_RendererFeatureMap: 4fd7c540f4f80f631e93023337576d7f10fa2c66206b7f682ef6969a8edcedeaca49cf8b7aed8252c108b9d71cb261e68e79b461d6f319a2b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59c892f6f2e339b8e32db0915643d89767
+  m_RendererFeatureMap: 10fa2c66206b7f68ca49cf8b7aed8252b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59c892f6f2e339b8e32db0915643d89767
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}

@@ -57,7 +57,7 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: PIXEL_ART_BLIT
-    Steps: 12
+    Steps: 16
 --- !u!114 &-1845998535297136447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,7 +135,7 @@ MonoBehaviour:
   - {fileID: 7464672691116683309}
   m_RendererFeatureMap: 10fa2c66206b7f68ca49cf8b7aed8252b5558a125b4010613b72c7abe6c9ca3911c533f57d0a726f1b8d498434157f59c892f6f2e339b8e32db0915643d89767
   m_UseNativeRenderPass: 0
-  xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
+  xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 2
   m_OpaqueLayerMask:
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f1845c471b5da7479f4c33fd46d6c32, type: 3}
   m_Name: Colour Correction
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   setting:
     InjectionPoint: 600
     Requirements: 4

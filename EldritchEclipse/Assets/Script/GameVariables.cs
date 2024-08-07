@@ -12,6 +12,7 @@ public static class GameVariables
     public static float RemainingTime = 0;
     public static float MaxEntitySpeed = 50f;
     public static float MaxEnemyHP = 999f;
+    
 }
 
 public static class GameAssets

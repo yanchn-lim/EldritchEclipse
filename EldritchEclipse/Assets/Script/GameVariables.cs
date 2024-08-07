@@ -16,11 +16,11 @@ public static class GameVariables
 
 public static class GameAssets
 {
-    public static GameObject RetrieveGameObject(string path)
+    private static GameObject RetrieveGameObject(string path)
     {
         try
         {
-            return Resources.Load<GameObject>("Prefabs/xp_orb");
+            return Resources.Load<GameObject>(path);
         }
         catch
         {
@@ -29,9 +29,9 @@ public static class GameAssets
         }
     } 
 
-    public static GameObject xporb { get { return Resources.Load<GameObject>("Prefabs/xp_orb"); } }
+    public static GameObject xporb { get { return RetrieveGameObject("Prefabs/xp_orb"); } }
 
-    public static GameObject dmgPopUp { get { return Resources.Load<GameObject>("Prefabs/DamagePopUpText"); } }
+    public static GameObject dmgPopUp { get { return RetrieveGameObject("Prefabs/DamagePopUpText"); } }
 
 }
 

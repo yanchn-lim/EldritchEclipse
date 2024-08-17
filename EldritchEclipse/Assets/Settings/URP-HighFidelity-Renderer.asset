@@ -152,7 +152,7 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
-  m_RenderingMode: 0
+  m_RenderingMode: 2
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 0
   m_DepthAttachmentFormat: 0
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f1845c471b5da7479f4c33fd46d6c32, type: 3}
   m_Name: Colour Correction
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   setting:
     InjectionPoint: 600
     Requirements: 4

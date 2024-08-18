@@ -1,16 +1,16 @@
 using UnityEngine;
 
-public class CollisionLayer : MonoBehaviour
+public enum CollisionLayer
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    Default = 1 << 0,
+    Wall = 1 << 6,
+    Enemy = 1 << 7
+}
 
-    // Update is called once per frame
-    void Update()
+public class LayerMaskHelper
+{
+    public static uint GetLayerMaskFromTwoLayers(CollisionLayer layer1, CollisionLayer layer2)
     {
-        
+        return (uint)layer1 | (uint)layer2;
     }
 }

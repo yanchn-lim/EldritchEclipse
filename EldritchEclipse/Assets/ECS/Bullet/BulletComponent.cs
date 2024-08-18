@@ -1,6 +1,8 @@
 using Unity.Entities;
 
-public class BulletComponent : IComponentData
+public struct BulletComponent : IComponentData
 {
     public float Speed;
+    public float Size;
+    public float Damage;
 }

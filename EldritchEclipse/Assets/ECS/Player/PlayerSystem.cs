@@ -5,7 +5,6 @@ using Unity.Collections;
 using UnityEngine;
 using Unity.Burst;
 
-[BurstCompile]
 public partial struct PlayerSystem : ISystem
 {
     EntityManager _entityManager;
@@ -17,7 +16,6 @@ public partial struct PlayerSystem : ISystem
     InputComponent _inputComponent;
 
     //updates state every frame
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         _entityManager = state.EntityManager;
@@ -31,7 +29,6 @@ public partial struct PlayerSystem : ISystem
         Shoot(ref state);
     }
 
-    [BurstCompile]
     void Move(ref SystemState state)
     {
         //grabs transform from the entity
@@ -48,7 +45,6 @@ public partial struct PlayerSystem : ISystem
         _entityManager.SetComponentData(_playerEntity,playerTransform);
     }
 
-    [BurstCompile]
     void Shoot(ref SystemState state)
     {
         if(_inputComponent.Shoot)
@@ -62,7 +58,9 @@ public partial struct PlayerSystem : ISystem
 
                 //assign values to the instantiated bullet's variables
                 ECB.AddComponent(bulletEntity,new BulletComponent(){
-                    Speed = 25f
+                    Speed = 25f,
+                    Size = 0.25f,
+                    Damage = 1f,
                 });
 
                 ECB.AddComponent(bulletEntity, new BulletLifeTimeComponent()

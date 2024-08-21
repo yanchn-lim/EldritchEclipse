@@ -5,11 +5,11 @@ using Unity.Transforms;
 // using UnityEngine;
 using Unity.Burst;
 using Unity.Physics;
-
 [BurstCompile]
 public partial struct BulletSystem : ISystem
 {
     EntityQuery query;
+    ComponentLookup<EnemyComponent> enemyComponents;
     public void OnCreate(ref SystemState state)
     {
         query = new EntityQueryBuilder(Allocator.Temp)
@@ -17,10 +17,43 @@ public partial struct BulletSystem : ISystem
             .WithAllRW<BulletComponent>()
             .WithAllRW<BulletLifeTimeComponent>()
             .Build(ref state);
+
+        enemyComponents = state.GetComponentLookup<EnemyComponent>();
     }
 
     [BurstCompile]
     private void OnUpdate(ref SystemState state)
+    {
+        //NaiveMethod(ref state); // 9.78ms / 102fps
+        //QueryMethod(ref state); // 9.32ms / 107fps
+        RunJob(ref state); // 6.14ms / 162fps
+    }
+
+    [BurstCompile]
+    void RunJob(ref SystemState state)
+    {
+
+        PhysicsWorld physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
+        float deltaTime = SystemAPI.Time.DeltaTime;
+        var ecb = new EntityCommandBuffer(Allocator.TempJob);
+        enemyComponents.Update(ref state);
+
+        var job = new BulletJob
+        {
+            deltaTime = deltaTime,
+            physicsWorld = physicsWorld,
+            ecb = ecb.AsParallelWriter(),
+            enemyComponents = enemyComponents,
+        };
+
+        job.ScheduleParallel(query);
+        
+        state.Dependency.Complete(); // if removed, 5.91ms / 169fps
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();
+    }
+
+    void QueryMethod2(ref SystemState state)
     {
         // PhysicsWorld physWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
         // float deltaTime = SystemAPI.Time.DeltaTime;
@@ -36,18 +69,18 @@ public partial struct BulletSystem : ISystem
         //         continue;
         //     }
         // }
-        //OldMethod(ref state);
-        QueryMethod(ref state);
-        
     }
 
-    void QueryMethod(ref SystemState state){
+    [BurstCompile]
+    void QueryMethod(ref SystemState state)
+    {
         PhysicsWorld physWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
 
         var e = query.ToEntityArray(Allocator.Temp);
         var entityManager = state.EntityManager;
 
-        foreach(var bullet in e){
+        foreach (var bullet in e)
+        {
             //move the bullet
             LocalTransform bulletTransform = entityManager.GetComponentData<LocalTransform>(bullet);
             BulletComponent bulletComponent = entityManager.GetComponentData<BulletComponent>(bullet);
@@ -114,7 +147,8 @@ public partial struct BulletSystem : ISystem
         }
     }
 
-    void OldMethod(ref SystemState state)
+    [BurstCompile]
+    void NaiveMethod(ref SystemState state)
     {
         EntityManager entityManager = state.EntityManager;
         NativeArray<Entity> allEntities = entityManager.GetAllEntities();
@@ -191,6 +225,76 @@ public partial struct BulletSystem : ISystem
                 }
                 hits.Dispose();
             }
+        }
+    }
+
+    //job
+    [BurstCompile]
+    public partial struct BulletJob : IJobEntity
+    {
+        public float deltaTime;
+        [ReadOnly] public PhysicsWorld physicsWorld;
+        public EntityCommandBuffer.ParallelWriter ecb;
+        [ReadOnly] public ComponentLookup<EnemyComponent> enemyComponents;
+
+        void Execute(Entity entity, [EntityIndexInQuery] int entityIndex,
+            ref LocalTransform bulletTransform,
+            ref BulletComponent bulletComponent,
+            ref BulletLifeTimeComponent bltc)
+        {
+            // Move the bullet
+            bulletTransform.Position += bulletComponent.Speed * deltaTime * bulletTransform.Forward();
+
+            // Update bullet lifetime
+            bltc.RemainingLifeTime -= deltaTime;
+
+            // Destroy bullet if no remaining time
+            if (bltc.RemainingLifeTime <= 0)
+            {
+                ecb.DestroyEntity(entityIndex, entity);
+                return;
+            }
+
+            // Perform physics checks
+            NativeList<ColliderCastHit> hits = new NativeList<ColliderCastHit>(Allocator.Temp);
+            float3 point1 = new(bulletTransform.Position - bulletTransform.Forward() * 0.15f);
+            float3 point2 = new(bulletTransform.Position + bulletTransform.Forward() * 0.15f);
+            uint layerMask = LayerMaskHelper.GetLayerMaskFromTwoLayers(CollisionLayer.Wall, CollisionLayer.Enemy);
+
+            physicsWorld.CollisionWorld.CapsuleCastAll(point1, point2, bulletComponent.Size / 2, float3.zero, 1f, ref hits, new CollisionFilter
+            {
+                BelongsTo = (uint)CollisionLayer.Default,
+                CollidesWith = layerMask,
+            });
+
+
+            if (hits.Length > 0)
+            {
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    Entity hitEntity = hits[i].Entity;
+
+                    if (enemyComponents.HasComponent(hitEntity))
+                    {
+                        // Get the EnemyComponent safely using ComponentLookup
+                        var enemyComponent = enemyComponents[hitEntity];
+                        enemyComponent.CurrentHealth -= bulletComponent.Damage;
+                        ecb.SetComponent(entityIndex, hitEntity, enemyComponent);
+
+                        if (enemyComponent.CurrentHealth <= 0)
+                        {
+                            ecb.DestroyEntity(entityIndex, hitEntity);
+                        }
+                    }
+
+                    ecb.DestroyEntity(entityIndex, entity);
+
+                }
+                hits.Dispose();
+
+            }
+
+
         }
     }
 }

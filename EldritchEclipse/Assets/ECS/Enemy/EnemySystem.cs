@@ -14,6 +14,7 @@ public partial struct EnemySystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
+        return;
         _entityManager = state.EntityManager;
         _playerEntity = SystemAPI.GetSingletonEntity<PlayerComponent>();
         LocalTransform playerTransform = _entityManager.GetComponentData<LocalTransform>(_playerEntity);

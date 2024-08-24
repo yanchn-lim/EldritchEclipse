@@ -4,6 +4,7 @@ using Unity.Transforms;
 using Unity.Collections;
 using UnityEngine;
 using Unity.Burst;
+using Unity.Physics;
 
 public partial struct PlayerSystem : ISystem
 {
@@ -67,6 +68,9 @@ public partial struct PlayerSystem : ISystem
                 {
                     RemainingLifeTime = 1.5f
                 });
+
+                ECB.AddComponent(bulletEntity, new PhysicsCollider());
+                ECB.AddComponent(bulletEntity, new PhysicsVelocity());
 
                 //get transform of bullet and player
                 LocalTransform bulletTransform = _entityManager.GetComponentData<LocalTransform>(bulletEntity);

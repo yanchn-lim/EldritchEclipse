@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2faa1a8903af0e4468493c68b6ea03c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 5
+  MoveSpeed: 10
   BulletPrefab: {fileID: 4627363856819732176, guid: 339c5303a6514ed46a43b002ca0a7710,
     type: 3}
   NumOfBulletsToSpawn: 50

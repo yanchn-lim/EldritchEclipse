@@ -5,8 +5,10 @@ using Unity.Transforms;
 // using UnityEngine;
 using Unity.Burst;
 using Unity.Physics;
+using Unity.Physics.Systems;
 using Unity.Burst.Intrinsics;
-[BurstCompile]
+
+[BurstCompile,UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 public partial struct BulletSystem : ISystem
 {
     EntityQuery query;
@@ -17,6 +19,9 @@ public partial struct BulletSystem : ISystem
     ComponentTypeHandle<BulletLifeTimeComponent> bulletLifeTimeHandler;
     EntityTypeHandle entityTypeHandle;
     PhysicsWorld physicsWorld;
+    EntityCommandBuffer ecb;
+    float deltaTime;
+    EntityManager entityManager;
 
     public void OnCreate(ref SystemState state)
     {
@@ -31,18 +36,22 @@ public partial struct BulletSystem : ISystem
         bulletHandler = state.GetComponentTypeHandle<BulletComponent>();
         transformHandler = state.GetComponentTypeHandle<LocalTransform>();
         entityTypeHandle = state.GetEntityTypeHandle();
+        //deltaTime = SystemAPI.Time.DeltaTime;
+        entityManager = state.EntityManager;
     }
 
     [BurstCompile]
     private void OnUpdate(ref SystemState state)
     {
         physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
+        ecb = new EntityCommandBuffer(Allocator.TempJob);
+        deltaTime = SystemAPI.Time.DeltaTime;
 
         //UnityEngine.Profiling.Profiler.BeginSample("BulletSystem");
 
         //NaiveMethod(ref state); // 7.587952ms / 131fps 
         //QueryMethod(ref state); // 7.278624ms / 136fps
-        //RunJob(ref state); // 3.957736ms / 252fps
+        RunJob(ref state); // 3.957736ms / 252fps
         //RunJobChunk(ref state); // 5.403228ms / 184fps
 
         //UnityEngine.Profiling.Profiler.EndSample();
@@ -51,8 +60,6 @@ public partial struct BulletSystem : ISystem
     [BurstCompile]
     void RunJobChunk(ref SystemState state){
 
-        float deltaTime = SystemAPI.Time.DeltaTime;
-        var ecb = new EntityCommandBuffer(Allocator.TempJob);
         enemyComponents.Update(ref state);
         bulletHandler.Update(ref state);
         transformHandler.Update(ref state);
@@ -81,9 +88,6 @@ public partial struct BulletSystem : ISystem
     [BurstCompile]
     void RunJob(ref SystemState state)
     {
-
-        float deltaTime = SystemAPI.Time.DeltaTime;
-        var ecb = new EntityCommandBuffer(Allocator.TempJob);
         enemyComponents.Update(ref state);
 
         var job = new BulletJob
@@ -122,10 +126,7 @@ public partial struct BulletSystem : ISystem
     [BurstCompile]
     void QueryMethod(ref SystemState state)
     {
-        PhysicsWorld physWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
-
         var e = query.ToEntityArray(Allocator.Temp);
-        var entityManager = state.EntityManager;
 
         foreach (var bullet in e)
         {
@@ -156,7 +157,7 @@ public partial struct BulletSystem : ISystem
             float3 point1 = new(bulletTransform.Position - bulletTransform.Forward() * 0.15f);
             float3 point2 = new(bulletTransform.Position + bulletTransform.Forward() * 0.15f);
             uint layerMask = LayerMaskHelper.GetLayerMaskFromTwoLayers(CollisionLayer.Wall, CollisionLayer.Enemy);
-            physWorld.CapsuleCastAll(point1,
+            physicsWorld.CapsuleCastAll(point1,
                 point2,
                 bulletComponent.Size / 2,
                 float3.zero,
@@ -198,11 +199,7 @@ public partial struct BulletSystem : ISystem
     [BurstCompile]
     void NaiveMethod(ref SystemState state)
     {
-        EntityManager entityManager = state.EntityManager;
         NativeArray<Entity> allEntities = entityManager.GetAllEntities();
-
-        //get reference to the world's physics
-        PhysicsWorldSingleton physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>();
 
         //loop through all entities
         foreach (Entity entity in allEntities)
@@ -276,6 +273,7 @@ public partial struct BulletSystem : ISystem
         }
     }
 
+    #region JOBS
     //jobs
     [BurstCompile]
     public partial struct BulletJob : IJobEntity
@@ -365,7 +363,7 @@ public partial struct BulletSystem : ISystem
             var bulletLifeTimes = chunk.GetNativeArray(ref bulletLifeTimeHandler);
             var entities = chunk.GetNativeArray(entityTypeHandle);
             var enumerator = new ChunkEntityEnumerator(useEnabledMask, chunkEnabledMask, chunk.Count);
-
+            
             while(enumerator.NextEntityIndex(out var i)){
                 var bullet = bullets[i];
                 var transform = transforms[i];
@@ -430,4 +428,6 @@ public partial struct BulletSystem : ISystem
             }
         }
     }
+    #endregion
+
 }

@@ -49,10 +49,21 @@ public partial struct BulletSystem : ISystem
 
         //UnityEngine.Profiling.Profiler.BeginSample("BulletSystem");
 
-        //NaiveMethod(ref state); // 7.587952ms / 131fps 
-        //QueryMethod(ref state); // 7.278624ms / 136fps
-        RunJob(ref state); // 3.957736ms / 252fps
-        //RunJobChunk(ref state); // 5.403228ms / 184fps
+        // 7.587952ms / 131fps (bef caching)
+        // 5.201614ms / 191fps (aft caching)
+        //NaiveMethod(ref state);
+
+        // 7.278624ms / 136fps (bef caching)
+        // 5.104034ms / 195fps (aft caching)
+        //QueryMethod(ref state);
+
+        // 3.957736ms / 252fps(bef caching)
+        // 3.030105ms / 330fps (aft caching)
+        RunJob(ref state);
+
+        // 5.403228ms / 184fps (bef caching)
+        // 3.886812ms / 256fps (aft caching)
+        //RunJobChunk(ref state); 
 
         //UnityEngine.Profiling.Profiler.EndSample();
     }

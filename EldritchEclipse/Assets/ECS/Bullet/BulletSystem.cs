@@ -5,10 +5,10 @@ using Unity.Transforms;
 // using UnityEngine;
 using Unity.Burst;
 using Unity.Physics;
-using Unity.Physics.Systems;
 using Unity.Burst.Intrinsics;
 
-[BurstCompile,UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+[BurstCompile]
+[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 public partial struct BulletSystem : ISystem
 {
     EntityQuery query;
@@ -43,11 +43,11 @@ public partial struct BulletSystem : ISystem
     [BurstCompile]
     private void OnUpdate(ref SystemState state)
     {
+        //return;
         physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
         ecb = new EntityCommandBuffer(Allocator.TempJob);
         deltaTime = SystemAPI.Time.DeltaTime;
 
-        //UnityEngine.Profiling.Profiler.BeginSample("BulletSystem");
 
         // 7.587952ms / 131fps (bef caching)
         // 5.201614ms / 191fps (aft caching)
@@ -59,13 +59,37 @@ public partial struct BulletSystem : ISystem
 
         // 3.957736ms / 252fps(bef caching)
         // 3.030105ms / 330fps (aft caching)
+        // 2.945617ms / 339fps
         RunJob(ref state);
 
         // 5.403228ms / 184fps (bef caching)
         // 3.886812ms / 256fps (aft caching)
         //RunJobChunk(ref state); 
 
-        //UnityEngine.Profiling.Profiler.EndSample();
+        //RunSeparatedJob(ref state); //2.74263ms / 364fps
+
+        //separated systems
+        // 3.865225ms / 258fps
+        // 2.984811ms / 334fps
+
+
+        ecb.Dispose();
+    }
+
+    [BurstCompile]
+    void RunSeparatedJob(ref SystemState state)
+    {       
+        var jobMovement = new BulletMovementJob
+        {
+            deltaTime = deltaTime,
+            ecb = ecb.AsParallelWriter()
+        };
+
+        jobMovement.ScheduleParallel(query);
+
+        state.Dependency.Complete();
+        ecb.Playback(entityManager);
+        ecb.Dispose();
     }
 
     [BurstCompile]
@@ -112,8 +136,9 @@ public partial struct BulletSystem : ISystem
         job.ScheduleParallel(query);
         
         state.Dependency.Complete(); // if removed, 5.91ms / 169fps
-        ecb.Playback(state.EntityManager);
-        ecb.Dispose();
+        if(!ecb.IsEmpty)
+            ecb.Playback(entityManager);
+        //ecb.Dispose();
     }
 
     void QueryMethod2(ref SystemState state)
@@ -437,6 +462,41 @@ public partial struct BulletSystem : ISystem
                 ecb.SetComponent(unfilteredChunkIndex, entity, bulletLifeTime);
                 ecb.SetComponent(unfilteredChunkIndex, entity, bullet);
             }
+        }
+    }
+
+    public struct BulletPhysicsJob : ITriggerEventsJob
+    {
+        public void Execute(TriggerEvent triggerEvent)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    [BurstCompile]
+    public partial struct BulletMovementJob : IJobEntity
+    {
+        public float deltaTime;
+        public EntityCommandBuffer.ParallelWriter ecb;
+
+        [BurstCompile]
+        void Execute(Entity entity, [EntityIndexInQuery] int entityIndex,
+            ref LocalTransform bulletTransform,
+            ref BulletComponent bulletComponent,
+            ref BulletLifeTimeComponent bltc)
+        {
+            // Update bullet lifetime
+            bltc.RemainingLifeTime -= deltaTime;
+
+            // Destroy bullet if no remaining time
+            if (bltc.RemainingLifeTime <= 0)
+            {
+                ecb.DestroyEntity(entityIndex, entity);
+                return;
+            }
+
+            // Move the bullet
+            bulletTransform.Position += bulletComponent.Speed * deltaTime * bulletTransform.Forward();           
         }
     }
     #endregion

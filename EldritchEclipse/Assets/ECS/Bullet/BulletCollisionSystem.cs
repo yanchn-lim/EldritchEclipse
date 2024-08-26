@@ -18,6 +18,8 @@ public partial struct BulletCollisionSystem : ISystem
     BulletCollisionJob job;
     ComponentLookup<EnemyComponent> enemyComponents;
 
+
+
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {

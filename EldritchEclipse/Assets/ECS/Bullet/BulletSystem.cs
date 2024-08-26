@@ -8,7 +8,7 @@ using Unity.Physics;
 using Unity.Burst.Intrinsics;
 
 [BurstCompile]
-[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+//[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 public partial struct BulletSystem : ISystem
 {
     EntityQuery query;
@@ -25,10 +25,17 @@ public partial struct BulletSystem : ISystem
 
     public void OnCreate(ref SystemState state)
     {
+        //query = new EntityQueryBuilder(Allocator.Temp)
+        //    .WithAllRW<LocalTransform>()
+        //    .WithAllRW<BulletComponent>()
+        //    .WithAllRW<BulletLifeTimeComponent>()
+        //    .Build(ref state);
+
         query = new EntityQueryBuilder(Allocator.Temp)
             .WithAllRW<LocalTransform>()
             .WithAllRW<BulletComponent>()
             .WithAllRW<BulletLifeTimeComponent>()
+            .WithAll<BulletActive>()
             .Build(ref state);
 
         enemyComponents = state.GetComponentLookup<EnemyComponent>();
@@ -60,6 +67,8 @@ public partial struct BulletSystem : ISystem
         // 3.957736ms / 252fps(bef caching)
         // 3.030105ms / 330fps (aft caching)
         // 2.945617ms / 339fps
+        // 3.287457ms / 303fps (POOLING)
+        // 3.592618ms / 278fps (NO POOL)
         RunJob(ref state);
 
         // 5.403228ms / 184fps (bef caching)
@@ -73,22 +82,6 @@ public partial struct BulletSystem : ISystem
         // 2.984811ms / 334fps
 
 
-        ecb.Dispose();
-    }
-
-    [BurstCompile]
-    void RunSeparatedJob(ref SystemState state)
-    {       
-        var jobMovement = new BulletMovementJob
-        {
-            deltaTime = deltaTime,
-            ecb = ecb.AsParallelWriter()
-        };
-
-        jobMovement.ScheduleParallel(query);
-
-        state.Dependency.Complete();
-        ecb.Playback(entityManager);
         ecb.Dispose();
     }
 
@@ -318,11 +311,20 @@ public partial struct BulletSystem : ISystem
         [ReadOnly] public PhysicsWorld physicsWorld;
         public EntityCommandBuffer.ParallelWriter ecb;
         [ReadOnly] public ComponentLookup<EnemyComponent> enemyComponents;
+        [BurstCompile]
+        void DespawnBullet(ref Entity b, int i,ref LocalTransform t)
+        {
+            //ecb.DestroyEntity(entityIndex, entity);
 
+            ecb.SetComponentEnabled<BulletActive>(i, b, false);
+            t.Position = new(0, -5, 0);
+        }
+        [BurstCompile]
         void Execute(Entity entity, [EntityIndexInQuery] int entityIndex,
             ref LocalTransform bulletTransform,
             ref BulletComponent bulletComponent,
-            ref BulletLifeTimeComponent bltc)
+            ref BulletLifeTimeComponent bltc
+            )
         {
             // Update bullet lifetime
             bltc.RemainingLifeTime -= deltaTime;
@@ -330,7 +332,7 @@ public partial struct BulletSystem : ISystem
             // Destroy bullet if no remaining time
             if (bltc.RemainingLifeTime <= 0)
             {
-                ecb.DestroyEntity(entityIndex, entity);
+                DespawnBullet(ref entity, entityIndex, ref bulletTransform);
                 return;
             }
 
@@ -368,9 +370,7 @@ public partial struct BulletSystem : ISystem
                             ecb.DestroyEntity(entityIndex, hitEntity);
                         }
                     }
-
-                    ecb.DestroyEntity(entityIndex, entity);
-
+                    DespawnBullet(ref entity, entityIndex, ref bulletTransform);
                 }
                 hits.Dispose();
 
@@ -465,40 +465,6 @@ public partial struct BulletSystem : ISystem
         }
     }
 
-    public struct BulletPhysicsJob : ITriggerEventsJob
-    {
-        public void Execute(TriggerEvent triggerEvent)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
-    [BurstCompile]
-    public partial struct BulletMovementJob : IJobEntity
-    {
-        public float deltaTime;
-        public EntityCommandBuffer.ParallelWriter ecb;
-
-        [BurstCompile]
-        void Execute(Entity entity, [EntityIndexInQuery] int entityIndex,
-            ref LocalTransform bulletTransform,
-            ref BulletComponent bulletComponent,
-            ref BulletLifeTimeComponent bltc)
-        {
-            // Update bullet lifetime
-            bltc.RemainingLifeTime -= deltaTime;
-
-            // Destroy bullet if no remaining time
-            if (bltc.RemainingLifeTime <= 0)
-            {
-                ecb.DestroyEntity(entityIndex, entity);
-                return;
-            }
-
-            // Move the bullet
-            bulletTransform.Position += bulletComponent.Speed * deltaTime * bulletTransform.Forward();           
-        }
-    }
     #endregion
 
 }

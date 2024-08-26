@@ -15,6 +15,16 @@ public partial struct PlayerSystem : ISystem
 
     PlayerComponent _playerComponent;
     InputComponent _inputComponent;
+    EntityQuery query;
+    public void OnCreate(ref SystemState state)
+    {
+        query = new EntityQueryBuilder(Allocator.Temp)
+            .WithAllRW<LocalTransform>()
+            .WithAllRW<BulletComponent>()
+            .WithAllRW<BulletLifeTimeComponent>()
+            .WithDisabled<BulletActive>()
+            .Build(ref state);
+    }
 
     //updates state every frame
     public void OnUpdate(ref SystemState state)
@@ -27,7 +37,8 @@ public partial struct PlayerSystem : ISystem
         _inputComponent = _entityManager.GetComponentData<InputComponent>(_inputEntity);
 
         Move(ref state);
-        Shoot(ref state);
+        //Shoot(ref state);
+        Shoot_Pool(ref state);
     }
 
     void Move(ref SystemState state)
@@ -46,6 +57,46 @@ public partial struct PlayerSystem : ISystem
         _entityManager.SetComponentData(_playerEntity,playerTransform);
     }
 
+    [BurstCompile]
+    void Shoot_Pool(ref SystemState state)
+    {
+        if (_inputComponent.Shoot)
+        {
+            var e = query.ToEntityArray(Allocator.Temp);
+
+            int counter = 0;
+            LocalTransform playerTransform = _entityManager.GetComponentData<LocalTransform>(_playerEntity);
+
+            //get inactive bullets from query
+            foreach (var b in e) 
+            {
+                EntityCommandBuffer ECB = new(Allocator.Temp);
+                
+                if (counter > _playerComponent.NumOfBulletsToSpawn)
+                    break;
+                counter++;
+
+
+                LocalTransform lt = _entityManager.GetComponentData<LocalTransform>(b);
+                BulletLifeTimeComponent bltc = _entityManager.GetComponentData<BulletLifeTimeComponent>(b);
+                bltc.RemainingLifeTime = bltc.DefaultLifeTime;
+                //align bullet to player's forward
+                lt.Rotation = playerTransform.Rotation;
+
+                float randomOffset = UnityEngine.Random.Range(-_playerComponent.BulletSpread, _playerComponent.BulletSpread);
+                lt.Position = playerTransform.Position + playerTransform.Forward() * 1.25f + playerTransform.Right() * randomOffset;
+
+                ECB.SetComponentEnabled<BulletActive>(b,true);
+                ECB.SetComponent(b, lt);
+                ECB.SetComponent(b, bltc);
+                ECB.Playback(_entityManager);
+
+                //release memory
+                ECB.Dispose();
+            }
+        }
+    }
+    
     void Shoot(ref SystemState state)
     {
         if(_inputComponent.Shoot)
@@ -69,8 +120,8 @@ public partial struct PlayerSystem : ISystem
                     RemainingLifeTime = 1.5f
                 });
 
-                ECB.AddComponent(bulletEntity, new PhysicsCollider());
-                ECB.AddComponent(bulletEntity, new PhysicsVelocity());
+                //ECB.AddComponent(bulletEntity, new PhysicsCollider());
+                //ECB.AddComponent(bulletEntity, new PhysicsVelocity());
 
                 //get transform of bullet and player
                 LocalTransform bulletTransform = _entityManager.GetComponentData<LocalTransform>(bulletEntity);

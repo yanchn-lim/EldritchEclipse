@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
-public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
+using UnityEngine.UI;
+
+public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
 {
     [Header("Idle + Hover animation")]
     [SerializeField]
@@ -25,10 +28,25 @@ public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
     bool reachedSlot;
     [SerializeField]
     GameObject cardBack,shadow;
-    
+
+    [SerializeField]
+    Camera cam;
+
+    [SerializeField]
+    RectMask2D mask;
+
+    [Header("Calls")]
+    public UnityEvent Events;
+
+    UnityAction t;
     public void Initialize()
     {
-
+        t = new(hehe);
+        Events.AddListener(t);
+    }
+    void hehe()
+    {
+        Debug.Log("ttt");
     }
 
     private void OnEnable()
@@ -88,8 +106,11 @@ public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
 
         float time = 0;
         while (true)
-        {           
-            Vector3 offset = transform.position - Input.mousePosition;
+        {
+
+            Vector3 mousePos = cam.ScreenToWorldPoint(new(Input.mousePosition.x,Input.mousePosition.y,cam.nearClipPlane));
+            Vector2 offset = mousePos - transform.position;
+            //Debug.DrawRay(transform.position, offset,Color.red);
             float tiltX = mouseHover? offset.y * -1 * manualTiltAmt : 0;
             float tiltY = mouseHover? offset.x * manualTiltAmt : 0;
 
@@ -113,10 +134,35 @@ public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
     public void OnPointerEnter(PointerEventData eventData)
     {
         mouseHover = true;
+        
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         mouseHover = false;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        StartCoroutine(FadeOut());
+    }
+
+    IEnumerator FadeOut()
+    {
+        float time = 0;
+        float timeL = 0.3f;
+        float endVal = 400;
+        Vector4 z = mask.padding;
+        float x = endVal - z.x;
+        float inc = x / (timeL / tick);
+        while (time < timeL)
+        {
+            Vector4 v = mask.padding;
+            Vector4 def = new(v.x,v.y,v.z,v.w);
+            def.y += inc;
+            mask.padding = def;
+            time += tick;
+            yield return new WaitForSeconds(tick);
+        }
     }
 }

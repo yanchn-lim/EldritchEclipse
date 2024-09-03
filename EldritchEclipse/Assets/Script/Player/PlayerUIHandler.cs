@@ -34,6 +34,7 @@ public class PlayerUIHandler : MonoBehaviour
 
     public void OpenLevelUpPanel()
     {
+        GameState.IsPlayerControlSuspended = true;
         levelUpPanel.SetActive(true);
     }
 }

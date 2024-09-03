@@ -15,6 +15,12 @@ public static class GameVariables
     
 }
 
+public static class GameState 
+{
+    public static bool IsPauseMenu { get { return false; } }
+    public static bool IsPlayerControlSuspended = true; //for now set to true
+}
+
 public static class GameAssets
 {
     private static GameObject RetrieveGameObject(string path)

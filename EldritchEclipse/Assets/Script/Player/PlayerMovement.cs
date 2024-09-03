@@ -21,6 +21,9 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameState.IsPlayerControlSuspended)
+            return;
+
         //rotate the player towards the mouse
         mouseRay = InputHandler.MouseScreenToWorldRay;
         if(Physics.Raycast(mouseRay,out RaycastHit hit,999f,rayMask))
@@ -35,6 +38,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameState.IsPlayerControlSuspended)
+            return;
+
         Move();
     }
 

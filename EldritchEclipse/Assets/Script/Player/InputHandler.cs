@@ -29,7 +29,9 @@ public static class InputHandler
 
         MouseScreenToWorldRay = mainCam.ScreenPointToRay(Input.mousePosition);
 
-        FirePressed = Input.GetMouseButtonDown(0);
+        
+
+        FirePressed = Input.GetMouseButtonDown(0) && !GameState.IsPlayerControlSuspended;
         FireHeld = Input.GetMouseButton(0);
     }
 }

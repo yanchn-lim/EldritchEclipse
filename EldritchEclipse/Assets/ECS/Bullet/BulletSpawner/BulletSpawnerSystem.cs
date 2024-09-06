@@ -7,6 +7,7 @@ public partial struct BulletSpawnerSystem : ISystem,ISystemStartStop
 {
     public void OnStartRunning(ref SystemState state)
     {
+        return;
         Debug.Log("bullet spawner run");
         EntityManager em = state.EntityManager;
         Entity bulletSpawner = SystemAPI.GetSingletonEntity<BulletSpawnerComponent>();

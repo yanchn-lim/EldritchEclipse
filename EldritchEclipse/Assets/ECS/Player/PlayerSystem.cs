@@ -29,6 +29,7 @@ public partial struct PlayerSystem : ISystem
     //updates state every frame
     public void OnUpdate(ref SystemState state)
     {
+        return;
         _entityManager = state.EntityManager;
         _playerEntity = SystemAPI.GetSingletonEntity<PlayerComponent>();
         _inputEntity = SystemAPI.GetSingletonEntity<InputComponent>();

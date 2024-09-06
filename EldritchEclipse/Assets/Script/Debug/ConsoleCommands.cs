@@ -7,8 +7,8 @@ namespace Debugger
     public class TestCommand : IConsoleCommand
     {
         public string identifier => "test";
-
         public string description => "this is a test command";
+        public string argsDescription => "int[optional]";
 
         public void Execute(string[] args, Action<string> Log)
         {
@@ -35,9 +35,8 @@ namespace Debugger
     public class ClearCommand : IConsoleCommand
     {
         public string identifier => "clear";
-
         public string description => "clears the console";
-
+        public string argsDescription => "";
         public TMP_Text consoleText;
 
         public void Execute(string[] args, Action<string> Log)
@@ -51,5 +50,19 @@ namespace Debugger
         }
     }
 
-    
+    public class HelpCommand : IConsoleCommand
+    {
+        public string identifier => "help";
+        public string description => "displays all available commands";
+        public string argsDescription => "";
+
+        public void Execute(string[] args, Action<string> Log)
+        {
+            Log("Available Commands:");
+            foreach (var cmd in Console.Instance.commandRegistry)
+            {
+                Log(cmd.Value.identifier + " - " + cmd.Value.description);
+            }
+        }
+    }
 }

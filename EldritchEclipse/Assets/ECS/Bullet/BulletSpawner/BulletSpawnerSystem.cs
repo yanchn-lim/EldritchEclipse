@@ -3,11 +3,11 @@ using Unity.Entities;
 using Unity.Collections;
 using Unity.Transforms;
 
+[DisableAutoCreation]
 public partial struct BulletSpawnerSystem : ISystem,ISystemStartStop
 {
     public void OnStartRunning(ref SystemState state)
     {
-        return;
         Debug.Log("bullet spawner run");
         EntityManager em = state.EntityManager;
         Entity bulletSpawner = SystemAPI.GetSingletonEntity<BulletSpawnerComponent>();

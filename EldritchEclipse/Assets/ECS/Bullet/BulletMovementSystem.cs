@@ -3,7 +3,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 
-[BurstCompile]
+[BurstCompile,DisableAutoCreation]
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 public partial struct BulletMovementSystem : ISystem
 {

@@ -57,7 +57,7 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: PIXEL_ART_BLIT
-    Steps: 16
+    Steps: 8
 --- !u!114 &-1845998535297136447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,17 +256,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 0
   m_Settings:
-    AOMethod: 0
+    AOMethod: 1
     Downsample: 0
     AfterOpaque: 1
     Source: 0
     NormalSamples: 2
-    Intensity: 0.03
+    Intensity: 1.09
     DirectLightingStrength: 1
-    Radius: 0.34
+    Radius: 0.08
     Samples: 2
     BlurQuality: 1
-    Falloff: 101.6
+    Falloff: 7.91
     SampleCount: -1
   m_BlueNoise256Textures:
   - {fileID: 2800000, guid: 36f118343fc974119bee3d09e2111500, type: 3}
@@ -315,27 +315,27 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: XDoG_BLIT
-    StructureTensorDeviation: 0.4
-    DifferenceOfGaussianDeviation: 6.04
-    LineIntegralDeviation: 1.53
+    StructureTensorDeviation: 0.34
+    DifferenceOfGaussianDeviation: 2.2
+    LineIntegralDeviation: 12.5
     EdgeSmoothDeviation: 0
     LineConvolutionStepSize: {x: 150, y: 150}
     EdgeSmoothStepSize: {x: 100, y: 100}
-    WhitePoint_1: 8.5
-    WhitePoint_2: 24.7
-    WhitePoint_3: 84.3
-    WhitePoint_4: 51.9
-    QuantizerSteps: 1
+    WhitePoint_1: 13
+    WhitePoint_2: 56
+    WhitePoint_3: 40
+    WhitePoint_4: 45
+    QuantizerSteps: 6
     THRESHOLDING: 2
-    StdDevScale: 0.1
-    Sharpness: 12.8
+    StdDevScale: 0.27
+    Sharpness: 17
     SoftThreshold: 10
-    AntiAlias: 1
+    AntiAlias: 0
     CALCDIFFBEFORECONVOLUTION: 0
     INVERT: 0
     BlendType: 2
-    DoGStrength: 2.59
-    BlendStrength: 1.12
+    DoGStrength: 4.74
+    BlendStrength: 1.19
     MinColor: {r: 0, g: 0.092446424, b: 0.16037738, a: 0}
     MaxColor: {r: 1, g: 1, b: 1, a: 0}
     ViewEdges: 0
@@ -420,7 +420,7 @@ MonoBehaviour:
     InjectionPoint: 600
     Requirements: 4
     ProfilerName: SHARPEN_BLIT
-    Sharpen: 14.96
+    Sharpen: 2.17
 --- !u!114 &9182091109868933918
 MonoBehaviour:
   m_ObjectHideFlags: 0

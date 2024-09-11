@@ -5,7 +5,7 @@ using Unity.Transforms;
 using Unity.Burst;
 using Unity.Physics;
 
-[BurstCompile]
+[BurstCompile,DisableAutoCreation]
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 public partial struct BulletCollisionSystem : ISystem
 {

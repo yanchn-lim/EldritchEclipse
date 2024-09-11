@@ -5,7 +5,7 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Burst;
 
-[BurstCompile]
+[BurstCompile,DisableAutoCreation]
 public partial struct EnemySpawnerSystem : ISystem
 {
     EntityManager _entityManager;
@@ -21,7 +21,6 @@ public partial struct EnemySpawnerSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        return;
         _entityManager = state.EntityManager;
 
         _enemySpawnerEntity = SystemAPI.GetSingletonEntity<EnemySpawnerComponent>();

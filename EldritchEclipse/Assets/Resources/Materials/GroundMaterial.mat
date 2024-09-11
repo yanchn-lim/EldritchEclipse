@@ -145,6 +145,7 @@ Material:
     - _SpecColor: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
     - _ToonRampTinting: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &106516262453794944
 MonoBehaviour:
   m_ObjectHideFlags: 11

@@ -7,7 +7,7 @@ using Unity.Burst;
 using Unity.Physics;
 using Unity.Burst.Intrinsics;
 
-[BurstCompile]
+[BurstCompile,DisableAutoCreation]
 //[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 public partial struct BulletSystem : ISystem
 {

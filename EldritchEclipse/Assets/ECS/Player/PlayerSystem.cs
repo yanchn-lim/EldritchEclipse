@@ -6,6 +6,7 @@ using UnityEngine;
 using Unity.Burst;
 using Unity.Physics;
 
+[DisableAutoCreation]
 public partial struct PlayerSystem : ISystem
 {
     EntityManager _entityManager;
@@ -29,7 +30,6 @@ public partial struct PlayerSystem : ISystem
     //updates state every frame
     public void OnUpdate(ref SystemState state)
     {
-        return;
         _entityManager = state.EntityManager;
         _playerEntity = SystemAPI.GetSingletonEntity<PlayerComponent>();
         _inputEntity = SystemAPI.GetSingletonEntity<InputComponent>();

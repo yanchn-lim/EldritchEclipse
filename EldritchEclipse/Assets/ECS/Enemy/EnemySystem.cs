@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using Unity.Burst;
 using Unity.Collections;
 
-[BurstCompile]
+[BurstCompile,DisableAutoCreation]
 public partial struct EnemySystem : ISystem
 {
     EntityManager _entityManager;
@@ -14,7 +14,6 @@ public partial struct EnemySystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        return;
         _entityManager = state.EntityManager;
         _playerEntity = SystemAPI.GetSingletonEntity<PlayerComponent>();
         LocalTransform playerTransform = _entityManager.GetComponentData<LocalTransform>(_playerEntity);

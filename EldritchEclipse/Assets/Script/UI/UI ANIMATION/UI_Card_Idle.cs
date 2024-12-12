@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
+public class UI_Card : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
 {
     [Header("Idle + Hover animation")]
     [SerializeField]
@@ -25,10 +26,12 @@ public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
     bool reachedSlot;
     [SerializeField]
     GameObject cardBack,shadow;
+    [SerializeField]
+    Transform deckSlot;
     
     public void Initialize()
     {
-
+        transform.localScale = Vector3.one;
     }
 
     private void OnEnable()
@@ -81,6 +84,8 @@ public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
         }
     }
 
+    Vector3 dir;
+
     IEnumerator Animation()
     {
         float x = 0;
@@ -90,9 +95,10 @@ public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
         while (true)
         {           
             Vector3 offset = transform.position - Input.mousePosition;
+            dir = offset;
             float tiltX = mouseHover? offset.y * -1 * manualTiltAmt : 0;
             float tiltY = mouseHover? offset.x * manualTiltAmt : 0;
-
+            dir = new(tiltX, tiltY, 0);
             x = Mathf.Sin(time);
             y = Mathf.Cos(time);
 
@@ -119,4 +125,29 @@ public class UI_Card_Idle : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
     {
         mouseHover = false;
     }
+
+    public void OnClick()
+    {
+        StopAllCoroutines();
+        StartCoroutine(MoveToDeckSlot());
+    }
+
+    IEnumerator MoveToDeckSlot()
+    {
+        float time = 0;
+        while (time < 1)
+        {
+            card.position = Vector3.Lerp(card.position, deckSlot.position, time);
+            card.localScale = Vector3.Lerp(card.localScale, Vector3.zero, time);
+            time += tick;
+            yield return new WaitForSeconds(tick);
+        }
+        // gameObject.SetActive(false);
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawRay(transform.position,dir);
+    }
+
 }
